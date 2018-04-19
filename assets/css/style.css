@@ -1,0 +1,290 @@
+.header{
+    position: fixed;
+    width: 100%;
+    z-index: 100;
+}
+#main{
+    padding-top: 25px;
+}
+.content-div{
+    overflow-x: scroll;
+}
+.bottom-sheet{
+    z-index: 100;
+    position: fixed;
+    bottom: 0px;
+    background: #fff;
+    width: 100%;
+    border-top: 1px solid #eee;
+}
+
+.enter-game .handsontable table.htCore th,
+.pick-game .handsontable table.htCore th, 
+.all-picks .handsontable table.htCore th  {
+    word-wrap: break-word;
+    white-space: pre-line;
+    height: 35px;
+    vertical-align: middle;
+}
+
+.enter-game .handsontable table.htCore thead tr th:nth-of-type(2),
+.enter-game .handsontable table.htCore tbody tr td:first-of-type
+{
+    display: none;
+}
+
+.pick-game .handsontable table.htCore thead tr th:nth-of-type(1),
+.pick-game .handsontable table.htCore tbody tr td:first-of-type
+{
+    display: none;
+}
+
+.enter-game table.htCore th,
+.pick-game table.htCore th
+{
+    background-color: #fff;
+    font-size: 15px;
+}   
+
+.enter-game .handsontable table.htCore thead tr:first-of-type th:nth-of-type(3),
+.pick-game .handsontable table.htCore thead tr:first-of-type th:nth-of-type(3)
+{
+    font-weight: bold !important;
+    font-size: 22px !important;
+    text-align: left !important;
+}
+.enter-game .handsontable table.htCore thead tr:first-of-type th:nth-of-type(9),
+.enter-game .handsontable table.htCore thead tr:first-of-type th:nth-of-type(12),
+.pick-game .handsontable table.htCore thead tr:first-of-type th:nth-of-type(6),
+.pick-game .handsontable table.htCore thead tr:first-of-type th:nth-of-type(9)
+{
+    background-color: rgb(142, 169, 219) !important;
+    color: white !important;
+    font-size: 22px !important;
+}
+
+.all-picks .handsontable table.htCore thead tr:first-of-type th:nth-of-type(1),
+.all-picks .handsontable table.htCore thead tr:first-of-type th:nth-of-type(9),
+.all-picks .handsontable table.htCore thead tr:first-of-type th:nth-of-type(17)
+{
+    /*color: white !important;*/
+    font-size: 22px !important;   
+}
+.all-picks .handsontable table.htCore thead tr:first-of-type th:nth-of-type(1)
+{
+    background-color: rgb(0, 176, 240) !important;
+}
+.all-picks .handsontable table.htCore thead tr:first-of-type th:nth-of-type(9)
+{
+    background-color: rgb(169, 208, 142) !important;
+}
+.all-picks .handsontable table.htCore thead tr:first-of-type th:nth-of-type(17)
+{
+    background-color: rgb(255, 0, 0) !important;
+}
+
+.worksheets .all-picks .handsontable table.htCore thead tr:first-of-type th:nth-of-type(1)
+{
+    background-color: rgb(169, 208, 142) !important;
+}
+.worksheets .all-picks .handsontable table.htCore thead tr:first-of-type th:nth-of-type(9)
+{
+    background-color: rgb(255, 0, 0) !important;
+}
+.worksheets .all-picks .handsontable table.htCore thead tr:first-of-type th:nth-of-type(17)
+{
+    background-color: rgb(0, 176, 240) !important;
+}
+
+.enter-game .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(3),
+.enter-game .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(4),
+.enter-game .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(7),
+.enter-game .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(10),
+.enter-game .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(11),
+.enter-game .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(12),
+.enter-game .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(13),
+.enter-game .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(14),
+.pick-game .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(3),
+.pick-game .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(4),
+.pick-game .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(5)
+{
+    color: white !important;
+    font-size: 15px !important;
+    background-color: rgb(58, 56, 56) !important;
+}
+
+.pick-game .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(2)
+{
+    color: white !important;
+    font-size: 15px !important;
+    background-color: rgb(255, 0, 0) !important;
+}
+
+.all-picks .handsontable table.htCore thead tr:nth-of-type(2) th{
+    color: white !important;
+    background-color: rgb(208, 206, 206) !important;
+    border-top:1px solid;
+    border-color: #fff;
+}
+.all-picks .handsontable.ht_master table.htCore tbody tr td{
+    border-bottom-width: 0px;
+}
+.all-picks .handsontable.ht_master table.htCore tbody tr:last-of-type td{
+    border-bottom-width: 1px;
+}
+.all-picks .handsontable.ht_master table.htCore tbody tr:nth-of-type(even) td
+{
+    background-color: rgb(234, 228, 176) !important;
+    border-top: 0px;
+    border-bottom: 0px;
+}
+
+.enter-game .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(5),
+.enter-game .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(6),
+.enter-game .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(9)
+{
+    color: white !important;
+    font-size: 15px !important;
+    background-color: rgb(255, 0, 0) !important;
+}
+
+.enter-game .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(8)
+{
+    color: white !important;
+    font-size: 15px !important;
+    background-color: rgb(146, 208, 80) !important;
+}
+
+.header-div{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 20px;
+}
+.game-week-select-div{
+    display: flex;
+}
+
+.game-week-select-div label{
+    padding-right: 20px;
+    font-size: 20px;
+    font-weight: bold;
+}
+.content-div{
+    margin: 20px 0px 40px;
+}
+.footer-div{
+    padding: 0px 20px;
+}
+.pick-check-box{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #5875ab;
+    margin: 3px auto;
+    cursor: pointer;
+}
+.pick-check-box[checked="true"]{
+    background-color: #000;
+}
+.popover{
+    -webkit-box-shadow: 0px 1px 30px -6px rgba(143,143,143,1);
+    -moz-box-shadow: 0px 1px 30px -6px rgba(143,143,143,1);
+    box-shadow: 0px 1px 30px -6px rgba(143,143,143,1);
+}
+#popup-div{
+    display: flex;
+    align-items: center;
+    justify-content:center;
+}
+#popup-div div{
+    padding: 0px 10px;
+    text-align:center;
+    display: block;
+}
+#popup-div div input{
+    cursor: pointer;
+}
+#popup-div div label{
+    display: block;
+    cursor: pointer;
+}
+
+.notification-box{
+    width: 600px;
+    margin: auto;
+    display: none;
+}
+
+.worksheets .setting_sheet1 .handsontable table.htCore th  {
+    background-color: #548235;
+    color: #fff;
+    font-size: 15px;
+}
+
+.sheet_block_wrapper{
+    display: flex;
+    justify-content: space-between;
+}
+.sheet_block{
+    position: relative;
+    float:left;
+    padding: 10px 20px 20px 20px;
+    border: 1px solid blue;
+}
+.sheet_block table{
+    width: 450px;
+}
+.sheet_block table tr:nth-last-child(3){
+    font-weight: bold;
+}
+.sheet_block table tr:last-of-type td{
+    font-size: 12px;
+}
+.sheet_block td{
+    border:1px solid #ccc;
+    text-align: center;
+    font-size: 15px;
+    padding: 2px 5px;
+    height: 30px;
+}
+.sheet_block td.team{
+    text-align: left;
+}
+.sheet_block .mark-div{
+    display: inline-block;
+    border: 3px solid #000;
+    color: #4072c4;
+    float: right;
+    margin: 100px 0px 10px;
+    padding: 0px 20px;
+    font-size: 40px;
+    font-weight: bold;
+}
+.sheet_block .bottom-div{
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+}
+
+.sheet_block tr.disabled{
+    color: red;
+    font-weight: bold;
+}
+
+.sheet_block.disabled .warning{
+    position: absolute;
+    background-image: url(../img/cross.png);
+    width: 200px;
+    height: 200px;
+    top: 20%;
+    left: 30%;
+    background-size: 100% 100%; 
+}
+
+#bets .setting_div{
+    float: left;
+}
+#bets .all-picks{
+    width: 100%;
+}
