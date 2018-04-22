@@ -224,13 +224,39 @@
 
 .sheet_block_wrapper{
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 .sheet_block{
     position: relative;
     float:left;
-    padding: 10px 20px 20px 20px;
+    padding: 20px 20px 20px 20px;
     border: 1px solid blue;
+}
+.sheet_block:hover .remove-icon{
+    display: block;
+}
+.sheet_block .remove-icon{
+    content: '';
+    display: none;
+    cursor: pointer;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 0px;
+    left: 0px;
+    background-image: url(../img/cross-icon.png);
+    background-size: cover;
+    background-color: #a3c1dc;
+}
+.sheet_block::after{
+    content: '';
+    cursor: pointer;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 0px;
+    right: 0px;
+    background-color: #e4a484;
 }
 .sheet_block table{
     width: 450px;
@@ -279,7 +305,7 @@
     height: 200px;
     top: 20%;
     left: 30%;
-    background-size: 100% 100%; 
+    background-size: 100% 100%;
 }
 
 #bets .setting_div{
@@ -287,4 +313,18 @@
 }
 #bets .all-picks{
     width: 100%;
+}
+
+.pick-check{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 7px;
+}
+.pick-check label{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: red;
+    margin: auto;
 }

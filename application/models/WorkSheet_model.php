@@ -134,6 +134,33 @@ class WorkSheet_model extends CI_Model {
             ),$data));
         }
     }
+
+    public function savePickSelect($betday, $data)
+    {
+        $data = json_decode($data);
+        $newData = array(
+            'pick_select' => json_encode($data->data)
+        );
+
+        $this->db->select('*')->from($this->tableName);
+        $this->db->where(array(
+            'betday' =>$betday
+        ));
+        $rows = $this->db->get()->result_array();
+        
+        if(count($rows))
+        {
+            $this->db->where(array(
+                'betday'    =>$betday
+            ));
+            $this->db->update('work_sheet', $newData);
+        }
+        else{
+            $this->db->insert('work_sheet', array_merge(array(
+                'betday'=>$betday
+            ),$newData));
+        }
+    }
     public function q($sql) {
         $result = $this->db->query($sql);
     }

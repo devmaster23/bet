@@ -1,0 +1,93 @@
+.metrics-div{
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+}
+
+.metrics-div>div.metrics-inner-table{
+    flex: 0 1 50%;
+    text-align: center;
+}
+
+.metrics-div .metrics-inner-table table,
+.metrics-div .metrics-inner-table .handsontable{
+    margin: auto;
+}
+
+.metrics-div .metrics-inner-table table td{
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    text-align: center;
+}
+
+.number-pick-table{
+    width: 400px;
+    margin: auto;
+    position: relative;
+}
+.number-pick-table table{
+    margin-left: 10px;
+}
+.number-pick-table table thead td,
+.number-pick-table table tr td:first-of-type{
+    font-weight: bold;
+}
+
+.number-pick-table table td{
+    border: 1px solid #ccc;
+    width: 50px;
+    padding: 5px 10px;
+    text-align: center;
+}
+.number-pick-table p{
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.number-pick-table p.vertical-text{
+    transform: rotate(90deg);
+    transform-origin: left top 0;
+    display: inline-block;
+    position: absolute;
+    margin-top: 25px;
+    left: 0px;
+}
+
+.category-select{
+    list-style: none;
+    width: 200px;
+}
+.category-select li{
+    cursor: pointer;
+    list-style: none;
+    padding: 3px 10px;
+}
+
+.category-select li:hover{
+    background-color: #ccc;
+}
+
+.category-select li.selected{
+    background-color: #999;
+}
+
+#category-group-user{
+    height: 250px;
+    overflow-y: scroll;
+}
+.description-div{
+    text-align: center;
+    width: 500px;
+    margin: auto;
+}
+
+.description-div textarea{
+    width: 100%;
+    height: 100px;
+}
+.category-div{
+    display: flex;
+}
+#fomularTable td.selected{
+    background-color: yellow;
+}

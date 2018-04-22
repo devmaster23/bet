@@ -49,6 +49,10 @@
             </div>
             <div class="tab-pane" id="bet_sheet" role="tabpanel">
             </div>
+            <div class="tab-pane" id="bets_pick" role="tabpanel">
+                <div class="sheet" data-type="bets_pick">
+                </div>
+            </div>
         </div>
     </div>
     <div class="footer-div">
@@ -59,7 +63,10 @@
             <a class="nav-link active" data-toggle="tab" data-type="bets" href="#bets" aria-selected="true">Bets</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" data-type="bet_sheet" href="#bet_sheet" aria-selected="true">Bet Sheets</a>
+            <a class="nav-link" data-toggle="tab" data-type="bet_sheet" href="#bet_sheet" aria-selected="true">Bet Instruction Sheets PR Parl</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" data-type="bets_pick" href="#bets_pick" aria-selected="true">Bet Instruction Sheets Pick</a>
         </li>
     </ul>
 </div>

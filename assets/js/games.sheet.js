@@ -240,7 +240,4 @@ $(document).on('click','#sheets .nav-link',function(){
 $(document).ready(function() {
   // $('#sheets').tab();
   loadTable();
-    $('.select2').select2({
-        width: '100px'
-    });
 });

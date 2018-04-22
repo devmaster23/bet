@@ -1,4 +1,5 @@
 var allTabelTimeOut = null;
+var pickTableObject = null;
 var allTableObject = null;
 var settingTableObject = null;
 var settingTableObject1 = null;
@@ -282,13 +283,74 @@ var allHotSettings = {
     ],
     minSpareRows: 0,
     minSpareCols: 0,
-    colWidths: [40, 100, 50,60, 250, 60,80,60,40, 100, 50,60, 250, 60,80,60,100,40, 100, 50,60, 250, 60,80,60],
+    colWidths: [40, 100, 50,60, 250, 60,80,60,40, 100, 50,60, 250, 60,80,60,60,40, 100, 50,60, 250, 60,80,60],
     rowHeights: rowHeight,
     className: "htCenter htMiddle",
     height: tableHeight,
     rowHeaders: false,
     colHeaders: true,
     nestedHeaders: all_custom_headers,
+    cells: function (row, col, prop) {
+      var cellProperties = {};
+      if(prop == 'select')
+        cellProperties.renderer = selectViewRenderer;
+      else
+        cellProperties.renderer = allDefaultValueRenderer;
+      return cellProperties;
+    }
+};
+
+var pickTableSettings = {
+    columns: [
+        {
+          data: 'select',
+          type: 'numeric',
+          readOnly: true
+        },
+        {
+          data: 'game_type',
+          readOnly: true
+        },
+        {
+          data: 'vrn',
+          type: 'numeric',
+          readOnly: true
+        },
+        {
+          data: 'type',
+          readOnly: true
+        },
+        {
+          data: 'team',
+          readOnly: true
+        },
+        {
+          data: 'line',
+          type: 'numeric',
+          readOnly: true
+        },
+        {
+          data: 'time',
+          type: 'time',
+          timeFormat: 'h:mm A',
+          correctFormat: true,
+          readOnly: true
+        },
+        {
+          data: 'count',
+          type: 'numeric',
+          readOnly: true
+        },
+
+    ],
+    minSpareRows: 0,
+    minSpareCols: 0,
+    colWidths: [50, 100, 50,60, 250, 60,80,60],
+    rowHeights: rowHeight,
+    className: "htCenter htMiddle",
+    height: tableHeight,
+    rowHeaders: true,
+    colHeaders: ['','Sport','VRN','SP/ML','Team','Line','Game Time','Count'],
     cells: function (row, col, prop) {
       var cellProperties = {};
       if(prop == 'select')
@@ -330,7 +392,15 @@ function allDefaultValueRenderer(instance, td, row, col, prop, value, cellProper
 }
 
 function selectRenderer (instance, td, row, col, prop, value, cellProperties) {
-  $(td).html("<input style type='radio' />");
+  var selected = instance.getDataAtRowProp(row, 'selected');
+  $(td).html("<input type='checkbox' " + (selected?"checked":"") + " name='pick_select' data-key='"+value+"' />");
+  td.style.textAlign = 'center';
+  return td;
+}
+
+function selectViewRenderer (instance, td, row, col, prop, value, cellProperties) {
+  var selected = instance.getDataAtRowProp(row, 'selected');
+  $(td).html("<div class='"+(selected?"pick-check":"")+"'><label></label></div>");
   td.style.textAlign = 'center';
   return td;
 }
@@ -360,6 +430,16 @@ function createAllPickSheets(data){
     allTableObject.loadData(data);  
 }
 
+function createPickSheets(data){
+  var key = 'bets_pick';
+  var container = $('div.sheet[data-type="'+key+'"]')[0];
+  pickTableSettings['data'] = data;
+  if(pickTableObject == null)
+    pickTableObject = new Handsontable(container, pickTableSettings);
+  else
+    pickTableObject.loadData(data);   
+}
+
 function createSettingSheet(data){
   var container = $('div.sheet[data-type="setting_sheet"]')[0];
   customHotSettings['data'] = data['sheet_data'];
@@ -386,6 +466,7 @@ function createBetSheets(data){
     $.each(row_item, function(key2, item){
       var cls = item.disabled.length ? "disabled" : "";
       tblItem += "<div class='sheet_block "+cls+"' id='"+item.title+"'>"+
+                "<span class='remove-icon'></span>"+
                 "<table><tbody>";
         $.each(item, function(key3, team_item){
           if(key3 == 'title')
@@ -460,7 +541,7 @@ function loadAllPickTable(){
         betweek: betweek
       },
       success: function(data) {
-          createAllPickSheets(data);
+        createAllPickSheets(data);
       }
   });
 }
@@ -477,6 +558,20 @@ function loadBetSheet(){
           createBetSheets(data);
       }
   }); 
+}
+
+function loadPickData(){
+  var betweek = $('.game-week-select').val()
+  $.ajax({
+      url: api_url+'/loadPickData',
+      type: 'POST',
+      data: {
+        betweek: betweek
+      },
+      success: function(data) {
+        createPickSheets(data);
+      }
+  });  
 }
 
 function mergeFields(){
@@ -497,28 +592,45 @@ function mergeFields(){
 }
 
 function updateTable(){
-    var betweek = $('.game-week-select').val()
-    var tableData = settingTableObject.getData();
-    var tableData1 = settingTableObject1.getData();
-
-    $.ajax({
-        url: api_url+'/saveData',
-        type: 'POST',
-        data: {
-          betweek: betweek,
-          setting: JSON.stringify({
-            data: tableData,
-            data1: tableData1
-          })
-        },
-        success: function(data) {
-          initPage()
-          $(".notification-box").show()
-          setTimeout(function() {
-            $(".notification-box").hide()
-          }, 1000);
-        }
+  var betweek = $('.game-week-select').val()
+  var tableData = settingTableObject.getData();
+  var tableData1 = settingTableObject1.getData();
+  var selectType = $('#sheets .nav-link.active').data('type');
+  var url = api_url+'/saveData';
+  var postData = {
+    betweek: betweek,
+    setting: JSON.stringify({
+      data: tableData,
+      data1: tableData1
+    })
+  }
+  if(selectType == 'bets_pick')
+  {
+    let selectArr = [];
+    $("input:checkbox[name=pick_select]:not(:checked)").each(function(){
+      selectArr.push($(this).data('key'));
     });
+    url = api_url+'/savePickSelect';
+    postData = {
+      betweek: betweek,
+      data: JSON.stringify({
+        data: selectArr
+      })
+    }
+  }
+  $.ajax({
+      url: url,
+      type: 'POST',
+      data: postData,
+      success: function(data) {
+        console.log(data);
+        // initPage()
+        // $(".notification-box").show()
+        // setTimeout(function() {
+        //   $(".notification-box").hide()
+        // }, 1000);
+      }
+  });
 }
 
 $(document).on('click','#sheets .nav-link',function(){
@@ -534,6 +646,7 @@ function initPage(){
     // allTabelTimeOut = setInterval(function(){
     //   loadAllPickTable();
     // }, 3000);
+
   }else{
     clearInterval(allTabelTimeOut);
   }
@@ -541,15 +654,19 @@ function initPage(){
   {
     loadBetSheet();
   }
+  if(selectType == 'bets_pick')
+  {
+    loadPickData();
+  }
 }
+$(document).on('click','.remove-icon', function(){
+  $(this).parents('.sheet_block').hide();
+})
 
 $(document).ready(function() {
 
   initPage();
 
-  $('.select2').select2({
-      width: '100px'
-  });
   $('body').click(function(event) {
     if($(event.target).parents('.popover-body').length == 0 && !$(event.target).hasClass('pick-check-box')){
       $(".popover").popover('hide');

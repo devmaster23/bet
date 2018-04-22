@@ -31,6 +31,14 @@ class Worksheets extends CI_Controller {
         echo json_encode( $data);
     }
 
+    public function loadPickData()
+    {
+        $betweek = $_POST['betweek'];
+        $data = $this->pick_model->getIndividual($betweek, 'pick');
+        header('Content-Type: application/json');
+        echo json_encode( $data);      
+    }
+
     public function loadBetSetting(){
         $betweek = $_POST['betweek'];
         $data = $this->model->getBetSetting($betweek);
@@ -49,6 +57,14 @@ class Worksheets extends CI_Controller {
         $betweek = $_POST['betweek'];
         $data = $_POST['setting'];
         $this->model->saveSetting($betweek, $data);
+        echo 'success';
+        die;
+    }
+
+    public function savePickSelect(){
+        $betweek = $_POST['betweek'];
+        $data = $_POST['data'];
+        $this->model->savePickSelect($betweek, $data);
         echo 'success';
         die;
     }

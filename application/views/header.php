@@ -10,6 +10,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   <link href='<?php echo base_url('bower_components/select2/dist/css/select2.min.css') ?>' rel='stylesheet' />
   <link href='<?php echo base_url('assets/vendor/css/handsontable.full.min.css') ?>' rel='stylesheet' />
   <link href='<?php echo base_url('assets/css/style.css') ?>' rel='stylesheet' />
+  <link href='<?php echo base_url('assets/css/setting.css') ?>' rel='stylesheet' />
 </head>
 <body>
 
@@ -29,6 +30,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           </li>
           <li class="nav-item <?php echo ($page == 'worksheets')?'active':'';?>">
             <a class="nav-link" href="<?php echo site_url('worksheets'); ?>">Worksheets</a>
+          </li>
+          <li class="nav-item <?php echo ($page == 'settings')?'active':'';?>">
+            <a class="nav-link" href="<?php echo site_url('settings'); ?>">Control Panel</a>
           </li>
         </ul>
       </div>

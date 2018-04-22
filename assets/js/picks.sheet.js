@@ -494,9 +494,6 @@ $(document).ready(function() {
 
   initPage();
 
-  $('.select2').select2({
-      width: '100px'
-  });
   $('body').click(function(event) {
     if($(event.target).parents('.popover-body').length == 0 && !$(event.target).hasClass('pick-check-box')){
       $(".popover").popover('hide');
