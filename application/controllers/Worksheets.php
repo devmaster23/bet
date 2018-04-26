@@ -12,8 +12,19 @@ class Worksheets extends CI_Controller {
     {
         $date = new DateTime(date('Y-m-d'));
         $betweek = $date->format('W');
+        
+        $settingId = isset($_GET['id'])?$_GET['id']:-1;
         $data['betweek'] = $betweek;
+        $data['settingId'] = $settingId;
         $this->load->view('worksheets', $data);
+    }
+
+    public function loadSummary(){
+        $betweek = $_POST['betweek'];
+        $data['summary'] = $this->model->getBetSummary($betweek);
+        header('Content-Type: application/json');
+        echo json_encode( $data);
+        die;
     }
 
     public function loadData(){
@@ -26,6 +37,7 @@ class Worksheets extends CI_Controller {
 
     public function loadAllPickData(){
         $betweek = $_POST['betweek'];
+
         $data = $this->pick_model->getAll($betweek);
         header('Content-Type: application/json');
         echo json_encode( $data);
@@ -41,7 +53,8 @@ class Worksheets extends CI_Controller {
 
     public function loadBetSetting(){
         $betweek = $_POST['betweek'];
-        $data = $this->model->getBetSetting($betweek);
+        $settingId = $_POST['settingId'];
+        $data = $this->model->getBetSetting($betweek,$settingId);
         header('Content-Type: application/json');
         echo json_encode( $data);   
     }
@@ -56,7 +69,7 @@ class Worksheets extends CI_Controller {
     public function saveData(){
         $betweek = $_POST['betweek'];
         $data = $_POST['setting'];
-        $this->model->saveSetting($betweek, $data);
+        $this->model->saveData($betweek, $data);
         echo 'success';
         die;
     }
@@ -68,4 +81,13 @@ class Worksheets extends CI_Controller {
         echo 'success';
         die;
     }
+
+    public function updateParlay(){
+        $betweek = $_POST['betweek'];
+        $data = $_POST['data'];
+        $this->model->updateParlay($betweek, $data);
+        echo 'success';
+        die;   
+    }
 }
+

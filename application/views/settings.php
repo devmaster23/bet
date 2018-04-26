@@ -4,9 +4,14 @@
         base_url('assets/js/setting.js'),
     ];
     $this->load->view('header', array('page' => $page)) ?>
+<?php 
+  $categoryType = $activeSetting['type'];
+  $categoryGroupUser = $activeSetting['groupuser_id'];
+?>
 <script>
     var betweek = <?php echo $betweek ?>;
     var fomularData = <?php echo json_encode($fomularData) ?>;
+    var activeSetting = <?php echo json_encode($activeSetting) ?>;
     var api_url = "<?php echo site_url('settings'); ?>";
 </script>
 <div class="container title">
@@ -36,9 +41,9 @@
       <div class="category-div">
         <div class="col-md-2">
           <ul class="category-select" id="category-type">
-            <li data-value="all" class="selected">All</li>
-            <li data-value="group">Groups</li>
-            <li data-value="individual">Individuals</li>
+            <li data-value="0" class="<?php echo ($categoryType == 0 ? 'selected':'')?>">All</li>
+            <li data-value="1" class="<?php echo ($categoryType == 1 ? 'selected':'')?>">Groups</li>
+            <li data-value="2" class="<?php echo ($categoryType == 2 ? 'selected':'')?>">Individuals</li>
           </ul>
         </div>
         <div class="col-md-4">

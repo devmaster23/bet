@@ -19,6 +19,8 @@ class Settings extends CI_Controller {
         
         $data['fomularData'] = $this->model->getFomular();
 
+        $data['activeSetting'] = $this->model->getActiveSetting($betweek);
+
         $this->load->view('settings', $data);
     }
 

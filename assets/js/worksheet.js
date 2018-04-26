@@ -8,12 +8,12 @@ var all_custom_headers = [
     [
       {label: 'Wrappers', colspan: 8},
       {label: 'Candy', colspan: 8},
-      {label: 'Picks', colspan: 9} 
+      {label: 'Picks', colspan: 8} 
     ],
     [
       '#','Sport','VRN','SP/ML','Team','Line','Game Time','Count',
       '#','Sport','VRN','SP/ML','Team','Line','Game Time','Count',
-      'Select','#','Sport','VRN','SP/ML','Team','Line','Game Time','Count'
+      '#','Sport','VRN','SP/ML','Team','Line','Game Time','Count'
     ]
 ];
 
@@ -58,7 +58,7 @@ var customHotSettings = {
     cells: function (row, col, prop) {
       var cellProperties = {};
       cellProperties.renderer = settingValueRenderer;
-      if(row == 7)
+      if(row == 7 || row == 8)
         cellProperties.readOnly = true;
       return cellProperties;
     },
@@ -236,11 +236,6 @@ var allHotSettings = {
           readOnly: true
         },
         {
-          data: 'select',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
           data: 'id',
           type: 'numeric',
           readOnly: true
@@ -283,7 +278,7 @@ var allHotSettings = {
     ],
     minSpareRows: 0,
     minSpareCols: 0,
-    colWidths: [40, 100, 50,60, 250, 60,80,60,40, 100, 50,60, 250, 60,80,60,60,40, 100, 50,60, 250, 60,80,60],
+    colWidths: [40, 100, 50,60, 250, 60,80,60,40, 100, 50,60, 250, 60,80,60,40, 100, 50,60, 250, 60,80,60],
     rowHeights: rowHeight,
     className: "htCenter htMiddle",
     height: tableHeight,
@@ -292,10 +287,7 @@ var allHotSettings = {
     nestedHeaders: all_custom_headers,
     cells: function (row, col, prop) {
       var cellProperties = {};
-      if(prop == 'select')
-        cellProperties.renderer = selectViewRenderer;
-      else
-        cellProperties.renderer = allDefaultValueRenderer;
+      cellProperties.renderer = allDefaultValueRenderer;
       return cellProperties;
     }
 };
@@ -365,7 +357,7 @@ function settingValueRenderer(instance, td, row, col, prop, value, cellPropertie
   var args = arguments;
   td.style.fontSize = fontSize;
   td.style.color = '#000';
-  td.style.backgroundColor = '#fff';  
+  // td.style.backgroundColor = '#fff';  
   if(row == 4 || row == 5 || row == 6){
     if(cellProperties.readOnly === true)
       td.style.backgroundColor = '#eee';
@@ -458,20 +450,19 @@ function createSettingSheet(data){
 }
 
 function createBetSheets(data){
-  var key = 'bet_sheet';
   var container = $('div#bet_sheet');
   container.html("");
   $.each(data.data, function(key, row_item){
     var tblItem = "<div class='sheet_block_wrapper'>";
     $.each(row_item, function(key2, item){
       var cls = item.disabled.length ? "disabled" : "";
+      var is_parlay = item.is_parlay ? "selected" : "";
       tblItem += "<div class='sheet_block "+cls+"' id='"+item.title+"'>"+
                 "<span class='remove-icon'></span>"+
+                "<span class='parlay-icon "+is_parlay+"' data-id='"+key+"_"+key2+"'></span>"+
                 "<table><tbody>";
         $.each(item, function(key3, team_item){
-          if(key3 == 'title')
-            return true;
-          if(key3 == 'disabled')
+          if(['title','disabled','is_parlay'].indexOf(key3) != -1)
             return true;
 
           var disableCls = item.disabled.indexOf(eval(key3)) > -1 ? "disabled" : "";
@@ -518,13 +509,46 @@ function createBetSheets(data){
   });
 }
 
+function createBetSummary(data){
+  var container = $('div#bet_summary');
+  container.html("");
+  var tblItem = "<table>"+
+        "<thead><tr>"+
+          "<td colspan='2'></td>"+
+          "<td colspan='5'>Round Robbins</td>"+
+          "<td colspan='2'>Parlay</td>"+
+          "<td colspan='2'>Individual Picks</td>"+
+        "</tr></thead>";
+
+  $.each(data.summary, function(key, row_item){
+    var tilte = "All";
+    var selected = (row_item.id == settingId)? "selectecd" : "";
+    tblItem += "<tbody><tr>"+
+          "<td class='title "+selected+"'><a href='"+api_url+"?id="+row_item.id+"'>"+row_item.title+"</a></td>"+
+          "<td class='total_allocation'>"+row_item.bet_allocation+"%</td>"+
+          "<td>"+row_item.rr_allocation+"%</td>"+
+          "<td>"+row_item.rr_number1+"</td>"+
+          "<td>by</td>"+
+          "<td>"+row_item.rr_number2+"</td>"+
+          "<td>"+row_item.rr_number3+"</td>"+
+          "<td>"+row_item.parlay_allocation+"%</td>"+
+          "<td>"+row_item.parlay_number1+"</td>"+
+          "<td>"+row_item.pick_allocation+"%</td>"+
+          "<td>"+row_item.pick_number1+"</td>"+
+        "</tr></tbody>";
+  });
+  tblItem += "</table>";
+  container.append(tblItem);
+}
+
 function loadSettingTable(){
   var betweek = $('.game-week-select').val()
   $.ajax({
       url: api_url+'/loadBetSetting',
       type: 'POST',
       data: {
-        betweek: betweek
+        betweek: betweek,
+        settingId: settingId
       },
       success: function(data) {
           createSettingSheet(data);
@@ -572,6 +596,20 @@ function loadPickData(){
         createPickSheets(data);
       }
   });  
+}
+
+function loadSummary(){
+  var betweek = $('.game-week-select').val()
+  $.ajax({
+      url: api_url+'/loadSummary',
+      type: 'POST',
+      data: {
+        betweek: betweek
+      },
+      success: function(data) {
+        createBetSummary(data);
+      }
+  });   
 }
 
 function mergeFields(){
@@ -623,12 +661,11 @@ function updateTable(){
       type: 'POST',
       data: postData,
       success: function(data) {
-        console.log(data);
-        // initPage()
-        // $(".notification-box").show()
-        // setTimeout(function() {
-        //   $(".notification-box").hide()
-        // }, 1000);
+        initPage()
+        $(".notification-box").show()
+        setTimeout(function() {
+          $(".notification-box").hide()
+        }, 1000);
       }
   });
 }
@@ -640,6 +677,10 @@ $(document).on('click','#sheets .nav-link',function(){
 function initPage(){
   loadSettingTable();
   var selectType = $('#sheets .nav-link.active').data('type');
+  if(selectType == 'bet_summary')
+  {
+    loadSummary();
+  }
   if(selectType == 'bets')
   {
     loadAllPickTable();
@@ -659,8 +700,27 @@ function initPage(){
     loadPickData();
   }
 }
-$(document).on('click','.remove-icon', function(){
-  $(this).parents('.sheet_block').hide();
+
+$(document).on('click','.parlay-icon', function(){
+  $(this).toggleClass('selected');
+  var parlayObjs = $('.parlay-icon.selected');
+  var betweek = $('.game-week-select').val()
+  var paralyIds = [];
+  $.each(parlayObjs, function(key, item){
+    paralyIds.push($(item).data('id'));
+  });
+
+  $.ajax({
+      url: api_url+'/updateParlay',
+      type: 'POST',
+      data: {
+        betweek: betweek,
+        data: JSON.stringify(paralyIds)
+      },
+      success: function(data) {
+        console.log(data)
+      }
+  });
 })
 
 $(document).ready(function() {

@@ -1,6 +1,6 @@
 var tableObject = null;
 var tableObject1 = null;
-var categoryType = "all";
+var categoryType = 0;
 var categoryGroupUser = null;
 
 var hotSettings = {
@@ -51,7 +51,7 @@ var hotSettings = {
   cells: function (row, col, prop) {
     var cellProperties = {};
     cellProperties.renderer = defaultValueRenderer;
-    if((row == 0 && col>0) || (row == 1 && col == 3) || (row == 2 && col > 2) || (row == 3 && col > 2)){
+    if((row == 0 && col>0) || (row == 1 && col == 3) || (row == 2 && col > 1) || (row == 3 && col > 1)){
       cellProperties.readOnly = true;
     }
     return cellProperties;
@@ -114,7 +114,7 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
   td.style.fontSize = fontSize;
   td.style.color = '#000';
   td.style.backgroundColor = '#fff';  
-  if((row == 0 && col>0) || (row == 1 && col == 3) || (row == 2 && col > 2) || (row == 3 && col > 2)){
+  if((row == 0 && col>0) || (row == 1 && col == 3) || (row == 2 && col > 1) || (row == 3 && col > 1)){
     td.style.backgroundColor = '#eee';
   }
   Handsontable.renderers.TextRenderer.apply(this, args);
@@ -169,9 +169,10 @@ function initData(data){
 
   var rr_number1 = data['bet_allocation'][1]['bet_number1'],
       rr_number2 = data['bet_allocation'][1]['bet_number2'],
-      rr_number3 = data['bet_allocation'][1]['bet_number3'];
+      rr_number3 = data['bet_allocation'][1]['bet_number3'],
+      rr_number4 = data['bet_allocation'][1]['bet_number4'];
 
-  updateFomularColor([rr_number1],[rr_number2,rr_number3]);
+  updateFomularColor([rr_number1],[rr_number2,rr_number3,rr_number4]);
   mergeFields();
 }
 
@@ -198,10 +199,6 @@ function loadGroupUser(){
     },
     dataType: 'json',
     success: function(data) {
-      if(data.length)
-        categoryGroupUser = data[0]['id'];
-      else
-        categoryGroupUser = null;
       updateGroupUserList(data,categoryType);
       loadData();
     }
@@ -210,15 +207,24 @@ function loadGroupUser(){
 
 function updateGroupUserList(data,categoryType){
   var html = '';
-  if(categoryType != "all")
+  if(categoryType != 0)
   {
-    var index = 0;
+
     $.each(data, function(key,item){
-      if(index == 0)
-        html += '<li data-value="'+item.id+'" class="selected">'+item.name+'</li>';
-      else
-        html += '<li data-value="'+item.id+'">'+item.name+'</li>';
-      index ++;
+      if(categoryGroupUser == null)
+      {
+        html += '<li data-value="'+item.id+'" class="'+(key == 0?'selected':'')+'">'+item.name+'</li>'; 
+        if(key == 0)
+          categoryGroupUser = item.id;
+      }
+      else{
+        if( item['id'] == categoryGroupUser )
+        {
+          html += '<li data-value="'+item.id+'" class="selected">'+item.name+'</li>';
+        }
+        else
+          html += '<li data-value="'+item.id+'">'+item.name+'</li>';
+      }
     })
   }
   $('#category-group-user').html(html);
@@ -251,6 +257,7 @@ $(document).on('click','#category-type li', function(){
   if(value != categoryType)
   {
     categoryType = value;
+    categoryGroupUser = null;
     loadGroupUser();
   }
 });
@@ -292,5 +299,7 @@ function updateData(){
 }
 
 $(document).ready(function(){
-  loadData();
+  categoryType = activeSetting['type'];
+  categoryGroupUser = activeSetting['groupuser_id'];
+  loadGroupUser();
 })

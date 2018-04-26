@@ -232,12 +232,13 @@
     padding: 20px 20px 20px 20px;
     border: 1px solid blue;
 }
+
 .sheet_block:hover .remove-icon{
     display: block;
 }
 .sheet_block .remove-icon{
-    content: '';
     display: none;
+    content: '';
     cursor: pointer;
     position: absolute;
     width: 20px;
@@ -248,15 +249,19 @@
     background-size: cover;
     background-color: #a3c1dc;
 }
-.sheet_block::after{
-    content: '';
+.sheet_block .parlay-icon{
     cursor: pointer;
     position: absolute;
     width: 20px;
     height: 20px;
     top: 0px;
     right: 0px;
-    background-color: #e4a484;
+    background-color: #ddd;
+}
+.sheet_block .parlay-icon.selected{
+    background-image: url(../img/check_icon.png);
+    background-color: #fff;
+    background-size: contain;
 }
 .sheet_block table{
     width: 450px;
@@ -327,4 +332,33 @@
     border-radius: 50%;
     background-color: red;
     margin: auto;
+}
+#bet_summary table{
+    margin: auto;
+}
+#bet_summary table thead td{
+    font-weight: bold;
+    font-size: 25px;
+}
+#bet_summary table td{
+    border: 1px solid #ccc;
+    border: 1px solid #ccc;
+    padding: 5px 30px;
+    text-align: center;
+    font-size: 22px;
+}
+#bet_summary table td.title{
+    width: 200px;
+}
+#bet_summary table td.title a{
+    color: #2f93d2;
+    font-weight: bold;
+}
+#bet_summary table td.title.selectecd a{
+    color: #b11d1d;
+}
+
+#bet_summary table td.total_allocation{
+    color: #ff0000;
+    font-weight: bold;
 }

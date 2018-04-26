@@ -6,6 +6,7 @@
     $this->load->view('header', array('page' => $page)) ?>
 <script>
     var betweek = <?php echo $betweek ?>;
+    var settingId = <?php echo $settingId;?>;
     var api_url = "<?php echo site_url('worksheets'); ?>";
 </script>
 <div class="container title">
@@ -34,7 +35,9 @@
     </div>
     <div class="content-div">
         <div class="tab-content">
-            <div class="tab-pane active" id="bets" role="tabpanel">
+            <div class="tab-pane active" id="bet_summary" role="tabpanel">
+            </div>
+            <div class="tab-pane" id="bets" role="tabpanel">
                 <div class="setting_div">
                     <div class="sheet setting_sheet" data-type="setting_sheet">
                     </div>
@@ -60,7 +63,10 @@
     </div>
     <ul id="sheets" class="nav nav-tabs bottom-sheet" role="tablist">
         <li class="nav-item">
-            <a class="nav-link active" data-toggle="tab" data-type="bets" href="#bets" aria-selected="true">Bets</a>
+            <a class="nav-link active" data-toggle="tab" data-type="bet_summary" href="#bet_summary" aria-selected="true">Bet Summary</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" data-type="bets" href="#bets" aria-selected="true">Bets</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" data-toggle="tab" data-type="bet_sheet" href="#bet_sheet" aria-selected="true">Bet Instruction Sheets PR Parl</a>

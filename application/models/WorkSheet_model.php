@@ -2,7 +2,26 @@
 class WorkSheet_model extends CI_Model {
     private $tableName = 'work_sheet';
 
-    public function getBetSetting($betday){
+    private function getRobbinSetting($betday, $settingId = -1){
+        $CI =& get_instance();
+        $CI->load->model('settings_model');
+        return $CI->settings_model->getActiveSetting($betday, $settingId);
+    }   
+
+    public function getBetSummary($betday)
+    {
+        $CI =& get_instance();
+        $CI->load->model('settings_model');
+        $settingList = $CI->settings_model->getSettingList($betday);
+        $result = array();
+        $result = $settingList;
+        return $result;
+    }
+
+    public function getBetSetting($betday, $settingId = -1){
+        
+        $activeSetting = $this->getRobbinSetting($betday, $settingId);
+
         $this->db->select('*')->from($this->tableName);
         $this->db->where(array('betday' => $betday));
         $rows = $this->db->get()->result_array();
@@ -22,7 +41,12 @@ class WorkSheet_model extends CI_Model {
         }
         
         array_push($ret['sheet_data'], array("Round Robbin Structure"));
-        array_push($ret['sheet_data'], array(@$row['robin_1'],@$row['robin_2'],@$row['robin_3']));
+        array_push($ret['sheet_data'], array(
+            @$activeSetting['rr_number1'],
+            @$activeSetting['rr_number2'],
+            @$activeSetting['rr_number3'],
+            @$activeSetting['rr_number4']
+        ));
         array_push($ret['date_info'], array(
             date_format(date_create(@$row['date']),"M d, Y"),
             date_format(date_create(@$row['date']),"Y"),
@@ -32,11 +56,69 @@ class WorkSheet_model extends CI_Model {
         return $ret;
     }
 
+    public function getParlayCount($betday){
+        $this->db->select('*')->from($this->tableName);
+        $this->db->where(array('betday' => $betday));
+        $rows = $this->db->get()->result_array();
+        
+        $result = 0;
+
+        if(count($rows))
+        {
+            $row = $rows[0];
+            $parlayIDs = json_decode($row['parlay_select']);
+            $result = count($parlayIDs);
+        }
+        return $result;
+    }
+
+    public function getDisableCount($betday){
+        $CI =& get_instance();
+        $CI->load->model('picks_model');
+        $pick_data = $CI->picks_model->getAll($betday);
+
+        $activeSetting = $this->getRobbinSetting($betday);
+
+        $this->db->select('*')->from($this->tableName);
+        $this->db->where(array('betday' => $betday));
+        $rows = $this->db->get()->result_array();
+        
+        $result = 0;
+
+        if(count($rows))
+        {
+            $row = $rows[0];
+            $settingData = json_decode($row['sheet_data']);
+            $robin_1 = @$activeSetting['rr_number1'];
+            $robin_2 = @$activeSetting['rr_number2'];
+            $robin_3 = @$activeSetting['rr_number3'];
+
+            for($i=0; $i<60; $i++)
+            {
+                $candy_item = $this->getTeamFromPick($pick_data, $i, 'candy');
+                for($j=0; $j<7; $j++){
+                    for($k=0; $k<$robin_1-1; $k++){
+                        $team_row_id = $settingData[$k][$j];
+                        $team_info = $this->getTeamFromPick($pick_data, $team_row_id-1);
+                        if($candy_item['team'] != null && $candy_item['team'] == $team_info['team'])
+                        {
+                            $result++;
+                            break;
+                        }
+                    }    
+                }
+            }
+        }
+        return $result;
+    }
+
     public function getBetSheet($betday)
     {
         $CI =& get_instance();
         $CI->load->model('picks_model');
         $pick_data = $CI->picks_model->getAll($betday);
+
+        $activeSetting = $this->getRobbinSetting($betday);
 
         $this->db->select('*')->from($this->tableName);
         $this->db->where(array('betday' => $betday));
@@ -54,7 +136,10 @@ class WorkSheet_model extends CI_Model {
         {
             $row = $rows[0];
             $settingData = json_decode($row['sheet_data']);
-            $robin_1 = $row['robin_1'];
+            $robin_1 = @$activeSetting['rr_number1'];
+            $robin_2 = @$activeSetting['rr_number2'];
+            $robin_3 = @$activeSetting['rr_number3'];
+            $parlayIds = empty($row['parlay_select'])? array() : json_decode($row['parlay_select']);
 
             for($i=0; $i<60; $i++)
             {
@@ -71,11 +156,12 @@ class WorkSheet_model extends CI_Model {
                             $disableList[] = $k;
                     }    
                     array_push($ret[$i][$j],$candy_item);
+                    $ret[$i][$j]['is_parlay'] = in_array($i."_".$j, $parlayIds) ? 1 : 0;
                     $ret[$i][$j]['title'] = chr(65+$j).($i+1);
                     $ret[$i][$j]['disabled'] = $disableList;
                 }
             }
-            $result['type'] = @$row['robin_1'].'-'.@$row['robin_2'].'-'.@$row['robin_3'];
+            $result['type'] = $robin_1.'-'.$robin_2.'-'.$robin_3;
             $result['date'] = $row['date'];
             $result['data'] = $ret;
         }
@@ -94,8 +180,11 @@ class WorkSheet_model extends CI_Model {
         }
         return $result;
     }
-    public function saveSetting($betday, $setting)
+    public function saveData($betday, $setting)
     {
+        $CI =& get_instance();
+        $CI->load->model('picks_model');
+
         $settingList = json_decode($setting);
         $data = array();
         
@@ -133,6 +222,52 @@ class WorkSheet_model extends CI_Model {
                 'betday'=>$betday
             ),$data));
         }
+
+        $this->saveSetting($betday);
+    }
+
+    private function saveSetting($betday)
+    {
+        $CI =& get_instance();
+        $CI->load->model('picks_model');
+        $candy_data = $CI->picks_model->getIndividual($betday, 'candy');
+        $pick_data = $CI->picks_model->getIndividual($betday, 'pick');
+
+        $parlayCnt = $this->getParlayCount($betday);
+
+        $individualCnt = 0;
+        foreach($pick_data as $key => $item)
+        {
+            if($item['selected'])
+            {
+                $individualCnt++;
+            }
+        }
+
+        $newData = array(
+            'parlay_number1'    => $parlayCnt,
+            'pick_number1'      => $individualCnt
+        );
+
+        $this->db->select('*')->from('settings');
+        $this->db->where(array(
+            'betday' =>$betday
+        ));
+
+        $rows = $this->db->get()->result_array();
+        if(count($rows))
+        {
+            $this->db->where(array(
+                'betday'    =>$betday
+            ));
+            $this->db->update('settings', $newData);
+        }
+        else{
+            $this->db->insert('settings', array_merge(array(
+                'betday'=>$betday
+            ),$newData));
+        }
+
     }
 
     public function savePickSelect($betday, $data)
@@ -160,6 +295,19 @@ class WorkSheet_model extends CI_Model {
                 'betday'=>$betday
             ),$newData));
         }
+
+        $this->saveSetting($betday);
+    }
+
+    public function updateParlay($betday, $data){
+        $this->db->where(array(
+            'betday'    =>$betday
+        ));
+        $newData = array(
+            'parlay_select' => $data
+        );
+        $this->db->update('work_sheet', $newData);
+        return true;
     }
     public function q($sql) {
         $result = $this->db->query($sql);
