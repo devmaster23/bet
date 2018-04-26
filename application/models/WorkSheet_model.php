@@ -4,15 +4,15 @@ class WorkSheet_model extends CI_Model {
 
     private function getRobbinSetting($betday, $settingId = -1){
         $CI =& get_instance();
-        $CI->load->model('settings_model');
-        return $CI->settings_model->getActiveSetting($betday, $settingId);
+        $CI->load->model('Settings_model');
+        return $CI->Settings_model->getActiveSetting($betday, $settingId);
     }   
 
     public function getBetSummary($betday)
     {
         $CI =& get_instance();
-        $CI->load->model('settings_model');
-        $settingList = $CI->settings_model->getSettingList($betday);
+        $CI->load->model('Settings_model');
+        $settingList = $CI->Settings_model->getSettingList($betday);
         $result = array();
         $result = $settingList;
         return $result;
@@ -74,8 +74,8 @@ class WorkSheet_model extends CI_Model {
 
     public function getDisableCount($betday){
         $CI =& get_instance();
-        $CI->load->model('picks_model');
-        $pick_data = $CI->picks_model->getAll($betday);
+        $CI->load->model('Picks_model');
+        $pick_data = $CI->Picks_model->getAll($betday);
 
         $activeSetting = $this->getRobbinSetting($betday);
 
@@ -115,8 +115,8 @@ class WorkSheet_model extends CI_Model {
     public function getBetSheet($betday)
     {
         $CI =& get_instance();
-        $CI->load->model('picks_model');
-        $pick_data = $CI->picks_model->getAll($betday);
+        $CI->load->model('Picks_model');
+        $pick_data = $CI->Picks_model->getAll($betday);
 
         $activeSetting = $this->getRobbinSetting($betday);
 
@@ -183,7 +183,7 @@ class WorkSheet_model extends CI_Model {
     public function saveData($betday, $setting)
     {
         $CI =& get_instance();
-        $CI->load->model('picks_model');
+        $CI->load->model('Picks_model');
 
         $settingList = json_decode($setting);
         $data = array();
@@ -229,9 +229,9 @@ class WorkSheet_model extends CI_Model {
     private function saveSetting($betday)
     {
         $CI =& get_instance();
-        $CI->load->model('picks_model');
-        $candy_data = $CI->picks_model->getIndividual($betday, 'candy');
-        $pick_data = $CI->picks_model->getIndividual($betday, 'pick');
+        $CI->load->model('Picks_model');
+        $candy_data = $CI->Picks_model->getIndividual($betday, 'candy');
+        $pick_data = $CI->Picks_model->getIndividual($betday, 'pick');
 
         $parlayCnt = $this->getParlayCount($betday);
 

@@ -213,14 +213,14 @@ class Settings_model extends CI_Model {
         $bet_analysis = $this->defaultResult;
 
         $CI =& get_instance();
-        $CI->load->model('picks_model');
-        $candy_data = $CI->picks_model->getIndividual($betday, 'candy');
-        $pick_data = $CI->picks_model->getIndividual($betday, 'pick');
+        $CI->load->model('Picks_model');
+        $candy_data = $CI->Picks_model->getIndividual($betday, 'candy');
+        $pick_data = $CI->Picks_model->getIndividual($betday, 'pick');
 
         $CI =& get_instance();
-        $CI->load->model('worksheet_model');
-        $rr_disableCnt = $CI->worksheet_model->getDisableCount($betday);
-        $parlayCnt = $CI->worksheet_model->getParlayCount($betday);
+        $CI->load->model('WorkSheet_model');
+        $rr_disableCnt = $CI->WorkSheet_model->getDisableCount($betday);
+        $parlayCnt = $CI->WorkSheet_model->getParlayCount($betday);
 
         $individualCnt = 0;
         foreach($pick_data as $key => $item)
