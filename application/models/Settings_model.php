@@ -116,13 +116,13 @@ class Settings_model extends CI_Model {
         switch ($categoryType) {
             case 1:
                 $CI =& get_instance();
-                $CI->load->model('groups_model');
-                $result = $CI->groups_model->getAll();
+                $CI->load->model('Groups_model');
+                $result = $CI->Groups_model->getAll();
                 break;
             case 2:
                 $CI =& get_instance();
-                $CI->load->model('users_model');
-                $result = $CI->users_model->getAll();
+                $CI->load->model('Users_model');
+                $result = $CI->Users_model->getAll();
                 break;
             case 0:
             default:
@@ -177,19 +177,19 @@ class Settings_model extends CI_Model {
             ->order_by('groupuser_id','asc');
 
         $CI =& get_instance();
-        $CI->load->model('groups_model');
-        $CI->load->model('users_model');
+        $CI->load->model('Groups_model');
+        $CI->load->model('Users_model');
 
         $rows = $query->get()->result_array();
         foreach($rows as $key => &$item)
         {
             switch ($item['type']) {
                 case '1':
-                    $group = $CI->groups_model->getByID($item['groupuser_id']);
+                    $group = $CI->Groups_model->getByID($item['groupuser_id']);
                     $item['title'] = $group['name'];
                     break;
                 case '2':
-                    $user = $CI->users_model->getByID($item['groupuser_id']);
+                    $user = $CI->Users_model->getByID($item['groupuser_id']);
                     $item['title'] = $user['name'];
                     break;
                 case '0':
