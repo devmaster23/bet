@@ -32,9 +32,9 @@ class Picks_model extends CI_Model {
     );
 
     private $typeJsonTpl = array(
-        'pts'   => 'PTS',
+        'pts'   => 'SP',
         'ml'    => 'ML',
-        'total' => 'TOT'
+        'total' => 'TO'
     );
     private $pickType = array(
         'pick',
@@ -267,9 +267,13 @@ class Picks_model extends CI_Model {
             }
             else if($db_column == 'type')
             {
-                $value = $this->typeJsonTpl[$type];
+                if($team_id == 1)
+                    $value = 'OVER';
+                else
+                    $value = 'UNDER';
+                // $value = $this->typeJsonTpl[$type];
                 if($first_half)
-                    $value = '1H '.$value;
+                    $value = '1st '.$value;
             }
             else if($db_column == 'count')
             {
