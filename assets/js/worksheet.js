@@ -55,6 +55,7 @@ var customHotSettings = {
     className: "htCenter htMiddle",
     rowHeaders: true,
     colHeaders: true,
+    height: 297,
     cells: function (row, col, prop) {
       var cellProperties = {};
       cellProperties.renderer = settingValueRenderer;
@@ -147,6 +148,7 @@ var customHotSettings1 = {
     className: "htCenter htMiddle",
     rowHeaders: true,
     colHeaders: true,
+    height: 200,
     colHeaders: ['Date', 'Year', 'Bet Day'],
     cells: function (row, col, prop) {
       var cellProperties = {};

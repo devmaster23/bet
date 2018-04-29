@@ -32,15 +32,17 @@
             <div class="tab-pane active" id="bet_summary" role="tabpanel">
             </div>
             <div class="tab-pane" id="bets" role="tabpanel">
-                <div class="setting_div">
-                    <div class="sheet setting_sheet" data-type="setting_sheet">
+                <div class="bets-inner">
+                    <div class="setting_div">
+                        <div class="sheet setting_sheet" data-type="setting_sheet">
+                        </div>
+                        <div class="sheet setting_sheet1" data-type="setting_sheet1">
+                        </div>
+                        <div class="clearfix"></div>
                     </div>
-                    <div class="sheet setting_sheet1" data-type="setting_sheet1">
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="all-picks">
-                    <div class="sheet" data-type="bets">
+                    <div class="all-picks">
+                        <div class="sheet" data-type="bets">
+                        </div>
                     </div>
                 </div>
             </div>

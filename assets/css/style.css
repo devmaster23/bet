@@ -335,12 +335,19 @@
     left: 30%;
     background-size: 100% 100%;
 }
-
-#bets .setting_div{
-    float: left;
+#bets .bets-inner{
+    display: flex;
+    align-content: flex-start;
+    justify-content: flex-start;
+    position: relative;
 }
-#bets .all-picks{
-    width: 100%;
+#bets .bets-inner .setting_div{
+    flex: 0 0 400px;
+    position: relative;
+}
+#bets .bets-inner .all-picks{
+    flex: 1 0;
+    position: relative;
 }
 
 .pick-check{
