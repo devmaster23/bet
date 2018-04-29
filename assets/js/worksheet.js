@@ -761,4 +761,7 @@ $(document).ready(function() {
     refreshTable(hot,tableData);
   })
 
+  if($('#bet_sheet'))
+    $('#bet_sheet').css('max-height', tableHeight+'px');
+
 });
