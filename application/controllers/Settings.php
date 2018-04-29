@@ -7,13 +7,14 @@ class Settings extends CI_Controller {
         parent::__construct();
         $this->load->model('Settings_model', 'model');
         $this->load->model('Picks_model', 'pick_model');
+        $this->load->library('session');
     }
 
     public function index()
     {
         $date = new DateTime(date('Y-m-d'));
         $betweek = $date->format('W');
-        $data['betweek'] = $betweek;
+        $data['betweek'] = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
         $data['numberOfTeams'] = $this->model->getNumberOfTeams();
         $data['numberOfPicks'] = $this->model->getNumberOfPicks();
         
@@ -36,6 +37,8 @@ class Settings extends CI_Controller {
         $betweek            = $_POST['betweek'];
         $categoryType       = $_POST['categoryType'];
         $categoryGroupUser  = $_POST['categoryGroupUser'];
+
+        $_SESSION['betday'] = $betweek;
 
         $data = $this->model->getSettings($betweek, $categoryType, $categoryGroupUser);
         header('Content-Type: application/json');

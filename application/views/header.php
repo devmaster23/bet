@@ -14,7 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </head>
 <body>
 
-<section class="header">
+<section class="header" id="MainHeader">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand" href="#">Bet Game</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,3 +38,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
       </div>
     </nav>
 </section>
+
+<div class="loading-div">
+  <div class="loading-div-inner">
+    <img src="assets/img/loading-icon.gif">
+  </div>
+</div>

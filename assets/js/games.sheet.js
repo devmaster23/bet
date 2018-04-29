@@ -94,10 +94,6 @@ var hotSettings = {
     height: tableHeight,
     outsideClickDeselects: false,
     nestedHeaders: custom_headers,
-    // hiddenColumns: {
-    //   columns: [0],
-    //   indicators: false
-    // },
     cells: function (row, col, prop) {
       var cellProperties = {};
       cellProperties.renderer = defaultValueRenderer;
@@ -225,9 +221,9 @@ function updateTable(){
         },
         success: function(data) {
             loadTable()
-            $(".notification-box").show()
+            $(".loading-div").show()
             setTimeout(function() {
-              $(".notification-box").hide()
+              $(".loading-div").hide()
             }, 2000);
         }
     });

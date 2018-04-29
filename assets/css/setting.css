@@ -1,11 +1,22 @@
-.metrics-div{
-    margin-top: 50px;
+.content-div
+{
+    width: 1024;
+    overflow-x: scroll;
+}
+.setting-div{
+    margin: 0px 40px;
     display: flex;
-    justify-content: center;
+    align-content: flex-start;
+    justify-content: space-between;
+}
+.setting-div .user-group-div{
+    flex: 0 0 400px;
+}
+.metrics-div{
+
 }
 
 .metrics-div>div.metrics-inner-table{
-    flex: 0 1 50%;
     text-align: center;
 }
 
@@ -21,9 +32,9 @@
 }
 
 .number-pick-table{
-    width: 400px;
-    margin: auto;
+    flex: 0 0 400px;
     position: relative;
+    margin-left: 40px;
 }
 .number-pick-table table{
     margin-left: 10px;
@@ -36,8 +47,9 @@
 .number-pick-table table td{
     border: 1px solid #ccc;
     width: 50px;
-    padding: 5px 10px;
+    padding: 7px 14px;
     text-align: center;
+    font-size: 20px;
 }
 .number-pick-table p{
     margin-bottom: 10px;
@@ -49,18 +61,25 @@
     transform-origin: left top 0;
     display: inline-block;
     position: absolute;
-    margin-top: 25px;
+    margin-top: 50px;
     left: 0px;
 }
 
 .category-select{
     list-style: none;
-    width: 200px;
+    width: 180px;
+    float: left;
+    margin: 0px;
+    padding-left: 20px;
+}
+.category-select:first-of-type{
+    padding-left: 0px;
 }
 .category-select li{
     cursor: pointer;
     list-style: none;
     padding: 3px 10px;
+    font-size: 18px;
 }
 
 .category-select li:hover{
@@ -77,17 +96,22 @@
 }
 .description-div{
     text-align: center;
-    width: 500px;
     margin: auto;
 }
 
 .description-div textarea{
+    padding: 5px;
     width: 100%;
     height: 100px;
 }
-.category-div{
-    display: flex;
+#fomularTable td.selected{
+    background-color: yellow;
 }
 #fomularTable td.selected{
     background-color: yellow;
+}
+#bet_analysis .handsontable thead tr th{
+    height: 46px;
+    font-size: 20px;
+    vertical-align: middle;
 }

@@ -181,6 +181,7 @@ class Picks_model extends CI_Model {
                 {
                     $row_item['selected'] = @$ret[$type][$i]['selected'];   
                 }
+                $row_item['key'] = @$ret[$type][$i]['key'];
             }
             $result[] = $row_item;
         }
@@ -290,6 +291,7 @@ class Picks_model extends CI_Model {
         {
             $item['selected'] = false;
         }
+        $item['key'] = $row['id'];
         return $item;
     }
 

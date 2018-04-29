@@ -6,17 +6,19 @@ class Games extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('Games_model', 'model');
+		$this->load->library('session');
 	}
 	public function index()
 	{
 		$date = new DateTime(date('Y-m-d'));
 		$betweek = $date->format('W');
-		$data['betweek'] = $betweek;
+		$data['betweek'] = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
 		$this->load->view('games', $data);
 	}
 
 	public function loadData(){
 		$betweek = $_POST['betweek'];
+		$_SESSION['betday'] = $betweek;
 		$data['games'] = $this->model->getGames($betweek);
 		header('Content-Type: application/json');
 		echo json_encode( $data);

@@ -2,6 +2,8 @@ var tableObject = null;
 var tableObject1 = null;
 var categoryType = 0;
 var categoryGroupUser = null;
+var custom_fontSize = '20px';
+var custom_rowHeight = 35;
 
 var hotSettings = {
   columns: [
@@ -40,13 +42,13 @@ var hotSettings = {
         readOnly: false
       }
   ],
-  colWidths: [200, 80, 50, 50, 50, 50, 50],
-  rowHeights: rowHeight,
+  colWidths: [250, 100, 80, 80, 80, 80, 80],
+  rowHeights: custom_rowHeight,
   className: "htCenter htMiddle",
   rowHeaders: false,
   colHeaders: false,
   height: 200,
-  width: 550,
+  width: 750,
   outsideClickDeselects: false,
   cells: function (row, col, prop) {
     var cellProperties = {};
@@ -93,13 +95,13 @@ var hotSettings1 = {
         readOnly: true
       }
   ],
-  colWidths: [180,180,180],
-  rowHeights: rowHeight,
+  colWidths: [250,250,250],
+  rowHeights: custom_rowHeight,
   className: "htCenter htMiddle",
   rowHeaders: false,
-  colHeaders: ['Pralays / Sheet', '# Sheets (Col A-F)', '# of Bets'],
+  colHeaders: ['Parlays / Sheet', '# Sheets (Col A-F)', '# of Bets'],
   height: 200,
-  width: 550,
+  width: 750,
   outsideClickDeselects: false,
   formulas: true,
   cells: function (row, col, prop) {
@@ -111,7 +113,7 @@ var hotSettings1 = {
 
 function defaultValueRenderer(instance, td, row, col, prop, value, cellProperties) {
   var args = arguments;
-  td.style.fontSize = fontSize;
+  td.style.fontSize = custom_fontSize;
   td.style.color = '#000';
   td.style.backgroundColor = '#fff';  
   if((row == 0 && col>0) || (row == 1 && col == 3) || (row == 2 && col > 1) || (row == 3 && col > 1)){
@@ -127,7 +129,7 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
 
 function defaultValueRenderer1(instance, td, row, col, prop, value, cellProperties) {
   var args = arguments;
-  td.style.fontSize = fontSize;
+  td.style.fontSize = custom_fontSize;
   td.style.color = '#000';
   td.style.backgroundColor = '#fff';  
   
@@ -290,9 +292,9 @@ function updateData(){
         },
         success: function(data) {
           loadData();
-          $(".notification-box").show()
+          $(".loading-div").show()
           setTimeout(function() {
-            $(".notification-box").hide()
+            $(".loading-div").hide()
           }, 2000);
         }
     });

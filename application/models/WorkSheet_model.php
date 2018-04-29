@@ -96,11 +96,13 @@ class WorkSheet_model extends CI_Model {
             for($i=0; $i<60; $i++)
             {
                 $candy_item = $this->getTeamFromPick($pick_data, $i, 'candy');
+                $candy_key = $this->getTeamKey($pick_data, $i);
                 for($j=0; $j<7; $j++){
                     for($k=0; $k<$robin_1-1; $k++){
                         $team_row_id = $settingData[$k][$j];
                         $team_info = $this->getTeamFromPick($pick_data, $team_row_id-1);
-                        if($candy_item['team'] != null && $candy_item['team'] == $team_info['team'])
+                        $team_key = $this->getTeamKey($pick_data, $team_row_id-1);
+                        if($candy_item['team'] != null && $team_info['team'] != null && ($candy_item['team'] == $team_info['team'] || $candy_key == $team_key))
                         {
                             $result++;
                             break;
@@ -117,7 +119,6 @@ class WorkSheet_model extends CI_Model {
         $CI =& get_instance();
         $CI->load->model('Picks_model');
         $pick_data = $CI->Picks_model->getAll($betday);
-
         $activeSetting = $this->getRobbinSetting($betday);
 
         $this->db->select('*')->from($this->tableName);
@@ -145,16 +146,19 @@ class WorkSheet_model extends CI_Model {
             {
                 $ret[$i] = array();
                 $candy_item = $this->getTeamFromPick($pick_data, $i, 'candy');
+                $candy_key = $this->getTeamKey($pick_data, $i);
                 for($j=0; $j<7; $j++){
                     $ret[$i][$j] = array();
                     $disableList = array();
                     for($k=0; $k<$robin_1-1; $k++){
                         $team_row_id = $settingData[$k][$j];
                         $team_info = $this->getTeamFromPick($pick_data, $team_row_id-1);
+                        $team_key = $this->getTeamKey($pick_data, $team_row_id-1);
+
                         array_push($ret[$i][$j],$team_info);    
-                        if($candy_item['team'] != null && $candy_item['team'] == $team_info['team'])
+                        if($candy_item['team'] != null && $team_info['team'] != null && ($candy_item['team'] == $team_info['team'] || $candy_key == $team_key))
                             $disableList[] = $k;
-                    }    
+                    }  
                     array_push($ret[$i][$j],$candy_item);
                     $ret[$i][$j]['is_parlay'] = in_array($i."_".$j, $parlayIds) ? 1 : 0;
                     $ret[$i][$j]['title'] = chr(65+$j).($i+1);
@@ -167,6 +171,15 @@ class WorkSheet_model extends CI_Model {
         }
         return $result;
     }
+
+    public function getTeamKey($pickData, $id){
+        $result = null;
+        if(isset($pickData[$id])){
+            $result = $pickData[$id]['key'];
+        }
+        return $result;
+    }
+
     public function getTeamFromPick($pickData, $id, $type='wrapper'){
         $result = null;
         if(isset($pickData[$id])){

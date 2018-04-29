@@ -6,17 +6,19 @@ class Picks extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('Picks_model', 'model');
+        $this->load->library('session');
     }
     public function index()
     {
         $date = new DateTime(date('Y-m-d'));
         $betweek = $date->format('W');
-        $data['betweek'] = $betweek;
+        $data['betweek'] = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
         $this->load->view('picks', $data);
     }
 
     public function loadData(){
         $betweek = $_POST['betweek'];
+        $_SESSION['betday'] = $betweek;
         $data['picks'] = $this->model->get($betweek);
         header('Content-Type: application/json');
         echo json_encode( $data);
@@ -24,6 +26,7 @@ class Picks extends CI_Controller {
 
     public function loadAllPickData(){
         $betweek = $_POST['betweek'];
+        $_SESSION['betday'] = $betweek;
         $data = $this->model->getAll($betweek);
         header('Content-Type: application/json');
         echo json_encode( $data);

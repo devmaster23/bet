@@ -53,7 +53,7 @@ var customHotSettings = {
     colWidths: [50,50,50,50,50,50,50,50],
     rowHeights: rowHeight,
     className: "htCenter htMiddle",
-    rowHeaders: false,
+    rowHeaders: true,
     colHeaders: true,
     cells: function (row, col, prop) {
       var cellProperties = {};
@@ -145,7 +145,7 @@ var customHotSettings1 = {
     colWidths: [150,100,100],
     rowHeights: rowHeight,
     className: "htCenter htMiddle",
-    rowHeaders: false,
+    rowHeaders: true,
     colHeaders: true,
     colHeaders: ['Date', 'Year', 'Bet Day'],
     cells: function (row, col, prop) {
@@ -525,15 +525,15 @@ function createBetSummary(data){
     var selected = (row_item.id == settingId)? "selectecd" : "";
     tblItem += "<tbody><tr>"+
           "<td class='title "+selected+"'><a href='"+api_url+"?id="+row_item.id+"'>"+row_item.title+"</a></td>"+
-          "<td class='total_allocation'>"+row_item.bet_allocation+"%</td>"+
-          "<td>"+row_item.rr_allocation+"%</td>"+
+          "<td class='total_allocation'>"+(row_item.bet_allocation ? row_item.bet_allocation+"%":"")+"</td>"+
+          "<td>"+(row_item.rr_allocation ? row_item.rr_allocation+"%":"")+"</td>"+
           "<td>"+row_item.rr_number1+"</td>"+
           "<td>by</td>"+
           "<td>"+row_item.rr_number2+"</td>"+
           "<td>"+row_item.rr_number3+"</td>"+
-          "<td>"+row_item.parlay_allocation+"%</td>"+
+          "<td>"+(row_item.parlay_allocation ? row_item.parlay_allocation+"%":"")+"</td>"+
           "<td>"+row_item.parlay_number1+"</td>"+
-          "<td>"+row_item.pick_allocation+"%</td>"+
+          "<td>"+(row_item.pick_allocation ? row_item.pick_allocation+"%":"")+"</td>"+
           "<td>"+row_item.pick_number1+"</td>"+
         "</tr></tbody>";
   });
@@ -662,9 +662,9 @@ function updateTable(){
       data: postData,
       success: function(data) {
         initPage()
-        $(".notification-box").show()
+        $(".loading-div").show()
         setTimeout(function() {
-          $(".notification-box").hide()
+          $(".loading-div").hide()
         }, 1000);
       }
   });

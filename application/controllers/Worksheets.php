@@ -7,6 +7,7 @@ class Worksheets extends CI_Controller {
         parent::__construct();
         $this->load->model("WorkSheet_model","model");
         $this->load->model("Picks_model","pick_model");
+        $this->load->library('session');
     }
     public function index()
     {
@@ -14,13 +15,14 @@ class Worksheets extends CI_Controller {
         $betweek = $date->format('W');
         
         $settingId = isset($_GET['id'])?$_GET['id']:-1;
-        $data['betweek'] = $betweek;
+        $data['betweek'] = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
         $data['settingId'] = $settingId;
         $this->load->view('worksheets', $data);
     }
 
     public function loadSummary(){
         $betweek = $_POST['betweek'];
+        $_SESSION['betday'] = $betweek;
         $data['summary'] = $this->model->getBetSummary($betweek);
         header('Content-Type: application/json');
         echo json_encode( $data);
@@ -29,6 +31,7 @@ class Worksheets extends CI_Controller {
 
     public function loadData(){
         $betweek = $_POST['betweek'];
+        $_SESSION['betday'] = $betweek;
         $data['games'] = $this->model->getGames($betweek);
         header('Content-Type: application/json');
         echo json_encode( $data);
@@ -37,7 +40,7 @@ class Worksheets extends CI_Controller {
 
     public function loadAllPickData(){
         $betweek = $_POST['betweek'];
-
+        $_SESSION['betday'] = $betweek;
         $data = $this->pick_model->getAll($betweek);
         header('Content-Type: application/json');
         echo json_encode( $data);
@@ -46,6 +49,7 @@ class Worksheets extends CI_Controller {
     public function loadPickData()
     {
         $betweek = $_POST['betweek'];
+        $_SESSION['betday'] = $betweek;
         $data = $this->pick_model->getIndividual($betweek, 'pick');
         header('Content-Type: application/json');
         echo json_encode( $data);      
@@ -53,6 +57,7 @@ class Worksheets extends CI_Controller {
 
     public function loadBetSetting(){
         $betweek = $_POST['betweek'];
+        $_SESSION['betday'] = $betweek;
         $settingId = $_POST['settingId'];
         $data = $this->model->getBetSetting($betweek,$settingId);
         header('Content-Type: application/json');
@@ -61,6 +66,7 @@ class Worksheets extends CI_Controller {
 
     public function loadBetSheet(){
         $betweek = $_POST['betweek'];
+        $_SESSION['betday'] = $betweek;
         $data = $this->model->getBetSheet($betweek);
         header('Content-Type: application/json');
         echo json_encode( $data);   

@@ -26,11 +26,6 @@
 			<button type="button" class="btn btn-success enter-game_save-button" onClick="updateTable()">Update</button>
 		</div>
 	</div>
-	<div class="alert-div">
-		<div class="alert alert-success notification-box">
-		  <strong>Notification! </strong>Data is successfully updated.
-		</div>
-	</div>
 	<div class="content-div">
 		<div class="tab-content enter-game">
 			<div class="tab-pane active" id="ncaa_m" role="tabpanel">

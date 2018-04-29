@@ -3,11 +3,30 @@
     width: 100%;
     z-index: 100;
 }
+.clearfix{
+    clear: both;
+}
+.loading-div{
+    display: none;
+}
+.loading-div-inner{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    background-color: rgba(255,255,255,0.8);
+}
 #main{
     padding-top: 25px;
 }
 .content-div{
     overflow-x: scroll;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
 }
 .bottom-sheet{
     z-index: 100;
@@ -39,8 +58,8 @@
     display: none;
 }
 
-.enter-game table.htCore th,
-.pick-game table.htCore th
+.enter-game table.htCore thead th,
+.pick-game table.htCore thead th
 {
     background-color: #fff;
     font-size: 15px;
@@ -61,6 +80,13 @@
     background-color: rgb(142, 169, 219) !important;
     color: white !important;
     font-size: 22px !important;
+}
+
+.pick-game .handsontable table.htCore tbody tr:nth-child(even) td,
+.pick-game .handsontable table.htCore tbody tr:nth-child(odd) td:nth-of-type(3),
+.pick-game .handsontable table.htCore tbody tr:nth-child(odd) td:nth-of-type(4)
+{
+    border-bottom: 3px solid #8ea9db;
 }
 
 .all-picks .handsontable table.htCore thead tr:first-of-type th:nth-of-type(1),
@@ -109,14 +135,14 @@
 .pick-game .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(5)
 {
     color: white !important;
-    font-size: 15px !important;
+    font-size: 18px !important;
     background-color: rgb(58, 56, 56) !important;
 }
 
 .pick-game .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(2)
 {
     color: white !important;
-    font-size: 15px !important;
+    font-size: 18px !important;
     background-color: rgb(255, 0, 0) !important;
 }
 
@@ -144,14 +170,14 @@
 .enter-game .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(9)
 {
     color: white !important;
-    font-size: 15px !important;
+    font-size: 18px !important;
     background-color: rgb(255, 0, 0) !important;
 }
 
 .enter-game .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(8)
 {
     color: white !important;
-    font-size: 15px !important;
+    font-size: 18px !important;
     background-color: rgb(146, 208, 80) !important;
 }
 
@@ -210,13 +236,10 @@
     cursor: pointer;
 }
 
-.notification-box{
-    width: 600px;
-    margin: auto;
-    display: none;
-}
-
-.worksheets .setting_sheet1 .handsontable table.htCore th  {
+.worksheets .setting_sheet1 .handsontable table.htCore thead th:nth-of-type(2),
+.worksheets .setting_sheet1 .handsontable table.htCore thead th:nth-of-type(3),
+.worksheets .setting_sheet1 .handsontable table.htCore thead th:nth-of-type(4)
+{
     background-color: #548235;
     color: #fff;
     font-size: 15px;

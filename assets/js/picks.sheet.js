@@ -30,9 +30,9 @@ var all_custom_headers = [
       {label: 'Candy', colspan: 8}
     ],
     [
-      '#','Sport','VRN','SP/ML','Team','Line','Game Time','Count',
-      '#','Sport','VRN','SP/ML','Team','Line','Game Time','Count',
-      '#','Sport','VRN','SP/ML','Team','Line','Game Time','Count'
+      '#','Sport','VRN','SP / ML<br/>(Ov / Un)','Team','Line','Game Time','Count',
+      '#','Sport','VRN','SP / ML<br/>(Ov / Un)','Team','Line','Game Time','Count',
+      '#','Sport','VRN','SP / ML<br/>(Ov / Un)','Team','Line','Game Time','Count'
     ]
 ];
 
@@ -243,7 +243,7 @@ var allHotSettings = {
     ],
     minSpareRows: 0,
     minSpareCols: 0,
-    colWidths: [40, 100, 50,60, 250, 60,80,60,40, 100, 50,60, 250, 60,80,60,40, 100, 50,60, 250, 60,80,60],
+    colWidths: [40, 100, 50,100, 250, 60,80,60,40, 100, 50,100, 250, 60,80,60,40, 100, 50,100, 250, 60,80,60],
     rowHeights: rowHeight,
     className: "htCenter htMiddle",
     height: tableHeight,
@@ -412,9 +412,9 @@ function updateTable(){
         success: function(data) {
           $(".popover").popover('hide');
           loadTable()
-          $(".notification-box").show()
+          $(".loading-div").show()
           setTimeout(function() {
-            $(".notification-box").hide()
+            $(".loading-div").hide()
           }, 1000);
         }
     });

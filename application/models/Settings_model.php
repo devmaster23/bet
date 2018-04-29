@@ -199,7 +199,7 @@ class Settings_model extends CI_Model {
             }
             foreach($item as $column_name => &$value)
             {
-                $value = (is_null($value) || empty($value)) ? 'NA' : $value;
+                $value = (is_null($value) || empty($value)) ? '' : $value;
             }
         }
         return $rows;
