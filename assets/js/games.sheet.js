@@ -186,23 +186,27 @@ function createSheets(games) {
 }
 
 function loadTable(){
-    var betweek = $('.game-week-select').val()
-    $.ajax({
-        url: api_url+'/loadData',
-        type: 'POST',
-        data: {
-          betweek: betweek
-        },
-        dataType: 'json',
-        success: function(data) {
-            createSheets(data['games']);
-            var selectType = $('#sheets .nav-link.active').data('type');
-            currentTable = tableObject[selectType];
-        }
-    });
+  $(".loading-div").show()
+  var betweek = $('.game-week-select').val()
+  $.ajax({
+      url: api_url+'/loadData',
+      type: 'POST',
+      data: {
+        betweek: betweek
+      },
+      dataType: 'json',
+      success: function(data) {
+          createSheets(data['games']);
+          var selectType = $('#sheets .nav-link.active').data('type');
+          currentTable = tableObject[selectType];
+          $(".loading-div").hide()
+      }
+  });
 } 
 
 function updateTable(){
+    $(".loading-div").show()
+
     var betweek = $('.game-week-select').val()
     var tableData = currentTable.getData();
     var selectType = $('#sheets .nav-link.active').data('type');
@@ -221,10 +225,7 @@ function updateTable(){
         },
         success: function(data) {
             loadTable()
-            $(".loading-div").show()
-            setTimeout(function() {
-              $(".loading-div").hide()
-            }, 2000);
+            $(".loading-div").hide()
         }
     });
 }

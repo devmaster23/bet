@@ -233,6 +233,7 @@ function updateGroupUserList(data,categoryType){
 }
 
 function loadData(){
+  $(".loading-div").show()
   var betweek = $('.game-week-select').val()
   $.ajax({
     url: api_url+'/loadData',
@@ -245,6 +246,7 @@ function loadData(){
     dataType: 'json',
     success: function(data) {
       initData(data)
+      $(".loading-div").hide()
     }
   });
 }
@@ -277,7 +279,7 @@ function updateData(){
     var betweek = $('.game-week-select').val();
     var description = $('#description').val();
     var tableData = tableObject.getData();
-
+    $(".loading-div").show()
     $.ajax({
         url: api_url+'/saveData',
         type: 'POST',
@@ -292,10 +294,7 @@ function updateData(){
         },
         success: function(data) {
           loadData();
-          $(".loading-div").show()
-          setTimeout(function() {
-            $(".loading-div").hide()
-          }, 2000);
+          $(".loading-div").hide()
         }
     });
 }

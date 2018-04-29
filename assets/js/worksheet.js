@@ -557,6 +557,7 @@ function loadSettingTable(){
 }
 
 function loadAllPickTable(){
+  $(".loading-div").show()
   var betweek = $('.game-week-select').val()
   $.ajax({
       url: api_url+'/loadAllPickData',
@@ -566,11 +567,13 @@ function loadAllPickTable(){
       },
       success: function(data) {
         createAllPickSheets(data);
+        $(".loading-div").hide()
       }
   });
 }
 
 function loadBetSheet(){
+  $(".loading-div").show()
   var betweek = $('.game-week-select').val()
   $.ajax({
       url: api_url+'/loadBetSheet',
@@ -580,11 +583,13 @@ function loadBetSheet(){
       },
       success: function(data) {
           createBetSheets(data);
+          $(".loading-div").hide()
       }
   }); 
 }
 
 function loadPickData(){
+  $(".loading-div").show()
   var betweek = $('.game-week-select').val()
   $.ajax({
       url: api_url+'/loadPickData',
@@ -594,11 +599,13 @@ function loadPickData(){
       },
       success: function(data) {
         createPickSheets(data);
+        $(".loading-div").hide()
       }
   });  
 }
 
 function loadSummary(){
+  $(".loading-div").show()
   var betweek = $('.game-week-select').val()
   $.ajax({
       url: api_url+'/loadSummary',
@@ -608,6 +615,7 @@ function loadSummary(){
       },
       success: function(data) {
         createBetSummary(data);
+        $(".loading-div").hide()
       }
   });   
 }
@@ -630,6 +638,7 @@ function mergeFields(){
 }
 
 function updateTable(){
+  $(".loading-div").show()
   var betweek = $('.game-week-select').val()
   var tableData = settingTableObject.getData();
   var tableData1 = settingTableObject1.getData();
@@ -662,10 +671,7 @@ function updateTable(){
       data: postData,
       success: function(data) {
         initPage()
-        $(".loading-div").show()
-        setTimeout(function() {
-          $(".loading-div").hide()
-        }, 1000);
+        $(".loading-div").hide()
       }
   });
 }
@@ -679,24 +685,28 @@ function initPage(){
   var selectType = $('#sheets .nav-link.active').data('type');
   if(selectType == 'bet_summary')
   {
+    $(".save-button-div").hide();
     loadSummary();
   }
   if(selectType == 'bets')
   {
+    $(".save-button-div").show();
     loadAllPickTable();
     // allTabelTimeOut = setInterval(function(){
     //   loadAllPickTable();
     // }, 3000);
 
   }else{
-    clearInterval(allTabelTimeOut);
+    // clearInterval(allTabelTimeOut);
   }
   if(selectType == 'bet_sheet')
   {
+    $(".save-button-div").hide();
     loadBetSheet();
   }
   if(selectType == 'bets_pick')
   {
+    $(".save-button-div").show();
     loadPickData();
   }
 }
@@ -709,7 +719,7 @@ $(document).on('click','.parlay-icon', function(){
   $.each(parlayObjs, function(key, item){
     paralyIds.push($(item).data('id'));
   });
-
+  $(".loading-div").show()
   $.ajax({
       url: api_url+'/updateParlay',
       type: 'POST',
@@ -718,7 +728,7 @@ $(document).on('click','.parlay-icon', function(){
         data: JSON.stringify(paralyIds)
       },
       success: function(data) {
-        console.log(data)
+        $(".loading-div").show()
       }
   });
 })

@@ -356,6 +356,7 @@ function createAllPickSheets(data){
 
 function loadAllPickTable(){
   var betweek = $('.game-week-select').val()
+  $(".loading-div").show()
   $.ajax({
       url: api_url+'/loadAllPickData',
       type: 'POST',
@@ -363,13 +364,15 @@ function loadAllPickTable(){
         betweek: betweek
       },
       success: function(data) {
-          createAllPickSheets(data);
+        createAllPickSheets(data);
+        $(".loading-div").hide()
       }
   });
 }
 
 function loadTable(){
   var betweek = $('.game-week-select').val()
+  $(".loading-div").show()
   $.ajax({
       url: api_url+'/loadData',
       type: 'POST',
@@ -378,6 +381,7 @@ function loadTable(){
       },
       success: function(data) {
           createSheets(data['picks']);
+          $(".loading-div").hide()
       }
   });
 } 
@@ -386,6 +390,8 @@ function refreshTable(tableItem, data){
   setStyle();
 }
 function updateTable(){
+    $(".loading-div").show()
+
     var betweek = $('.game-week-select').val()
     var selectType = $('#sheets .nav-link.active').data('type');
     var hot = tableObject[selectType];
@@ -412,10 +418,7 @@ function updateTable(){
         success: function(data) {
           $(".popover").popover('hide');
           loadTable()
-          $(".loading-div").show()
-          setTimeout(function() {
-            $(".loading-div").hide()
-          }, 1000);
+          $(".loading-div").hide()
         }
     });
 }
@@ -480,12 +483,14 @@ function initPage(){
   var selectType = $('#sheets .nav-link.active').data('type');
   if(selectType == 'all_picks')
   {
+    $(".save-button-div").hide();
     loadAllPickTable();
-    allTabelTimeOut = setInterval(function(){
-      loadAllPickTable();
-    }, 3000);
+    // allTabelTimeOut = setInterval(function(){
+    //   loadAllPickTable();
+    // }, 3000);
   }else{
-    clearInterval(allTabelTimeOut);
+    $(".save-button-div").show();
+    // clearInterval(allTabelTimeOut)
     loadTable();  
   }
 }
