@@ -25,6 +25,7 @@
     padding-top: 25px;
 }
 .content-div{
+    overflow: none;
     font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
 }
 .bottom-sheet{
