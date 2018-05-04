@@ -7,6 +7,7 @@ class Worksheets extends CI_Controller {
         parent::__construct();
         $this->load->model("WorkSheet_model","model");
         $this->load->model("Picks_model","pick_model");
+        $this->load->model("CustomBet_model","custombet_model");
         $this->load->library('session');
     }
     public function index()
@@ -18,6 +19,16 @@ class Worksheets extends CI_Controller {
         $data['betweek'] = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
         $data['settingId'] = $settingId;
         $this->load->view('worksheets', $data);
+    }
+
+    public function loadCustomBet(){
+        $betweek = $_POST['betweek'];
+        $_SESSION['betday'] = $betweek;
+        $data['data'] = $this->custombet_model->getData($betweek);    
+        $data['bets'] = $this->pick_model->getAllList($betweek);
+        header('Content-Type: application/json');
+        echo json_encode( $data);
+        die;
     }
 
     public function loadSummary(){
@@ -86,6 +97,14 @@ class Worksheets extends CI_Controller {
         $this->model->savePickSelect($betweek, $data);
         echo 'success';
         die;
+    }
+
+    public function saveCustomBet(){
+        $betweek = $_POST['betweek'];
+        $data = $_POST['data'];
+        $this->custombet_model->saveCustomBet($betweek, $data);
+        echo 'success';
+        die;   
     }
 
     public function updateParlay(){

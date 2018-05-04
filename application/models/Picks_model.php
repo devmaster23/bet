@@ -91,6 +91,72 @@ class Picks_model extends CI_Model {
         return $ret;
     }
 
+    public function getAllList($betday)
+    {
+        $this->db->select('*')->from('games');
+        $this->db->where(array(
+            'betday' => $betday
+        ))->order_by('time', 'ASC')->order_by('game_type', 'ASC');
+        $rows = $this->db->get()->result_array();
+
+        $this->db->select('pick_select')->from('work_sheet');
+        $this->db->where(array(
+            'betday' => $betday
+        ));
+        $pickSelectList = $this->db->get()->result_array();
+        $pickSelectList = count($pickSelectList) && $pickSelectList[0]['pick_select'] ? json_decode($pickSelectList[0]['pick_select']) : array();
+        $ret = array();
+        foreach($rows as $key => $item){
+            $team1_game_pts = json_decode($item['team1_game_pts']);
+            $team1_game_ml = json_decode($item['team1_game_ml']);
+            $team1_game_total = json_decode($item['team1_game_total']);
+            $team1_first_half_pts = json_decode($item['team1_first_half_pts']);
+            $team1_first_half_ml = json_decode($item['team1_first_half_ml']);
+            $team1_first_half_total = json_decode($item['team1_first_half_total']);
+            
+            $team2_game_pts = json_decode($item['team2_game_pts']);
+            $team2_game_ml = json_decode($item['team2_game_ml']);
+            $team2_game_total = json_decode($item['team2_game_total']);
+            $team2_first_half_pts = json_decode($item['team2_first_half_pts']);
+            $team2_first_half_ml = json_decode($item['team2_first_half_ml']);
+            $team2_first_half_total = json_decode($item['team2_first_half_total']);
+
+            foreach($this->pickType as $type_item)
+            {   
+                if(isset($team1_game_pts->$type_item) && $team1_game_pts->$type_item)
+                    $ret[] = $this->getPickData($item, 1, 'pts', false, $pickSelectList);
+                if(isset($team1_game_ml->$type_item) && $team1_game_ml->$type_item)
+                    $ret[] = $this->getPickData($item, 1, 'ml', false, $pickSelectList);
+                if(isset($team1_game_total->$type_item) && $team1_game_total->$type_item)
+                    $ret[] = $this->getPickData($item, 1, 'total', false, $pickSelectList);
+
+                if(isset($team1_first_half_pts->$type_item) && $team1_first_half_pts->$type_item)
+                    $ret[] = $this->getPickData($item, 1, 'pts',true, $pickSelectList);
+                if(isset($team1_first_half_ml->$type_item) && $team1_first_half_ml->$type_item)
+                    $ret[] = $this->getPickData($item, 1, 'ml',true, $pickSelectList);
+                if(isset($team1_first_half_total->$type_item) && $team1_first_half_total->$type_item)
+                    $ret[] = $this->getPickData($item, 1, 'total',true, $pickSelectList);
+
+                if(isset($team2_game_pts->$type_item) && $team2_game_pts->$type_item)
+                    $ret[] = $this->getPickData($item, 2, 'pts', false, $pickSelectList);
+                if(isset($team2_game_ml->$type_item) && $team2_game_ml->$type_item)
+                    $ret[] = $this->getPickData($item, 2, 'ml', false, $pickSelectList);
+                if(isset($team2_game_total->$type_item) && $team2_game_total->$type_item)
+                    $ret[] = $this->getPickData($item, 2, 'total', false, $pickSelectList);
+
+                if(isset($team2_first_half_pts->$type_item) && $team2_first_half_pts->$type_item)
+                    $ret[] = $this->getPickData($item, 2, 'pts',true, $pickSelectList);
+                if(isset($team2_first_half_ml->$type_item) && $team2_first_half_ml->$type_item)
+                    $ret[] = $this->getPickData($item, 2, 'ml',true, $pickSelectList);
+                if(isset($team2_first_half_total->$type_item) && $team2_first_half_total->$type_item)
+                    $ret[] = $this->getPickData($item, 2, 'total',true, $pickSelectList);
+            }
+        }
+
+        $result = $ret;
+        return $result;
+    }
+
     public function getAll($betday)
     {
         $this->db->select('*')->from('games');
@@ -296,6 +362,7 @@ class Picks_model extends CI_Model {
             $item['selected'] = false;
         }
         $item['key'] = $row['id'];
+        $item['team_id'] = $team_id;
         return $item;
     }
 

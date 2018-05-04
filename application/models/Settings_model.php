@@ -222,6 +222,14 @@ class Settings_model extends CI_Model {
         $rr_disableCnt = $CI->WorkSheet_model->getDisableCount($betday);
         $parlayCnt = $CI->WorkSheet_model->getParlayCount($betday);
 
+        $CI =& get_instance();
+        $CI->load->model('CustomBet_model');
+        $custom_bets = $CI->CustomBet_model->getData($betday);
+
+        $CI =& get_instance();
+        $CI->load->model('CustomBetAllocation_model');
+        $custom_bet_allocations = $CI->CustomBetAllocation_model->getByBetday($betday,$categoryType,$categoryGroupUser);
+
         $individualCnt = 0;
         foreach($pick_data as $key => $item)
         {
@@ -245,7 +253,7 @@ class Settings_model extends CI_Model {
         if(count($rows))
         {
             $data = $rows[0];
-            // var_dump($data);die;
+            
             $settings[0]['bet_percent'] = $data['bet_allocation'];
 
             $settings[1]['bet_percent'] = $data['rr_allocation'];            
@@ -260,7 +268,51 @@ class Settings_model extends CI_Model {
             $settings[3]['bet_percent'] = $data['pick_allocation'];            
             $settings[3]['bet_number1'] = $individualCnt;            
 
-            $bet_analysis[0]['parlay'] = @$fomularData[$data['rr_number1']][$data['rr_number2']] + @$fomularData[$data['rr_number1']][$data['rr_number3']] + @$fomularData[$data['rr_number1']][$data['rr_number4']];
+            $custom_bet_allocation = 0;
+
+            foreach ($custom_bets as $key => $custom_bet_item) {
+
+                $rr_allocation = "0";
+                $parlay_allocation = "0";
+                foreach($custom_bet_allocations as $allocation_item)
+                {
+                    if($allocation_item['bet_id'] == $custom_bet_item['id'])
+                    {
+                        $rr_allocation = $allocation_item['rr_allocation'];
+                        $parlay_allocation = $allocation_item['parlay_allocation'];;
+                    }
+                }
+
+                $settings[] = array(
+                    'id'          => $custom_bet_item['id'],
+                    'type'        => 'rr',
+                    'title'     => "Custom RR ".($key+1),
+                    'bet_percent' => $rr_allocation,
+                    'bet_text'    => 'by',
+                    'bet_number1' => $custom_bet_item['rr_number1'],
+                    'bet_number2' => $custom_bet_item['rr_number2'],
+                    'bet_number3' => "0",
+                    'bet_number4' => "0"
+                );
+
+                $settings[] = array(
+                    'id'          => $custom_bet_item['id'],
+                    'type'        => 'parlay',
+                    'title' => "Custom Parlay ".($key+1),
+                    'bet_percent' => $parlay_allocation,
+                    'bet_number1' => $custom_bet_item['parlay_number'],
+                    'bet_number2' => "0",
+                    'bet_number3' => "0",
+                    'bet_number4' => "0"
+                );
+
+                $custom_bet_allocation += @$fomularData[$custom_bet_item['rr_number1']][$custom_bet_item['rr_number2']];
+            }   
+
+            $total_bet_allocation = @$fomularData[$data['rr_number1']][$data['rr_number2']] + @$fomularData[$data['rr_number1']][$data['rr_number3']] + @$fomularData[$data['rr_number1']][$data['rr_number4']];
+
+
+            $bet_analysis[0]['parlay'] = $total_bet_allocation + $custom_bet_allocation;
             $bet_analysis[0]['sheet'] = (7) * count($candy_data) - $rr_disableCnt;
             $bet_analysis[0]['bet_number'] = $bet_analysis[0]['parlay'] * $bet_analysis[0]['sheet'];
 
@@ -300,6 +352,10 @@ class Settings_model extends CI_Model {
             $query = $query->where('groupuser_id', $categoryGroupUser);
         $rows = $query->get();
 
+        $CI =& get_instance();
+        $CI->load->model('CustomBetAllocation_model');
+        $custom_bet_allocations = $CI->CustomBetAllocation_model->getByBetday($betday,$categoryType, $categoryGroupUser);
+
         $newData = array(
             'bet_allocation' => $settingData[0]['1'],
             'rr_allocation' => $settingData[1]['1'],
@@ -338,6 +394,37 @@ class Settings_model extends CI_Model {
             if($categoryType != 0)
                 $newData['groupuser_id'] = $categoryGroupUser;
             $this->db->insert('settings', $newData);
+        }
+
+        for($i=4; $i< count($settingData); $i = $i+2)
+        {
+            $bet_id = $settingData[$i][7];
+            $custom_bet_rows = array_filter($custom_bet_allocations, function($item) use($bet_id, $categoryType, $categoryGroupUser){
+                return ((($categoryType == 0 && $item['type'] == $categoryType) || 
+                    ($item['type'] == $categoryType && $item['groupuser_id'] == $categoryGroupUser)) && 
+                    ($item['bet_id'] == $bet_id));
+            });
+            $customData = array(
+                'rr_allocation'     => $settingData[$i][1],
+                'parlay_allocation' => $settingData[$i+1][1]
+            );
+            
+            if(count($custom_bet_rows))
+            {   
+                $custom_bet_row = reset($custom_bet_rows);
+                $custom_bet_row_id = $custom_bet_row['id'];
+                $updateQuery = $this->db->where(array(
+                    'id'      => $custom_bet_row_id,
+                ));
+                $updateQuery->update('custom_bet_allocations', $customData);
+            }else{
+                $this->db->insert('custom_bet_allocations', array_merge(array(
+                    'betday'    => $betday,
+                    'type'      => $categoryType,
+                    'groupuser_id'  => $categoryGroupUser,
+                    'bet_id'        => $bet_id
+                ),$customData));
+            }
         }
     }
 

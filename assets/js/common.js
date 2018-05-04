@@ -14,7 +14,20 @@ if(h)
     tableHeight = h - headerHeight - footerHeight - 90;
 }
 
-$('.select2').select2({
-    width: '100px'
-});
+function initSelect()
+{
+    $('.select2').select2({
+        width: '100px'
+    });
+}
+
+$(document).ready(function(){
+  if($("#bets_custom_inner-wrapper"))
+  {
+    $("#bets_custom_inner-wrapper").css('max-height', tableHeight+'px');
+  }
+  initSelect();  
+})
+
+
 

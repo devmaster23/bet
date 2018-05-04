@@ -395,3 +395,56 @@
 #bet_sheet{
     overflow-y: auto;
 }
+
+#bets_custom{
+    padding: 0px 20px;
+}
+#bets_custom #bets_custom_inner-wrapper{
+    float: left;
+    margin-right: 50px;
+    overflow-y: auto;
+}
+#bets_custom #bets_custom_inner-wrapper #bets_custom_inner{
+    width: 700px;
+    text-align: center;
+}
+#bets_custom .action-div{
+    text-align: center;
+}
+.custom-bet-item
+{
+    display: inline-block;
+    position: relative;
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+}
+.custom-bet-item .remove-icon{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+.custom-bet-item .bet-item-header{
+    display: flex;
+    padding: 20px 0px;
+}
+.custom-bet-item .bet-item-header span,
+.custom-bet-item .bet-item-header label,
+.custom-bet-item .bet-item-header input
+{
+    flex: 0 0 150px;
+    display: block;
+    margin: 10px 0px 10px 10px;
+}
+
+.custom-bet-item .rr-content .select-div{
+    margin-top: 10px;
+    display: flex;
+    align-content: center;
+    justify-content: space-between;
+}
+.custom-bet-item .rr-content .remove-rr-icon{
+    margin-left: 10px;
+}
+
+

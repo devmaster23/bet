@@ -29,7 +29,7 @@
     </div>
     <div class="content-div">
         <div class="tab-content">
-            <div class="tab-pane active" id="bet_summary" role="tabpanel">
+            <div class="tab-pane" id="bet_summary" role="tabpanel">
             </div>
             <div class="tab-pane" id="bets" role="tabpanel">
                 <div class="bets-inner">
@@ -52,6 +52,21 @@
                 <div class="sheet" data-type="bets_pick">
                 </div>
             </div>
+            <div class="tab-pane active" id="bets_custom" role="tabpanel">
+                    <div id="bets_custom_inner-wrapper">
+                        <div id="bets_custom_inner">
+                        
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="action-div">
+                            <button type="button" class="btn btn-success new_bet_setting">+ New</button>
+                        </div>
+                    </div>
+                    <div class="sheet" data-type="bets_custom_sheet">
+                    
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="footer-div">
@@ -59,16 +74,19 @@
     </div>
     <ul id="sheets" class="nav nav-tabs bottom-sheet" role="tablist">
         <li class="nav-item">
-            <a class="nav-link active" data-toggle="tab" data-type="bet_summary" href="#bet_summary" aria-selected="true">Bet Summary</a>
+            <a class="nav-link" data-toggle="tab" data-type="bet_summary" href="#bet_summary" aria-selected="true">Summary</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" data-toggle="tab" data-type="bets" href="#bets" aria-selected="true">Bets</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" data-type="bet_sheet" href="#bet_sheet" aria-selected="true">Bet Instruction Sheets PR Parl</a>
+            <a class="nav-link" data-toggle="tab" data-type="bet_sheet" href="#bet_sheet" aria-selected="true">RR and Parlay</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" data-type="bets_pick" href="#bets_pick" aria-selected="true">Bet Instruction Sheets Pick</a>
+            <a class="nav-link" data-toggle="tab" data-type="bets_pick" href="#bets_pick" aria-selected="true">Picks</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" data-type="bets_custom" href="#bets_custom" aria-selected="true">Custom</a>
         </li>
     </ul>
 </div>

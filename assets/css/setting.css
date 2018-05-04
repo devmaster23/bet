@@ -17,6 +17,7 @@
 
 .metrics-div>div.metrics-inner-table{
     text-align: center;
+    position: relative;
 }
 
 .metrics-div .metrics-inner-table table,

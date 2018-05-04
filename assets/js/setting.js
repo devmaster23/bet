@@ -40,6 +40,16 @@ var hotSettings = {
         data: 'bet_number4',
         type: 'numeric',
         readOnly: false
+      },
+      {
+        data: 'id',
+        type: 'numeric',
+        readOnly: false
+      },
+      {
+        data: 'type',
+        type: 'text',
+        readOnly: false
       }
   ],
   colWidths: [250, 100, 80, 80, 80, 80, 80],
@@ -47,13 +57,17 @@ var hotSettings = {
   className: "htCenter htMiddle",
   rowHeaders: false,
   colHeaders: false,
-  height: 200,
   width: 750,
+  height: 500,
   outsideClickDeselects: false,
+  hiddenColumns: {
+    columns: [7,8],
+    indicators: false
+  },
   cells: function (row, col, prop) {
     var cellProperties = {};
     cellProperties.renderer = defaultValueRenderer;
-    if((row == 0 && col>0) || (row == 1 && col == 3) || (row == 2 && col > 1) || (row == 3 && col > 1)){
+    if((row == 0 && col>0) || (row == 1 && col == 3) || (row >= 2 && col > 1)){
       cellProperties.readOnly = true;
     }
     return cellProperties;
@@ -67,10 +81,12 @@ var hotSettings = {
           prop = change[0][1],
           ref_value = change[0][3];
       if (prop == 'bet_percent'){
-        var rr_allocation = tableObject.getDataAtRowProp(1,'bet_percent');
-        var parlay_allocation = tableObject.getDataAtRowProp(2,'bet_percent');
-        var pick_allocation = tableObject.getDataAtRowProp(3,'bet_percent');
-        var bet_allocation = eval(rr_allocation) + eval(parlay_allocation) + eval(pick_allocation);
+        var count_rows = tableObject.countRows();
+        var bet_allocation = 0;
+        for(var i=1; i< count_rows; i++)
+        {
+          bet_allocation += parseFloat(tableObject.getDataAtRowProp(i,'bet_percent'));
+        }
         tableObject.setDataAtRowProp(0,'bet_percent',bet_allocation,"sss");
       }
     }
@@ -100,8 +116,8 @@ var hotSettings1 = {
   className: "htCenter htMiddle",
   rowHeaders: false,
   colHeaders: ['Parlays / Sheet', '# Sheets (Col A-F)', '# of Bets'],
-  height: 200,
   width: 750,
+  height: 200,
   outsideClickDeselects: false,
   formulas: true,
   cells: function (row, col, prop) {
@@ -116,7 +132,7 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
   td.style.fontSize = custom_fontSize;
   td.style.color = '#000';
   td.style.backgroundColor = '#fff';  
-  if((row == 0 && col>0) || (row == 1 && col == 3) || (row == 2 && col > 1) || (row == 3 && col > 1)){
+  if((row == 0 && col>0) || (row == 1 && col == 3) || (row >= 2 && col > 1)){
     td.style.backgroundColor = '#eee';
   }
   Handsontable.renderers.TextRenderer.apply(this, args);

@@ -1,8 +1,10 @@
 var allTabelTimeOut = null;
 var pickTableObject = null;
+var customBetTableObject = null;
 var allTableObject = null;
 var settingTableObject = null;
 var settingTableObject1 = null;
+var betData = null;
 
 var all_custom_headers = [
     [
@@ -355,6 +357,53 @@ var pickTableSettings = {
     }
 };
 
+var customBetTableSettings = {
+    columns: [
+        {
+          data: 'game_type',
+          readOnly: true
+        },
+        {
+          data: 'vrn',
+          type: 'numeric',
+          readOnly: true
+        },
+        {
+          data: 'type',
+          readOnly: true
+        },
+        {
+          data: 'team',
+          readOnly: true
+        },
+        {
+          data: 'line',
+          type: 'numeric',
+          readOnly: true
+        },
+        {
+          data: 'time',
+          type: 'time',
+          timeFormat: 'h:mm A',
+          correctFormat: true,
+          readOnly: true
+        }
+    ],
+    minSpareRows: 0,
+    minSpareCols: 0,
+    colWidths: [100, 50,80, 250, 60, 100],
+    rowHeights: rowHeight,
+    className: "htCenter htMiddle",
+    height: tableHeight,
+    rowHeaders: true,
+    colHeaders: ['Sport','VRN','SP/ML','Team','Line','Game Time'],
+    cells: function (row, col, prop) {
+      var cellProperties = {};
+      cellProperties.renderer = allDefaultValueRenderer;
+      return cellProperties;
+    }
+};
+
 function settingValueRenderer(instance, td, row, col, prop, value, cellProperties) {
   var args = arguments;
   td.style.fontSize = fontSize;
@@ -543,6 +592,74 @@ function createBetSummary(data){
   container.append(tblItem);
 }
 
+function createCustomBet(data){
+  var betSettings = data['data'];
+  var html = '';
+  betData = data['bets'];
+
+  $.each(betSettings, function(key, settingItem){
+    html += getCustomBetContent(settingItem);
+  })
+  $("#bets_custom_inner").html(html);
+  createCustomeBetSheet(betData)
+  initBetSettings();
+}
+  
+function initBetSettings(){
+  $('.bet-select').select2({
+      width: '500px'
+  });  
+}
+
+function createCustomeBetSheet(data){
+  var key = 'bets_custom_sheet';
+  var container = $('div.sheet[data-type="'+key+'"]')[0];
+  customBetTableSettings['data'] = data;
+  if(customBetTableObject == null)
+    customBetTableObject = new Handsontable(container, customBetTableSettings);
+  else
+    customBetTableObject.loadData(data);   
+}
+
+function getCustomBetContent(settingItem){
+  var html = '';
+  var setting_id = -1,
+      rr_number1 = 1,
+      rr_number2 = 0,
+      parlay_number = 0,
+      rr_bets = [];
+  if(settingItem != null)
+  {
+      setting_id = settingItem.id;
+      rr_number1 = settingItem.rr_number1;
+      rr_number2 = settingItem.rr_number2;
+      parlay_number = settingItem.parlay_number;
+      rr_bets = JSON.parse(settingItem.rr_bets);
+  }
+  html += '<div class="custom-bet-item" data-setting-id="'+setting_id+'">'+
+      '<span class="remove-betsetting-icon"><button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></span>'+
+      '<div class="bet-item-header rr-header">'+
+      '<span>Round Robbin</span><input type="number" disabled rr-number1 value="'+rr_number1+'" min="1"/><input type="number" rr-number2 value="'+rr_number2+'" min="0"/>'+
+      '</div>'+
+      '<div class="text-right"><button type="button" class="btn btn-success new_rr">+</button></div>'+
+      '<div class="rr-content">';
+  for(var i=0; i< rr_number1; i++)
+  {
+    html += '<div class="select-div"><select bet-select class="bet-select">';
+    $.each(betData, function(key, betItem){
+      var text      = betItem.game_type+' '+betItem.vrn+' '+betItem.type+' '+betItem.team+' '+betItem.line;
+      var optionKey = betItem.key+'_'+betItem.team_id;
+      var selected  = rr_bets[i] == optionKey ? 'selected' : '';
+      html +='<option '+selected+' value="'+optionKey+'">'+text+'</span></option>';
+    });
+    html +=  '</select><span class="remove-rr-icon"><button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></sapn></div>';
+  } 
+  html += '</div><div class="bet-item-header parlay_header"><label for="parlay_number">Parlay</label><input parlay-number type="number" value="'+parlay_number+'" min="0"></div>';
+  html += '</div>'+
+      '</div><div class="clearfix"></div>';
+
+  return html;
+}
 function loadSettingTable(){
   var betweek = $('.game-week-select').val()
   $.ajax({
@@ -622,6 +739,22 @@ function loadSummary(){
   });   
 }
 
+function loadBetCustomData(){
+  $(".loading-div").show()
+  var betweek = $('.game-week-select').val()
+  $.ajax({
+      url: api_url+'/loadCustomBet',
+      type: 'POST',
+      data: {
+        betweek: betweek
+      },
+      success: function(data) {
+        createCustomBet(data)
+        $(".loading-div").hide()
+      }
+  });    
+}
+
 function mergeFields(){
   if(settingTableObject != null)
   {
@@ -666,6 +799,40 @@ function updateTable(){
         data: selectArr
       })
     }
+  }else if(selectType == 'bets_custom')
+  {
+    url = api_url+'/saveCustomBet';
+    let data = [];
+
+    $.each($(".custom-bet-item"),function(key, item){
+      var obj = $(item);
+      var data_id = obj.data('setting-id'),
+          rr_number1 = obj.find("[rr-number1]").val(),
+          rr_number2 = obj.find("[rr-number2]").val(),
+          parlay_number = obj.find("[rr-number2]").val(),
+          rr_bets = [];
+      var betSelList = obj.find("[bet-select]");
+      $.each(betSelList,function(key, betSelItem){
+        rr_bets.push($(betSelItem).val());
+      });
+      var data_item = {
+        id: data_id,
+        rr_number1: rr_number1,
+        rr_number2: rr_number2,
+        parlay_number: parlay_number,
+        rr_bets: rr_bets
+      }
+
+      data.push(data_item);
+    })
+
+    postData = {
+      betweek: betweek,
+      data: JSON.stringify({
+        data: data
+      })
+    }
+    console.log(postData);
   }
   $.ajax({
       url: url,
@@ -710,6 +877,12 @@ function initPage(){
   {
     $(".save-button-div").show();
     loadPickData();
+  }
+
+  if(selectType == 'bets_custom')
+  {
+    $(".save-button-div").show();
+    loadBetCustomData();
   }
 }
 
@@ -763,5 +936,37 @@ $(document).ready(function() {
 
   if($('#bet_sheet'))
     $('#bet_sheet').css('max-height', tableHeight+'px');
+
+  $(document).on('click','.new_rr', function(){
+    var rrObj = $(this).parents(".custom-bet-item").find('[rr-number1]');
+
+    html = '<div class="select-div"><select bet-select class="bet-select">';
+    $.each(betData, function(key, betItem){
+      var text      = betItem.game_type+' '+betItem.vrn+' '+betItem.type+' '+betItem.team+' '+betItem.line;
+      var optionKey = betItem.key+'_'+betItem.team_id;
+      html +='<option value="'+optionKey+'">'+text+'</span></option>';
+    });
+    html +=  '</select><span class="remove-rr-icon"><button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></sapn></div>';
+    rrObj.val(eval(rrObj.val()) + 1);
+    $(this).parents(".custom-bet-item").find('.rr-content').append(html);
+
+    initBetSettings();
+  })
+
+  $(document).on('click','.remove-rr-icon', function(){
+    var rrObj = $(this).parents(".custom-bet-item").find('[rr-number1]');
+    rrObj.val(eval(rrObj.val()) - 1);
+    $(this).parents('.select-div').remove();
+  });
+
+  $(document).on('click','.remove-betsetting-icon', function(){
+    $(this).parents(".custom-bet-item").remove();
+  });
+
+  $(document).on('click','.new_bet_setting', function(){
+    var newBestSetting = getCustomBetContent(null);
+    $(this).parents('#bets_custom_inner-wrapper').find('#bets_custom_inner').append(newBestSetting);
+    initBetSettings();
+  });
 
 });
