@@ -57,9 +57,11 @@ var hotSettings = {
   className: "htCenter htMiddle",
   rowHeaders: false,
   colHeaders: false,
-  width: 750,
-  height: 500,
+  height: 400,
   outsideClickDeselects: false,
+  autoRowSize: true,
+  fixedRowsTop: 1,
+  viewportColumnRenderingOffset: 100, 
   hiddenColumns: {
     columns: [7,8],
     indicators: false
@@ -134,6 +136,11 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
   td.style.backgroundColor = '#fff';  
   if((row == 0 && col>0) || (row == 1 && col == 3) || (row >= 2 && col > 1)){
     td.style.backgroundColor = '#eee';
+  }
+  if(row == 0)
+  {
+    td.style.backgroundColor = '#548235'; 
+    td.style.color = '#fff';
   }
   Handsontable.renderers.TextRenderer.apply(this, args);
   if(col == 1 && value)
