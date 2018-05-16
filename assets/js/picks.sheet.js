@@ -1,14 +1,6 @@
 var tableObject = null;
 var allTableObject = null;
 var allTabelTimeOut = null;
-var game_types ={
-    'ncaa_m': 'NCAA M', 
-    'nba': 'NBA', 
-    'football': 'FOOTBALL',
-    'ncaa_f': 'NCAA F',
-    'soccer': 'SOCCER',
-    'mlb': 'MLB'
-  };
 
 var title_types ={
     'ncaa_m': 'NCAA M', 
@@ -439,10 +431,9 @@ function createSheets(picks) {
   };
 
   var selectType = $('#sheets .nav-link.active').data('type');
-  var value = game_types[selectType];
   var title = title_types[selectType];
 
-  var data = picks[value] || [];
+  var data = picks[selectType] || [];
   var container = $('div.sheet[data-type="'+selectType+'"]')[0];
   var title = (selectType == 'ncaa_m')? title+'(College Basketball)': title;
 

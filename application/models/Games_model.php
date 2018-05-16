@@ -1,13 +1,5 @@
 <?php
 class Games_model extends CI_Model {
-	private $gameTypeList = array(
-		'ncaa_m'=> 'NCAA M', 
-	    'nba'=> 'NBA', 
-	    'football'=> 'FOOTBALL',
-	    'ncaa_f'=> 'NCAA F',
-	    'soccer'=> 'SOCCER',
-	    'mlb'=> 'MLB'
-	);
 	private $gameJsonTpl = array(
 		'id',
 		'date',
@@ -64,7 +56,6 @@ class Games_model extends CI_Model {
 
 	public function saveGames($betday, $game_type, $games)
 	{
-		$game_type = $this->gameTypeList[$game_type];
 
 		$insertData = array();
 		$gamesList = json_decode($games);

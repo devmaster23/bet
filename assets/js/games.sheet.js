@@ -280,14 +280,6 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
 }
   
 function createSheets(games) {
-	var types ={
-    'ncaa_m': 'NCAA M', 
-    'nba': 'NBA', 
-    'football': 'FOOTBALL',
-    'ncaa_f': 'NCAA F',
-    'soccer': 'SOCCER',
-    'mlb': 'MLB'
-  };
 
   var title_types ={
     'ncaa_m': 'NCAA M', 
@@ -299,10 +291,9 @@ function createSheets(games) {
   };
 
   var selectType = $('#sheets .nav-link.active').data('type');
-  var value = types[selectType];
   var title = title_types[selectType];
 
-  var data = games[value] || [];
+  var data = games[selectType] || [];
   var container = $('div.sheet[data-type="'+selectType+'"]')[0];
 
   var title = (selectType == 'ncaa_m')? title+'(College Basketball)': title;

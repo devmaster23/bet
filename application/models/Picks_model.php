@@ -3,11 +3,12 @@ class Picks_model extends CI_Model {
     private $gameTypeList = array(
         'ncaa_m'=> 'NCAA M', 
         'nba'=> 'NBA', 
-        'football'=> 'FOOTBALL',
+        'football'=> 'NFL',
         'ncaa_f'=> 'NCAA F',
-        'soccer'=> 'SOCCER',
+        'soccer'=> 'SOC',
         'mlb'=> 'MLB'
     );
+
     private $gameJsonTpl = array(
         'id',
         'vrn',
@@ -240,7 +241,12 @@ class Picks_model extends CI_Model {
                     $new_colum_index = $type.'_'.$colum_index;
                     $value = null;
                     if(isset($ret[$type][$i]))
-                        $value = $ret[$type][$i][$colum_index];
+                    {
+                        if($colum_index == 'game_type')
+                            $value = $ret[$type][$i][$colum_index];
+                        else
+                            $value = $ret[$type][$i][$colum_index];
+                    }
                     $row_item[$new_colum_index] = $value;
                 }
                 if($type == 'pick')
@@ -325,7 +331,12 @@ class Picks_model extends CI_Model {
         foreach($this->pickJsonTpl as $key => $db_column)
         {
             $value = '';
-            if($db_column == 'team' OR $db_column == 'vrn')
+
+            if($db_column == 'game_type')
+            {
+                $value = $this->gameTypeList[$row[$db_column]];
+            }
+            else if($db_column == 'team' OR $db_column == 'vrn')
             {
                 $value = $row[$db_column.$team_id];
             }else if($db_column == 'time')
@@ -379,7 +390,6 @@ class Picks_model extends CI_Model {
 
     public function save($betday, $game_type, $games)
     {
-        $game_type = $this->gameTypeList[$game_type];
 
         $insertData = array();
         $gamesList = json_decode($games);
