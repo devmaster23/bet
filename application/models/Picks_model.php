@@ -321,6 +321,7 @@ class Picks_model extends CI_Model {
 
     private function getPickData($row, $team_id=1, $type, $first_half = false, $pickSelectList){
         $item = array();
+        $gameType = $row['game_type'];
         foreach($this->pickJsonTpl as $key => $db_column)
         {
             $value = '';
@@ -343,7 +344,10 @@ class Picks_model extends CI_Model {
                         $value = substr($value,0,2);
                 }else
                 {
-                    $value = strtoupper($type);
+                    if($gameType == 'MLB' && $type == 'pts')
+                        $value = 'RL';
+                    else
+                        $value = strtoupper($type);
                 }
                 if($first_half)
                     $value = '1st '.$value;

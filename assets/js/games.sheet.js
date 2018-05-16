@@ -16,6 +16,18 @@ var custom_headers = [
     ]
 ];
 
+var custom_headers_mlb = [
+    [
+        '',
+        {label: 'MLB', colspan: 6}, 
+        {label: 'Game', colspan: 3},
+        {label: '1st Half', colspan: 2}
+    ],
+    [
+        '','Date','Time','VRN','Away Team','@','Home Team','Run Line','Money Line','Total','Money Line','Total'
+    ]
+];
+
 var hotSettings = {
     columns: [
         {
@@ -86,7 +98,7 @@ var hotSettings = {
         },
     ],
     minSpareRows: 1,
-    colWidths: [110, 80, 60, 250, 50, 200, 70, 70, 70, 70, 70, 70],
+    colWidths: [110, 80, 60, 250, 50, 200, 90, 90, 90, 90, 90, 90],
     rowHeights: rowHeight,
     className: "htCenter htMiddle",
     rowHeaders: true,
@@ -116,6 +128,111 @@ var hotSettings = {
               first_half_ml = getPTS(first_half_pts);
           currentTable.setDataAtRowProp(row,'game_ml',game_ml,"sss");
           currentTable.setDataAtRowProp(row,'first_half_pts',first_half_pts,"sss");
+          currentTable.setDataAtRowProp(row,'first_half_ml',first_half_ml,"sss");
+        }
+
+        if (prop == 'game_total'){
+          var value = ref_value?ref_value/2:0;
+          currentTable.setDataAtRowProp(row,'first_half_total',value,"sss");
+        }
+      }
+    }
+};
+
+var hotSettings_mlb = {
+    columns: [
+        {
+          data: 'id',
+          type: 'numeric',
+          readOnly: true
+        },
+        {
+          data: 'date',
+          type: 'date',
+          dateFormat: 'MMM DD, YYYY',
+          correctFormat: true,
+          readOnly: false
+        },  
+        {
+          data: 'time',
+          type: 'time',
+          timeFormat: 'h:mm A',
+          correctFormat: true,
+          readOnly: false
+        },
+        {
+          data: 'vrn1',
+          type: 'numeric',
+          readOnly: false
+        },
+        {
+          data: 'team2',
+          readOnly: false
+        },
+        {
+          data: 'alpha',
+          readOnly: true
+        },
+        {
+          data: 'team1',
+          readOnly: false
+        },
+        {
+          data: 'game_pts',
+          type: 'numeric',
+          readOnly: false
+        },
+        {
+          data: 'game_ml',
+          type: 'numeric',
+          readOnly: true
+        },
+        {
+          data: 'game_total',
+          type: 'numeric',
+          readOnly: false
+        },
+        {
+          data: 'first_half_ml',
+          type: 'numeric',
+          readOnly: true
+        },
+        {
+          data: 'first_half_total',
+          type: 'numeric',
+          readOnly: true
+        },
+    ],
+    minSpareRows: 1,
+    colWidths: [110, 80, 60, 250, 50, 200, 90, 120, 90, 120, 90],
+    rowHeights: rowHeight,
+    className: "htCenter htMiddle",
+    rowHeaders: true,
+    colHeaders: true,
+    height: tableHeight,
+    outsideClickDeselects: false,
+    nestedHeaders: custom_headers_mlb,
+    cells: function (row, col, prop) {
+      var cellProperties = {};
+      cellProperties.renderer = defaultValueRenderer;
+      return cellProperties;
+    },
+    afterChange: function (change, source) {
+      if(source == "sss")
+        return;
+      if(change)
+      {
+        var row = change[0][0],
+            prop = change[0][1],
+            ref_value = change[0][3];
+        if (prop == 'game_pts'){
+          var ptsObj = getPTS(ref_value);
+
+          var game_ml         = getPTS(ref_value),
+              first_half_pts  = (ref_value? Math.floor(ref_value) / 2 : 0).toFixed(1);
+              first_half_pts = parseFloat(first_half_pts) * 10 / 10;
+              first_half_ml = getPTS(first_half_pts);
+          currentTable.setDataAtRowProp(row,'game_ml',game_ml,"sss");
           currentTable.setDataAtRowProp(row,'first_half_ml',first_half_ml,"sss");
         }
 
@@ -190,7 +307,11 @@ function createSheets(games) {
 
   var title = (selectType == 'ncaa_m')? title+'(College Basketball)': title;
 
-  tmpSetting = Object.assign({},hotSettings);
+  if (selectType == 'mlb')
+    tmpSetting = Object.assign({},hotSettings_mlb);
+  else
+    tmpSetting = Object.assign({},hotSettings);
+
   tmpSetting['nestedHeaders'][0][1].label = '<label class="enter-game__header-item" data-class-name="enter-game__header1-title">'+title+'</label>';
 
   currentTable = new Handsontable(container, tmpSetting);
@@ -223,6 +344,10 @@ function updateTable(){
     var selectType = $('#sheets .nav-link.active').data('type');
     var cleanedGridData = {};
     $.each( tableData, function( rowKey, object) {
+        if(selectType == 'mlb')
+        {
+          object.splice(10, 0, "");
+        }
         if (!currentTable.isEmptyRow(rowKey)) cleanedGridData[rowKey] = object;
     });
 
