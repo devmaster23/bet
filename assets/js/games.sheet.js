@@ -1,4 +1,4 @@
-var tableObject = [];
+
 var currentTable = null;
 var defaultRowTpl ={
   '5' : '@'
@@ -171,18 +171,30 @@ function createSheets(games) {
     'soccer': 'SOCCER',
     'mlb': 'MLB'
   };
-  $.each(types, function(key, value){
-    var data = games[value] || [];
-    var container = $('div.sheet[data-type="'+key+'"]')[0];
-    var title = (key == 'ncaa_m')? value+'(College Basketball)': value;
-    tmpSetting = Object.assign({},hotSettings);
-    tmpSetting['nestedHeaders'][0][0].label = '<label class="enter-game__header-item" data-class-name="enter-game__header1-title">'+title+'</label>';
-    tmpSetting['data'] = data;
-    if(tableObject[key] == undefined)
-      tableObject[key] = new Handsontable(container, tmpSetting);
-    else
-      tableObject[key].loadData(data);
-  });
+
+  var title_types ={
+    'ncaa_m': 'NCAA M', 
+    'nba': 'NBA', 
+    'football': 'NFL',
+    'ncaa_f': 'NCAA F',
+    'soccer': 'SOC',
+    'mlb': 'MLB'
+  };
+
+  var selectType = $('#sheets .nav-link.active').data('type');
+  var value = types[selectType];
+  var title = title_types[selectType];
+
+  var data = games[value] || [];
+  var container = $('div.sheet[data-type="'+selectType+'"]')[0];
+
+  var title = (selectType == 'ncaa_m')? title+'(College Basketball)': title;
+
+  tmpSetting = Object.assign({},hotSettings);
+  tmpSetting['nestedHeaders'][0][1].label = '<label class="enter-game__header-item" data-class-name="enter-game__header1-title">'+title+'</label>';
+
+  currentTable = new Handsontable(container, tmpSetting);
+  currentTable.loadData(data);
 }
 
 function loadTable(){
@@ -198,7 +210,6 @@ function loadTable(){
       success: function(data) {
           createSheets(data['games']);
           var selectType = $('#sheets .nav-link.active').data('type');
-          currentTable = tableObject[selectType];
           $(".loading-div").hide()
       }
   });

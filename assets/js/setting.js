@@ -208,7 +208,7 @@ function updateFomularColor(x,y)
   {
     $.each(y, function(key1, value1)
     {
-      if(!value || !value1)
+      if(!value || !value1 || value1 < 2)
         return false;
       $("#fomularTable tbody tr:eq("+(value-3)+") td:eq("+(value1-1)+")" ).addClass('selected');
     });

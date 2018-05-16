@@ -93,11 +93,21 @@ class WorkSheet_model extends CI_Model {
             $robin_2 = @$activeSetting['rr_number2'];
             $robin_3 = @$activeSetting['rr_number3'];
 
+            $validColumnArr = array();
+            for($i =0; $i < $robin_2; $i ++)
+            {
+                $arrayItem = $settingData[$i];
+                foreach ($arrayItem as $key1 => $value) {
+                    if(!is_null($value) && $value != '')
+                        $validColumnArr[$key1] = true;
+                }
+            }
+
             for($i=0; $i<60; $i++)
             {
                 $candy_item = $this->getTeamFromPick($pick_data, $i, 'candy');
-                $candy_key = $this->getTeamKey($pick_data, $i);
-                for($j=0; $j<7; $j++){
+                $candy_key = $this->getTeamKey($pick_data, $i, 'candy');
+                for($j=0; $j<count($validColumnArr); $j++){
                     for($k=0; $k<$robin_1-1; $k++){
                         $team_row_id = $settingData[$k][$j];
                         $team_info = $this->getTeamFromPick($pick_data, $team_row_id-1);
@@ -110,6 +120,38 @@ class WorkSheet_model extends CI_Model {
                     }    
                 }
             }
+        }
+        return $result;
+    }
+
+    public function getValidRRColumnCount($betday)
+    {
+        $activeSetting = $this->getRobbinSetting($betday);
+
+        $this->db->select('*')->from($this->tableName);
+        $this->db->where(array('betday' => $betday));
+        $rows = $this->db->get()->result_array();
+
+        $result = 0;
+        if(count($rows))
+        {
+            $row = $rows[0];
+            $settingData = json_decode($row['sheet_data']);
+            $robin_1 = @$activeSetting['rr_number1'];
+            $robin_2 = @$activeSetting['rr_number2'];
+            $robin_3 = @$activeSetting['rr_number3'];
+            $parlayIds = empty($row['parlay_select'])? array() : json_decode($row['parlay_select']);
+
+            $validColumnArr = array();
+            for($i =0; $i < $robin_2; $i ++)
+            {
+                $arrayItem = $settingData[$i];
+                foreach ($arrayItem as $key1 => $value) {
+                    if(!is_null($value) && $value != '')
+                        $validColumnArr[$key1] = true;
+                }
+            }
+            $result = count($validColumnArr);
         }
         return $result;
     }
@@ -142,12 +184,24 @@ class WorkSheet_model extends CI_Model {
             $robin_3 = @$activeSetting['rr_number3'];
             $parlayIds = empty($row['parlay_select'])? array() : json_decode($row['parlay_select']);
 
+            $validColumnArr = array();
+            for($i =0; $i < $robin_2; $i ++)
+            {
+                $arrayItem = $settingData[$i];
+                foreach ($arrayItem as $key1 => $value) {
+                    if(!is_null($value) && $value != '')
+                        $validColumnArr[$key1] = true;
+                }
+            }
+
             for($i=0; $i<60; $i++)
             {
                 $ret[$i] = array();
                 $candy_item = $this->getTeamFromPick($pick_data, $i, 'candy');
-                $candy_key = $this->getTeamKey($pick_data, $i);
-                for($j=0; $j<7; $j++){
+                if(is_null($candy_item['team']))
+                    continue;
+                $candy_key = $this->getTeamKey($pick_data, $i, 'candy');
+                for($j=0; $j<count($validColumnArr); $j++){
                     $ret[$i][$j] = array();
                     $disableList = array();
                     for($k=0; $k<$robin_1-1; $k++){
@@ -172,10 +226,10 @@ class WorkSheet_model extends CI_Model {
         return $result;
     }
 
-    public function getTeamKey($pickData, $id){
+    public function getTeamKey($pickData, $id, $type='wrapper'){
         $result = null;
         if(isset($pickData[$id])){
-            $result = $pickData[$id]['key'];
+            $result = $pickData[$id][$type.'_key'];
         }
         return $result;
     }

@@ -60,69 +60,10 @@ var customHotSettings = {
     height: 297,
     cells: function (row, col, prop) {
       var cellProperties = {};
-      cellProperties.renderer = settingValueRenderer;
+      cellProperties.renderer = settingValueRendererRobin;
       if(row == 7 || row == 8)
         cellProperties.readOnly = true;
       return cellProperties;
-    },
-    afterChange: function (change, source) {
-      if(source == "sss")
-        return;
-      if(change)
-      {
-        var row = change[0][0],
-            prop = change[0][1],
-            ref_value = change[0][3];
-        if (row == 8 && prop == 0)
-        {
-          if(ref_value > 8)
-          {
-            ref_value = 8;
-          }
-          if(ref_value < 5)
-          {
-            ref_value = 5;
-          }
-           settingTableObject.setDataAtRowProp(row,prop,ref_value,"sss");
-        }
-
-        var robin1 = settingTableObject.getDataAtRowProp(8,0);
-
-        for(var i=0; i<7; i++)
-        {
-          if(robin1 == 5)
-          {
-            settingTableObject.setCellMeta(4,i,'readOnly',true);
-            settingTableObject.setCellMeta(5,i,'readOnly',true);
-            settingTableObject.setCellMeta(6,i,'readOnly',true);
-            settingTableObject.setDataAtRowProp(4,i,null,"sss");
-            settingTableObject.setDataAtRowProp(5,i,null,"sss");
-            settingTableObject.setDataAtRowProp(6,i,null,"sss");
-          }
-          if(robin1 == 6)
-          {
-            settingTableObject.setCellMeta(4,i,'readOnly',false);
-            settingTableObject.setCellMeta(5,i,'readOnly',true);
-            settingTableObject.setCellMeta(6,i,'readOnly',true);
-            settingTableObject.setDataAtRowProp(5,i,null,"sss");
-            settingTableObject.setDataAtRowProp(6,i,null,"sss");
-          }
-          if(robin1 == 7)
-          {
-            settingTableObject.setCellMeta(4,i,'readOnly',false);
-            settingTableObject.setCellMeta(5,i,'readOnly',false);
-            settingTableObject.setCellMeta(6,i,'readOnly',true);
-            settingTableObject.setDataAtRowProp(6,i,null,"sss");
-          }
-          if(robin1 == 8)
-          {
-            settingTableObject.setCellMeta(4,i,'readOnly',false);
-            settingTableObject.setCellMeta(5,i,'readOnly',false);
-            settingTableObject.setCellMeta(6,i,'readOnly',false);
-            settingTableObject.setDataAtRowProp(8,0,robin1,"sss");
-          }
-        }
-      }
     }
 };
 
@@ -404,12 +345,17 @@ var customBetTableSettings = {
     }
 };
 
-function settingValueRenderer(instance, td, row, col, prop, value, cellProperties) {
+function settingValueRendererRobin(instance, td, row, col, prop, value, cellProperties) {
   var args = arguments;
   td.style.fontSize = fontSize;
   td.style.color = '#000';
-  // td.style.backgroundColor = '#fff';  
-  if(row == 4 || row == 5 || row == 6){
+  td.style.backgroundColor = '#fff';  
+  
+  var robin1 = instance.getDataAtRowProp(8,0);
+  if(row > robin1-2)
+    cellProperties.readOnly = true;
+  if(row < 7)
+  {
     if(cellProperties.readOnly === true)
       td.style.backgroundColor = '#eee';
     else  
@@ -423,6 +369,14 @@ function settingValueRenderer(instance, td, row, col, prop, value, cellPropertie
 
   Handsontable.renderers.TextRenderer.apply(this, args);
 }
+
+function settingValueRenderer(instance, td, row, col, prop, value, cellProperties) {
+  var args = arguments;
+  td.style.fontSize = fontSize;
+  td.style.color = '#000';
+  Handsontable.renderers.TextRenderer.apply(this, args);
+}
+
 function allDefaultValueRenderer(instance, td, row, col, prop, value, cellProperties) {
   var args = arguments;
   td.style.fontSize = fontSize;
@@ -470,7 +424,7 @@ function createAllPickSheets(data){
   if(allTableObject == null)
     allTableObject = new Handsontable(container, allHotSettings);
   else
-    allTableObject.loadData(data);  
+    allTableObject.loadData(data);
 }
 
 function createPickSheets(data){
@@ -903,7 +857,7 @@ $(document).on('click','.parlay-icon', function(){
         data: JSON.stringify(paralyIds)
       },
       success: function(data) {
-        $(".loading-div").show()
+        $(".loading-div").hide()
       }
   });
 })

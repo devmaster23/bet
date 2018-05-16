@@ -29,9 +29,9 @@
     </div>
     <div class="content-div">
         <div class="tab-content">
-            <div class="tab-pane active" id="bet_summary" role="tabpanel">
+            <div class="tab-pane" id="bet_summary" role="tabpanel">
             </div>
-            <div class="tab-pane" id="bets" role="tabpanel">
+            <div class="tab-pane active" id="bets" role="tabpanel">
                 <div class="bets-inner">
                     <div class="setting_div">
                         <div class="sheet setting_sheet" data-type="setting_sheet">
@@ -74,10 +74,10 @@
     </div>
     <ul id="sheets" class="nav nav-tabs bottom-sheet" role="tablist">
         <li class="nav-item">
-            <a class="nav-link active" data-toggle="tab" data-type="bet_summary" href="#bet_summary" aria-selected="true">Summary</a>
+            <a class="nav-link" data-toggle="tab" data-type="bet_summary" href="#bet_summary" aria-selected="true">Summary</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" data-type="bets" href="#bets" aria-selected="true">Bets</a>
+            <a class="nav-link active" data-toggle="tab" data-type="bets" href="#bets" aria-selected="true">Bets</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" data-toggle="tab" data-type="bet_sheet" href="#bet_sheet" aria-selected="true">RR and Parlay</a>

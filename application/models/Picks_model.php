@@ -223,8 +223,8 @@ class Picks_model extends CI_Model {
             }
         }
 
-        $maxRowCount = 60;
         $result = array();
+        $maxRowCount = 60;
         foreach($ret as $key => $arrayItem){
             $maxRowCount = count($arrayItem) > $maxRowCount ? count($arrayItem): $maxRowCount;
         }
@@ -247,7 +247,7 @@ class Picks_model extends CI_Model {
                 {
                     $row_item['selected'] = @$ret[$type][$i]['selected'];   
                 }
-                $row_item['key'] = @$ret[$type][$i]['key'];
+                $row_item[$type.'_key'] = @$ret[$type][$i]['key'];
             }
             $result[] = $row_item;
         }
@@ -332,12 +332,19 @@ class Picks_model extends CI_Model {
                 $value = $this->ftime($row[$db_column],12);
             }
             else if($db_column == 'type')
-            {
-                if($team_id == 1)
-                    $value = 'OVER';
-                else
-                    $value = 'UNDER';
-                // $value = $this->typeJsonTpl[$type];
+            {   
+                if($type == 'total')
+                {
+                    if($team_id == 1)
+                        $value = 'OVER';
+                    else
+                        $value = 'UNDER';
+                    if($first_half)
+                        $value = substr($value,0,2);
+                }else
+                {
+                    $value = strtoupper($type);
+                }
                 if($first_half)
                     $value = '1st '.$value;
             }

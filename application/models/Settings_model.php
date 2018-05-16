@@ -220,6 +220,8 @@ class Settings_model extends CI_Model {
         $CI =& get_instance();
         $CI->load->model('WorkSheet_model');
         $rr_disableCnt = $CI->WorkSheet_model->getDisableCount($betday);
+        $rr_validColumnCnt = $CI->WorkSheet_model->getValidRRColumnCount($betday);
+
         $parlayCnt = $CI->WorkSheet_model->getParlayCount($betday);
 
         $CI =& get_instance();
@@ -313,7 +315,7 @@ class Settings_model extends CI_Model {
 
 
             $bet_analysis[0]['parlay'] = $total_bet_allocation + $custom_bet_allocation;
-            $bet_analysis[0]['sheet'] = (7) * count($candy_data) - $rr_disableCnt;
+            $bet_analysis[0]['sheet'] = $rr_validColumnCnt * count($candy_data) - $rr_disableCnt;
             $bet_analysis[0]['bet_number'] = $bet_analysis[0]['parlay'] * $bet_analysis[0]['sheet'];
 
             $bet_analysis[1]['parlay'] = 1;
