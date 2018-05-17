@@ -21,7 +21,8 @@ class CustomBet_model extends CI_Model {
                 'rr_number1' => $betItem->rr_number1,
                 'rr_number2' => $betItem->rr_number2,
                 'parlay_number' => $betItem->parlay_number,
-                'rr_bets' => json_encode($betItem->rr_bets)
+                'rr_bets' => json_encode($betItem->rr_bets),
+                'parlay_bets' => json_encode($betItem->parlay_bets)
             );
 
             if($id != -1)

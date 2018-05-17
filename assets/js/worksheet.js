@@ -589,26 +589,45 @@ function getCustomBetContent(settingItem){
       rr_number2 = settingItem.rr_number2;
       parlay_number = settingItem.parlay_number;
       rr_bets = JSON.parse(settingItem.rr_bets);
+      parlay_bets = JSON.parse(settingItem.parlay_bets);
   }
   html += '<div class="custom-bet-item" data-setting-id="'+setting_id+'">'+
       '<span class="remove-betsetting-icon"><button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></span>'+
       '<div class="bet-item-header rr-header">'+
       '<span>Round Robbin</span><input type="number" disabled rr-number1 value="'+rr_number1+'" min="1"/><input type="number" rr-number2 value="'+rr_number2+'" min="0"/>'+
+      '<button type="button" data-type="rr" class="btn btn-success new_game">+</button>'+
       '</div>'+
-      '<div class="text-right"><button type="button" class="btn btn-success new_rr">+</button></div>'+
       '<div class="rr-content">';
+  
   for(var i=0; i< rr_number1; i++)
   {
-    html += '<div class="select-div"><select bet-select class="bet-select">';
+    html += '<div class="select-div"><select rr-bet-select class="bet-select">';
     $.each(betData, function(key, betItem){
       var text      = betItem.game_type+' '+betItem.vrn+' '+betItem.type+' '+betItem.team+' '+betItem.line;
-      var optionKey = betItem.key+'_'+betItem.team_id;
+      var optionKey = betItem.select;
       var selected  = rr_bets[i] == optionKey ? 'selected' : '';
       html +='<option '+selected+' value="'+optionKey+'">'+text+'</span></option>';
     });
-    html +=  '</select><span class="remove-rr-icon"><button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></sapn></div>';
+    html +=  '</select><span data-type="rr" class="remove-select-icon"><button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></sapn></div>';
   } 
-  html += '</div><div class="bet-item-header parlay_header"><label for="parlay_number">Parlay</label><input parlay-number type="number" value="'+parlay_number+'" min="0"></div>';
+
+  html += '</div><div class="bet-item-header parlay_header"><label for="parlay_number">Parlay</label><input parlay-number disabled type="number" value="'+parlay_number+'" min="0">'+
+    '<button type="button" data-type="parlay" class="btn btn-success new_game">+</button>'+ 
+    '</div>'+
+    '<div class="parlay-content">';
+  
+  for(var i=0; i< parlay_number; i++)
+  {
+    html += '<div class="select-div"><select parlay-bet-select class="bet-select">';
+    $.each(betData, function(key, betItem){
+      var text      = betItem.game_type+' '+betItem.vrn+' '+betItem.type+' '+betItem.team+' '+betItem.line;
+      var optionKey = betItem.select;
+      var selected  = parlay_bets[i] == optionKey ? 'selected' : '';
+      html +='<option '+selected+' value="'+optionKey+'">'+text+'</span></option>';
+    });
+    html +=  '</select><span data-type="parlay" class="remove-select-icon"><button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></sapn></div>';
+  } 
+  html += '</div>';
   html += '</div>'+
       '</div><div class="clearfix"></div>';
 
@@ -763,18 +782,26 @@ function updateTable(){
       var data_id = obj.data('setting-id'),
           rr_number1 = obj.find("[rr-number1]").val(),
           rr_number2 = obj.find("[rr-number2]").val(),
-          parlay_number = obj.find("[rr-number2]").val(),
+          parlay_number = obj.find("[parlay-number]").val(),
           rr_bets = [];
-      var betSelList = obj.find("[bet-select]");
-      $.each(betSelList,function(key, betSelItem){
+          parlay_bets = [];
+      var rr_betSelList = obj.find("[rr-bet-select]");
+      $.each(rr_betSelList,function(key, betSelItem){
         rr_bets.push($(betSelItem).val());
       });
+
+      var parlay_betSelList = obj.find("[parlay-bet-select]");
+      $.each(parlay_betSelList,function(key, betSelItem){
+        parlay_bets.push($(betSelItem).val());
+      });
+      console.log(parlay_bets);
       var data_item = {
         id: data_id,
         rr_number1: rr_number1,
         rr_number2: rr_number2,
         parlay_number: parlay_number,
-        rr_bets: rr_bets
+        rr_bets: rr_bets,
+        parlay_bets: parlay_bets
       }
 
       data.push(data_item);
@@ -786,7 +813,6 @@ function updateTable(){
         data: data
       })
     }
-    console.log(postData);
   }
   $.ajax({
       url: url,
@@ -891,24 +917,37 @@ $(document).ready(function() {
   if($('#bet_sheet'))
     $('#bet_sheet').css('max-height', tableHeight+'px');
 
-  $(document).on('click','.new_rr', function(){
-    var rrObj = $(this).parents(".custom-bet-item").find('[rr-number1]');
+  $(document).on('click','.new_game', function(){
+    var betType = $(this).data('type');
 
-    html = '<div class="select-div"><select bet-select class="bet-select">';
+    var rrObj = undefined;
+    if(betType == 'rr')
+      rrObj = $(this).parents(".custom-bet-item").find('[rr-number1]');
+    else
+      rrObj = $(this).parents(".custom-bet-item").find('[parlay-number]');
+
+    html = '<div class="select-div"><select '+betType+'-bet-select class="bet-select">';
     $.each(betData, function(key, betItem){
       var text      = betItem.game_type+' '+betItem.vrn+' '+betItem.type+' '+betItem.team+' '+betItem.line;
-      var optionKey = betItem.key+'_'+betItem.team_id;
+      var optionKey = betItem.select;
       html +='<option value="'+optionKey+'">'+text+'</span></option>';
     });
-    html +=  '</select><span class="remove-rr-icon"><button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></sapn></div>';
+    html +=  '</select><span data-type="'+betType+'" class="remove-select-icon"><button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></sapn></div>';
     rrObj.val(eval(rrObj.val()) + 1);
-    $(this).parents(".custom-bet-item").find('.rr-content').append(html);
+    $(this).parents(".custom-bet-item").find('.'+betType+'-content').append(html);
 
     initBetSettings();
   })
 
-  $(document).on('click','.remove-rr-icon', function(){
-    var rrObj = $(this).parents(".custom-bet-item").find('[rr-number1]');
+
+
+  $(document).on('click','.remove-select-icon', function(){
+    var betType = $(this).data('type');
+    var rrObj = undefined;
+    if(betType == 'rr')
+      rrObj = $(this).parents(".custom-bet-item").find('[rr-number1]');
+    else
+      rrObj = $(this).parents(".custom-bet-item").find('[parlay-number]');
     rrObj.val(eval(rrObj.val()) - 1);
     $(this).parents('.select-div').remove();
   });

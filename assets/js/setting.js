@@ -98,6 +98,11 @@ var hotSettings = {
 var hotSettings1 = {
   columns: [
       {
+        data: 'title',
+        type: 'numeric',
+        readOnly: true
+      },
+      {
         data: 'parlay',
         type: 'numeric',
         readOnly: true
@@ -113,13 +118,13 @@ var hotSettings1 = {
         readOnly: true
       }
   ],
-  colWidths: [250,250,250],
+  colWidths: [210,180,180,180],
   rowHeights: custom_rowHeight,
   className: "htCenter htMiddle",
   rowHeaders: false,
-  colHeaders: ['Parlays / Sheet', '# Sheets (Col A-F)', '# of Bets'],
+  colHeaders: ['','Parlays / Sheet', '# Sheets (Col A-F)', '# of Bets'],
   width: 750,
-  height: 200,
+  height: 400,
   outsideClickDeselects: false,
   formulas: true,
   cells: function (row, col, prop) {
@@ -173,6 +178,8 @@ function mergeFields(){
 }
 
 function initData(data){
+  cleanFomularColor();
+
   var description = data['description'];
   $('#description').val(description);
 
@@ -197,13 +204,22 @@ function initData(data){
       rr_number3 = data['bet_allocation'][1]['bet_number3'],
       rr_number4 = data['bet_allocation'][1]['bet_number4'];
 
+  for($i = 4; $i < data['bet_allocation'].length; $i++)
+  {
+    var tmpData = data['bet_allocation'][$i];
+
+    if(tmpData['type'] == 'rr')
+      updateFomularColor([tmpData['bet_number1']],[tmpData['bet_number2'],tmpData['bet_number3'],tmpData['bet_number4']]);      
+  }
+
   updateFomularColor([rr_number1],[rr_number2,rr_number3,rr_number4]);
   mergeFields();
 }
-
+function cleanFomularColor(){
+  $("#fomularTable tbody td").removeClass('selected'); 
+}
 function updateFomularColor(x,y)
 {
-  $("#fomularTable tbody td").removeClass('selected');
   $.each(x, function(key, value)
   {
     $.each(y, function(key1, value1)

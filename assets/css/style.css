@@ -418,6 +418,7 @@
     border: 1px solid #ccc;
     padding: 10px 20px;
     margin-bottom: 20px;
+    width: 570px;
 }
 .custom-bet-item .remove-icon{
     position: absolute;
@@ -425,25 +426,32 @@
     right: 5px;
 }
 .custom-bet-item .bet-item-header{
-    display: flex;
-    padding: 20px 0px;
+    padding: 50px 0px 10px;
+    text-align: left;
 }
 .custom-bet-item .bet-item-header span,
 .custom-bet-item .bet-item-header label,
 .custom-bet-item .bet-item-header input
-{
-    flex: 0 0 150px;
-    display: block;
+{   
+    display: inline-block;
+    width: 50px;
     margin: 10px 0px 10px 10px;
 }
+.custom-bet-item .bet-item-header span{
+    width: 150px;
+}
 
-.custom-bet-item .rr-content .select-div{
+.custom-bet-item .rr-content .select-div,
+.custom-bet-item .parlay-content .select-div{
     margin-top: 10px;
     display: flex;
     align-content: center;
     justify-content: space-between;
 }
-.custom-bet-item .rr-content .remove-rr-icon{
+.custom-bet-item .bet-item-header button{
+    float: right;
+}
+.custom-bet-item .remove-select-icon{
     margin-left: 10px;
 }
 
