@@ -1,7 +1,7 @@
 .header{
     position: fixed;
     width: 100%;
-    z-index: 100;
+    z-index: 130;
 }
 .clearfix{
     clear: both;
