@@ -282,7 +282,7 @@ var pickTableSettings = {
     ],
     minSpareRows: 0,
     minSpareCols: 0,
-    colWidths: [50, 100, 50,60, 250, 60,80,60],
+    colWidths: [50, 100, 50,60, 250, 120,80,60],
     rowHeights: rowHeight,
     className: "htCenter htMiddle",
     height: tableHeight,
@@ -476,32 +476,32 @@ function createBetSheets(data){
             tblItem +="<tr>"+
                   "<td width='10%'></td>"+
                   "<td width='20%'></td>"+
-                  "<td width='40%' class='team'></td>"+
-                  "<td width='10%'></td>"+
+                  "<td width='35%' class='team'></td>"+
                   "<td width='20%'></td>"+
+                  "<td width='15%'></td>"+
                 "</tr>"
           }else{
             tblItem +="<tr class='"+disableCls+"'>"+
                   "<td width='10%'>"+team_item.vrn+"</td>"+
                   "<td width='20%'>"+team_item.type+"</td>"+
-                  "<td width='40%' class='team'>"+team_item.team+"</td>"+
-                  "<td width='10%'>"+team_item.line+"</td>"+
-                  "<td width='20%'>"+team_item.time+"</td>"+
+                  "<td width='35%' class='team'>"+team_item.team+"</td>"+
+                  "<td width='20%'>"+team_item.line+"</td>"+
+                  "<td width='15%'>"+team_item.time+"</td>"+
                 "</tr>"
           }
             tblItem +="<tr>"+
                   "<td width='10%'></td>"+
                   "<td width='20%'></td>"+
-                  "<td width='40%' class='team'></td>"+
-                  "<td width='10%'></td>"+
+                  "<td width='35%' class='team'></td>"+
                   "<td width='20%'></td>"+
+                  "<td width='15%'></td>"+
                 "</tr>"
         });
         tblItem +="<tr>"+
-            "<td width='30%' colspan=2>Alternates</td>"+
-            "<td width='40%' class='team'></td>"+
-            "<td width='10%'></td>"+
-            "<td width='20%'></td>"+
+            "<td colspan=2>Alternates</td>"+
+            "<td class='team'></td>"+
+            "<td></td>"+
+            "<td></td>"+
           "</tr>"
       tblItem += "</tbody></table>"+
                 "<div class='mark-div'>"+item.title+"</div><div class='clearfix'></div>"+

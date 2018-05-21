@@ -301,7 +301,7 @@
     background-size: contain;
 }
 .sheet_block table{
-    width: 450px;
+    width: 500px;
 }
 .sheet_block table tr:nth-last-child(3){
     font-weight: bold;
