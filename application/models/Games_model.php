@@ -9,6 +9,8 @@ class Games_model extends CI_Model {
         'alpha',
         'team1',
         'game_pts',
+        'game_rl',
+        'game_rl_ml',
         'game_ml',
         'game_total',
         'first_half_pts',
@@ -62,14 +64,16 @@ class Games_model extends CI_Model {
 		$validIds = array();
 		foreach($gamesList->data as $key => $item){
 			$gameData = array();
-			$row_id = $item[0];
+			$row_id = $item->id;
 
-			foreach($this->gameJsonTpl as $index => $game_data_index){
+			foreach($this->gameJsonTpl as $game_data_index){
 				if($game_data_index =='id' or $game_data_index =='alpha')
 					continue;
 				$value = '';
-				if(!is_null($item[$index]))
-					$value = $item[$index];
+
+				if(!is_null($item->$game_data_index))
+					$value = $item->$game_data_index;
+
 				if($game_data_index == 'date')
 				{	
 					$value = date_format(date_create($value),"Y-m-d");

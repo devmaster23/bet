@@ -57,7 +57,7 @@
             </div>
           </div>
           <div class="description-div">
-            <p>Special Instruction</p>
+            <p class="title">Special Instruction</p>
             <textarea id="description" placeholder="Create Custom Description"></textarea>
           </div>
         </div>

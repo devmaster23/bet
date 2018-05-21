@@ -74,6 +74,7 @@
 }
 .enter-game .handsontable table.htCore thead tr:first-of-type th:nth-of-type(9),
 .enter-game .handsontable table.htCore thead tr:first-of-type th:nth-of-type(12),
+.enter-game .handsontable table.htCore thead tr:first-of-type th:nth-of-type(13),
 .pick-game .handsontable table.htCore thead tr:first-of-type th:nth-of-type(6),
 .pick-game .handsontable table.htCore thead tr:first-of-type th:nth-of-type(9)
 {
@@ -137,6 +138,16 @@
     color: white !important;
     font-size: 18px !important;
     background-color: rgb(58, 56, 56) !important;
+}
+
+.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(9),
+.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(10),
+.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(11),
+.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(12),
+.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(13),
+.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(14)
+{   
+    background-color: rgb(255, 94, 94) !important;
 }
 
 .pick-game .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(2)
@@ -254,6 +265,9 @@
     float:left;
     padding: 20px 20px 20px 20px;
     border: 1px solid blue;
+}
+.sheet_block.selected{
+    background-color: #f6fffa;
 }
 
 .sheet_block:hover .remove-icon{

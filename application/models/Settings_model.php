@@ -56,19 +56,12 @@ class Settings_model extends CI_Model {
 
         $this->defaultResult = array(
             array(
-                'parlay'        => null,
+                'rr1'           => null,
+                'rr2'           => null,
                 'sheet'         => null,
-                'bet_number'    => null
-            ),
-            array(
-                'parlay'        => null,
-                'sheet'         => null,
-                'bet_number'    => null
-            ),array(
-                'parlay'        => null,
-                'sheet'         => null,
-                'bet_number'    => null
-            ),
+                'order'         => 1,
+                'bets'          => null
+            )
         );
 
         $fomularData = array();
@@ -270,23 +263,59 @@ class Settings_model extends CI_Model {
             $settings[3]['bet_percent'] = $data['pick_allocation'];            
             $settings[3]['bet_number1'] = $individualCnt;
 
-            $total_bet_allocation = @$fomularData[$data['rr_number1']][$data['rr_number2']] + @$fomularData[$data['rr_number1']][$data['rr_number3']] + @$fomularData[$data['rr_number1']][$data['rr_number4']];
+            $bet_analysis_index = 0;
+            $bet_analysis[$bet_analysis_index]['title'] = '';
+            $bet_analysis[$bet_analysis_index]['rr1'] = 'Structure';
+            $bet_analysis[$bet_analysis_index]['rr2'] = '';
+            $bet_analysis[$bet_analysis_index]['sheet'] = 'Sheets';
+            $bet_analysis[$bet_analysis_index]['order'] = 'Orders';
+            $bet_analysis[$bet_analysis_index]['bets'] = '# Bets';
 
-            $bet_analysis[0]['title'] = 'Round Robbin Structure';
-            $bet_analysis[0]['parlay'] = $total_bet_allocation;
-            $bet_analysis[0]['sheet'] = $rr_validColumnCnt * count($candy_data) - $rr_disableCnt;
-            $bet_analysis[0]['bet_number'] = $bet_analysis[0]['parlay'] * $bet_analysis[0]['sheet'];
+            $bet_analysis_index++;
+            $bet_analysis[$bet_analysis_index]['title'] = 'Round Robbin 1';
+            $bet_analysis[$bet_analysis_index]['rr1'] = $data['rr_number1'];
+            $bet_analysis[$bet_analysis_index]['rr2'] = $data['rr_number2'];
+            $bet_analysis[$bet_analysis_index]['sheet'] = $rr_validColumnCnt * count($candy_data) - $rr_disableCnt;;
+            $bet_analysis[$bet_analysis_index]['order'] = 1;
+            $bet_analysis[$bet_analysis_index]['bets'] = @$fomularData[$data['rr_number1']][$data['rr_number2']];
 
-            $bet_analysis[1]['title'] = '# Sheets (Col A-G)';
-            $bet_analysis[1]['parlay'] = 1;
-            $bet_analysis[1]['sheet'] = $parlayCnt;
-            $totalParlayCnt = $bet_analysis[1]['parlay'] * $bet_analysis[1]['sheet'];
-            $bet_analysis[1]['bet_number'] = $totalParlayCnt;
+            if(!is_null($data['rr_number3']) && $data['rr_number3'] != 0)
+            {
+                $bet_analysis_index ++;
+                $bet_analysis[$bet_analysis_index]['title'] = 'Round Robbin 2';
+                $bet_analysis[$bet_analysis_index]['rr1'] = $data['rr_number1'];
+                $bet_analysis[$bet_analysis_index]['rr2'] = $data['rr_number3'];
+                $bet_analysis[$bet_analysis_index]['sheet'] = $rr_validColumnCnt * count($candy_data) - $rr_disableCnt;;
+                $bet_analysis[$bet_analysis_index]['order'] = 1;
+                $bet_analysis[$bet_analysis_index]['bets'] = @$fomularData[$data['rr_number1']][$data['rr_number3']];                
+            }
 
-            $bet_analysis[2]['title'] = '# Bets';
-            $bet_analysis[2]['parlay'] = 1;
-            $bet_analysis[2]['sheet'] = $individualCnt;
-            $bet_analysis[2]['bet_number'] = $bet_analysis[2]['parlay'] * $bet_analysis[2]['sheet'];
+            if(!is_null($data['rr_number4']) && $data['rr_number4'] != 0)
+            {
+                $bet_analysis_index ++;
+                $bet_analysis[$bet_analysis_index]['title'] = 'Round Robbin 3';
+                $bet_analysis[$bet_analysis_index]['rr1'] = $data['rr_number1'];
+                $bet_analysis[$bet_analysis_index]['rr2'] = $data['rr_number4'];
+                $bet_analysis[$bet_analysis_index]['sheet'] = $rr_validColumnCnt * count($candy_data) - $rr_disableCnt;;
+                $bet_analysis[$bet_analysis_index]['order'] = 1;
+                $bet_analysis[$bet_analysis_index]['bets'] = @$fomularData[$data['rr_number1']][$data['rr_number4']];                
+            }
+
+            $bet_analysis_index ++;
+            $bet_analysis[$bet_analysis_index]['title'] = 'Parlay';
+            $bet_analysis[$bet_analysis_index]['rr1'] = '';
+            $bet_analysis[$bet_analysis_index]['rr2'] = '';
+            $bet_analysis[$bet_analysis_index]['sheet'] = $parlayCnt;
+            $bet_analysis[$bet_analysis_index]['order'] = 1;
+            $bet_analysis[$bet_analysis_index]['bets'] = 1;
+
+            $bet_analysis_index ++;
+            $bet_analysis[$bet_analysis_index]['title'] = 'Individual Bets(Picks)';
+            $bet_analysis[$bet_analysis_index]['rr1'] = '';
+            $bet_analysis[$bet_analysis_index]['rr2'] = '';
+            $bet_analysis[$bet_analysis_index]['sheet'] = '';
+            $bet_analysis[$bet_analysis_index]['order'] = $individualCnt;
+            $bet_analysis[$bet_analysis_index]['bets'] = $individualCnt;
 
             foreach ($custom_bets as $key => $custom_bet_item) {
                 $custom_bet_allocation = 0;
@@ -329,16 +358,20 @@ class Settings_model extends CI_Model {
 
                 $bet_analysis[] = array(
                     'title'     => "Custom RR ".($key+1),
-                    'parlay' => $custom_bet_allocation,
-                    'sheet'    => $totalParlayCnt,
-                    'bet_number' => $custom_bet_allocation * $totalParlayCnt
+                    'rr1'       => $custom_bet_item['rr_number1'],
+                    'rr2'       => $custom_bet_item['rr_number2'],
+                    'sheet'     => '',
+                    'order'     => 1,
+                    'bets'      => $custom_bet_allocation
                 );
 
                 $bet_analysis[] = array(
-                    'title'     => "Custom Parlay ".($key+1),
-                    'parlay'    => '',
+                    'title'     => "Custom RR ".($key+1),
+                    'rr1'       => '',
+                    'rr2'       => '',
                     'sheet'     => '',
-                    'bet_number' => $custom_bet_item['parlay_number'],
+                    'order'     => 1,
+                    'bets'      => $custom_bet_item['parlay_number']
                 );
             }   
 

@@ -336,7 +336,7 @@ var allHotSettings = {
     ],
     minSpareRows: 0,
     minSpareCols: 0,
-    colWidths: [40, 100, 50,100, 250, 60,80,60,40, 100, 50,100, 250, 60,80,60,40, 100, 50,100, 250, 60,80,60],
+    colWidths: [40, 100, 50,100, 250, 100,80,60,40, 100, 50,100, 250, 100,80,60,40, 100, 50,100, 250, 100,80,60],
     rowHeights: rowHeight,
     className: "htCenter htMiddle",
     height: tableHeight,

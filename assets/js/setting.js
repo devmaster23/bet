@@ -57,6 +57,7 @@ var hotSettings = {
   className: "htCenter htMiddle",
   rowHeaders: false,
   colHeaders: false,
+  fixedRowsTop: 1,
   height: 400,
   outsideClickDeselects: false,
   autoRowSize: true,
@@ -103,7 +104,12 @@ var hotSettings1 = {
         readOnly: true
       },
       {
-        data: 'parlay',
+        data: 'rr1',
+        type: 'numeric',
+        readOnly: true
+      },
+      {
+        data: 'rr2',
         type: 'numeric',
         readOnly: true
       },
@@ -113,16 +119,22 @@ var hotSettings1 = {
         readOnly: true
       },
       {
-        data: 'bet_number',
+        data: 'order',
+        type: 'numeric',
+        readOnly: true
+      },
+      {
+        data: 'bets',
         type: 'numeric',
         readOnly: true
       }
   ],
-  colWidths: [210,180,180,180],
+  colWidths: [250,100,100,100,100,100],
   rowHeights: custom_rowHeight,
   className: "htCenter htMiddle",
   rowHeaders: false,
-  colHeaders: ['','Parlays / Sheet', '# Sheets (Col A-F)', '# of Bets'],
+  colHeaders: false,
+  fixedRowsTop: 1,
   width: 750,
   height: 400,
   outsideClickDeselects: false,
@@ -140,12 +152,17 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
   td.style.color = '#000';
   td.style.backgroundColor = '#fff';  
   if((row == 0 && col>0) || (row == 1 && col == 3) || (row >= 2 && col > 1)){
-    td.style.backgroundColor = '#eee';
+    td.style.backgroundColor = '#d4d4d4';
+  }
+  if(col == 0)
+  {
+    td.style.backgroundColor = '#ffe69d'; 
+    td.style.color = '#000';
   }
   if(row == 0)
   {
-    td.style.backgroundColor = '#548235'; 
-    td.style.color = '#fff';
+    td.style.backgroundColor = '#f5ca4b'; 
+    td.style.color = '#000';
   }
   Handsontable.renderers.TextRenderer.apply(this, args);
   if(col == 1 && value)
@@ -159,8 +176,17 @@ function defaultValueRenderer1(instance, td, row, col, prop, value, cellProperti
   var args = arguments;
   td.style.fontSize = custom_fontSize;
   td.style.color = '#000';
-  td.style.backgroundColor = '#fff';  
-  
+  td.style.backgroundColor = '#d4d4d4';
+  if(col == 0)
+  {
+    td.style.backgroundColor = '#ffe69d'; 
+    td.style.color = '#000';
+  }
+  if(row == 0)
+  {
+    td.style.backgroundColor = '#f5ca4b'; 
+    td.style.color = '#000';
+  }
   Handsontable.renderers.TextRenderer.apply(this, args);
 }
 
@@ -174,6 +200,16 @@ function mergeFields(){
       {row: 0, col: 1, rowspan: 1, colspan: 2}
     ]);
     tableObject.updateSettings(hotOptions);
+  }
+  if(tableObject1 != null)
+  {
+    var hotOptions = {
+      mergeCells: []
+    };
+    hotOptions.mergeCells = hotOptions.mergeCells.concat([
+      {row: 0, col: 1, rowspan: 1, colspan: 2}
+    ]);
+    tableObject1.updateSettings(hotOptions); 
   }
 }
 
@@ -209,16 +245,16 @@ function initData(data){
     var tmpData = data['bet_allocation'][$i];
 
     if(tmpData['type'] == 'rr')
-      updateFomularColor([tmpData['bet_number1']],[tmpData['bet_number2'],tmpData['bet_number3'],tmpData['bet_number4']]);      
+      updateFomularColor([tmpData['bet_number1']],[tmpData['bet_number2'],tmpData['bet_number3'],tmpData['bet_number4']],true);
   }
 
-  updateFomularColor([rr_number1],[rr_number2,rr_number3,rr_number4]);
+  updateFomularColor([rr_number1],[rr_number2,rr_number3,rr_number4], false);
   mergeFields();
 }
 function cleanFomularColor(){
   $("#fomularTable tbody td").removeClass('selected'); 
 }
-function updateFomularColor(x,y)
+function updateFomularColor(x,y,custom)
 {
   $.each(x, function(key, value)
   {
@@ -226,7 +262,10 @@ function updateFomularColor(x,y)
     {
       if(!value || !value1 || value1 < 2)
         return false;
-      $("#fomularTable tbody tr:eq("+(value-3)+") td:eq("+(value1-1)+")" ).addClass('selected');
+      var selectClass = 'selected';
+      if(custom)
+        selectClass = 'custom-selected';
+      $("#fomularTable tbody tr:eq("+(value-3)+") td:eq("+(value1-1)+")" ).addClass(selectClass);
     });
   });
 }

@@ -20,11 +20,11 @@ var custom_headers_mlb = [
     [
         '',
         {label: 'MLB', colspan: 6}, 
-        {label: 'Game', colspan: 3},
+        {label: 'Game', colspan: 4},
         {label: '1st Half', colspan: 2}
     ],
     [
-        '','Date','Time','VRN','Away Team','@','Home Team','Run Line','Money Line','Total','Money Line','Total'
+        '','Date','Time','VRN','Away Team','@','Home Team','RL', 'RL ML','Money Line','Total','Money Line','Total'
     ]
 ];
 
@@ -178,14 +178,19 @@ var hotSettings_mlb = {
           readOnly: false
         },
         {
-          data: 'game_pts',
+          data: 'game_rl',
+          editor: 'select',
+          selectOptions: ['-1.5', '1.5']
+        },
+        {
+          data: 'game_rl_ml',
           type: 'numeric',
           readOnly: false
         },
         {
           data: 'game_ml',
           type: 'numeric',
-          readOnly: true
+          readOnly: false
         },
         {
           data: 'game_total',
@@ -204,7 +209,7 @@ var hotSettings_mlb = {
         },
     ],
     minSpareRows: 1,
-    colWidths: [110, 80, 60, 250, 50, 200, 90, 120, 90, 120, 90],
+    colWidths: [110, 80, 60, 250, 50, 200, 90, 90, 120, 90, 120, 90],
     rowHeights: rowHeight,
     className: "htCenter htMiddle",
     rowHeaders: true,
@@ -225,15 +230,9 @@ var hotSettings_mlb = {
         var row = change[0][0],
             prop = change[0][1],
             ref_value = change[0][3];
-        if (prop == 'game_pts'){
-          var ptsObj = getPTS(ref_value);
-
-          var game_ml         = getPTS(ref_value),
-              first_half_pts  = (ref_value? Math.floor(ref_value) / 2 : 0).toFixed(1);
-              first_half_pts = parseFloat(first_half_pts) * 10 / 10;
-              first_half_ml = getPTS(first_half_pts);
-          currentTable.setDataAtRowProp(row,'game_ml',game_ml,"sss");
-          currentTable.setDataAtRowProp(row,'first_half_ml',first_half_ml,"sss");
+        if (prop == 'game_ml'){
+          var value = ref_value?ref_value/2:0;
+          currentTable.setDataAtRowProp(row,'first_half_ml',value,"sss");
         }
 
         if (prop == 'game_total'){
@@ -331,14 +330,10 @@ function updateTable(){
     $(".loading-div").show()
 
     var betweek = $('.game-week-select').val()
-    var tableData = currentTable.getData();
+    var tableData = currentTable.getSourceData();
     var selectType = $('#sheets .nav-link.active').data('type');
     var cleanedGridData = {};
     $.each( tableData, function( rowKey, object) {
-        if(selectType == 'mlb')
-        {
-          object.splice(10, 0, "");
-        }
         if (!currentTable.isEmptyRow(rowKey)) cleanedGridData[rowKey] = object;
     });
 

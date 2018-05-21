@@ -26,8 +26,9 @@
 }
 
 .metrics-div .metrics-inner-table table td{
-    border: 1px solid #ccc;
-    padding: 5px 10px;
+    border: 1px solid #333;
+    /*padding: 5px 10px;*/
+    height: 50px;
     text-align: center;
 }
 
@@ -45,7 +46,7 @@
 }
 
 .number-pick-table table td{
-    border: 1px solid #ccc;
+    border: 1px solid #333;
     width: 50px;
     padding: 7px 14px;
     text-align: center;
@@ -97,18 +98,31 @@
 .description-div{
     text-align: center;
     margin: auto;
+    margin-top: 30px;
+}
+.description-div .title{
+    margin: 0px;
+    padding: 8px 10px;
+    font-size: 20px;
+    border: 2px solid #333;
+    background-color: #f5ca4a;
 }
 
 .description-div textarea{
     padding: 5px;
     width: 100%;
+    border: 2px solid #333;
+    border-top: 0px;
+    outline: 0 none;
     height: 100px;
 }
-#fomularTable td.selected{
-    background-color: yellow;
+#fomularTable td.custom-selected{
+    background-color: #2e86e0;
+    color: #fff;
 }
 #fomularTable td.selected{
-    background-color: yellow;
+    background-color: #f5ca4b;
+    color: #212529;
 }
 #bet_analysis .handsontable thead tr th{
     height: 46px;

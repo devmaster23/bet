@@ -223,7 +223,7 @@ var allHotSettings = {
     ],
     minSpareRows: 0,
     minSpareCols: 0,
-    colWidths: [40, 100, 50,90, 250, 60,80,60,40, 100, 50,90, 250, 60,80,60,40, 100, 50,90, 250, 60,80,60],
+    colWidths: [40, 100, 50,90, 250, 100,80,60,40, 100, 50,90, 250, 100,80,60,40, 100, 50,90, 250, 100,80,60],
     rowHeights: rowHeight,
     className: "htCenter htMiddle",
     height: tableHeight,
@@ -462,7 +462,7 @@ function createBetSheets(data){
     $.each(row_item, function(key2, item){
       var cls = item.disabled.length ? "disabled" : "";
       var is_parlay = item.is_parlay ? "selected" : "";
-      tblItem += "<div class='sheet_block "+cls+"' id='"+item.title+"'>"+
+      tblItem += "<div class='sheet_block "+cls + " " +is_parlay+"'  id='"+item.title+"'>"+
                 "<span class='remove-icon'></span>"+
                 "<span class='parlay-icon "+is_parlay+"' data-id='"+key+"_"+key2+"'></span>"+
                 "<table><tbody>";
@@ -870,9 +870,9 @@ $(document).on('click','.parlay-icon', function(){
   $(this).toggleClass('selected');
   var parlayObjs = $('.parlay-icon.selected');
   var betweek = $('.game-week-select').val()
-  var paralyIds = [];
+  var parlayIds = [];
   $.each(parlayObjs, function(key, item){
-    paralyIds.push($(item).data('id'));
+    parlayIds.push($(item).data('id'));
   });
   $(".loading-div").show()
   $.ajax({
@@ -880,10 +880,10 @@ $(document).on('click','.parlay-icon', function(){
       type: 'POST',
       data: {
         betweek: betweek,
-        data: JSON.stringify(paralyIds)
+        data: JSON.stringify(parlayIds)
       },
       success: function(data) {
-        $(".loading-div").hide()
+        loadBetSheet();
       }
   });
 })

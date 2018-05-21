@@ -242,10 +242,7 @@ class Picks_model extends CI_Model {
                     $value = null;
                     if(isset($ret[$type][$i]))
                     {
-                        if($colum_index == 'game_type')
-                            $value = $ret[$type][$i][$colum_index];
-                        else
-                            $value = $ret[$type][$i][$colum_index];
+                        $value = $ret[$type][$i][$colum_index];
                     }
                     $row_item[$new_colum_index] = $value;
                 }
@@ -355,7 +352,7 @@ class Picks_model extends CI_Model {
                         $value = substr($value,0,2);
                 }else
                 {
-                    if($gameType == 'MLB' && $type == 'pts')
+                    if($gameType == 'mlb' && $type == 'pts')
                         $value = 'RL';
                     else
                         $value = strtoupper($type);
@@ -376,6 +373,11 @@ class Picks_model extends CI_Model {
             }
 
             $item[$key] = $value;
+        }
+
+        if ($gameType == 'mlb')
+        {
+            $item['line'] = (($row['game_rl'] > 0 ) ? '+' : ''). $row['game_rl']. ' ' .$row['game_rl_ml'];
         }
         $item['select'] = $row['id'].'_'.$team_id.'_'.$type.'_'.($first_half ? 1 : 0);
         $item['selected'] = true;
