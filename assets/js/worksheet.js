@@ -332,7 +332,7 @@ var customBetTableSettings = {
     ],
     minSpareRows: 0,
     minSpareCols: 0,
-    colWidths: [100, 50,80, 250, 60, 100],
+    colWidths: [100, 50,80, 250, 120, 100],
     rowHeights: rowHeight,
     className: "htCenter htMiddle",
     height: tableHeight,
