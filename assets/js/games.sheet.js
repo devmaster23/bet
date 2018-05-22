@@ -55,7 +55,7 @@ var hotSettings = {
           readOnly: false
         },
         {
-          data: 'team2',
+          data: 'team1',
           readOnly: false
         },
         {
@@ -63,7 +63,7 @@ var hotSettings = {
           readOnly: true
         },
         {
-          data: 'team1',
+          data: 'team2',
           readOnly: false
         },
         {
@@ -166,7 +166,7 @@ var hotSettings_mlb = {
           readOnly: false
         },
         {
-          data: 'team2',
+          data: 'team1',
           readOnly: false
         },
         {
@@ -174,7 +174,7 @@ var hotSettings_mlb = {
           readOnly: true
         },
         {
-          data: 'team1',
+          data: 'team2',
           readOnly: false
         },
         {

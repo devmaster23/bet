@@ -165,7 +165,7 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
     td.style.color = '#000';
   }
   Handsontable.renderers.TextRenderer.apply(this, args);
-  if(col == 1 && value)
+  if(col == 1)
   {
     td.innerHTML = value + ' %';
   }

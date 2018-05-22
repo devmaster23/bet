@@ -31,26 +31,16 @@ class Settings_model extends CI_Model {
         $this->defaultSetting = array(
             array(
                 'title' => $this->headerName[0],
-                'bet_percent'    => null
+                'bet_percent'    => 0
             ),
             array(
                 'title' => $this->headerName[1],
-                'bet_percent'    => null,
+                'bet_percent'    => 0,
                 'bet_number1'    => null,
                 'bet_text'       => 'by',
                 'bet_number2'    => null,
                 'bet_number3'    => null,
                 'bet_number4'    => null,
-            ),
-            array(
-                'title' => $this->headerName[2],
-                'bet_percent'    => null,
-                'bet_number1'    => null,
-            ),
-            array(
-                'title' => $this->headerName[3],
-                'bet_percent'    => null,
-                'bet_number1'    => null,
             )
         );
 
@@ -249,19 +239,31 @@ class Settings_model extends CI_Model {
         {
             $data = $rows[0];
             
-            $settings[0]['bet_percent'] = $data['bet_allocation'];
+            $settings[0]['bet_percent'] = floatval($data['bet_allocation']);
 
-            $settings[1]['bet_percent'] = $data['rr_allocation'];            
+            $settings[1]['bet_percent'] = floatval($data['rr_allocation']);
             $settings[1]['bet_number1'] = $data['rr_number1'];
             $settings[1]['bet_number2'] = $data['rr_number2'];
             $settings[1]['bet_number3'] = $data['rr_number3'];
             $settings[1]['bet_number4'] = $data['rr_number4'];
 
-            $settings[2]['bet_percent'] = $data['parlay_allocation'];            
-            $settings[2]['bet_number1'] = $parlayCnt;            
+            if($parlayCnt)
+            {
+                $settings[] = array(
+                    'title' => $this->headerName[2],
+                    'bet_percent' => floatval($data['parlay_allocation']),
+                    'bet_number1' => $parlayCnt
+                );
+            }
 
-            $settings[3]['bet_percent'] = $data['pick_allocation'];            
-            $settings[3]['bet_number1'] = $individualCnt;
+            if($individualCnt)
+            {
+                $settings[] = array(
+                    'title' => $this->headerName[3],
+                    'bet_percent' => floatval($data['pick_allocation']),
+                    'bet_number1' => $individualCnt
+                );
+            }
 
             $bet_analysis_index = 0;
             $bet_analysis[$bet_analysis_index]['title'] = '';
@@ -335,7 +337,7 @@ class Settings_model extends CI_Model {
                     'id'          => $custom_bet_item['id'],
                     'type'        => 'rr',
                     'title'     => "Custom RR ".($key+1),
-                    'bet_percent' => $rr_allocation,
+                    'bet_percent' => floatval($rr_allocation),
                     'bet_text'    => 'by',
                     'bet_number1' => $custom_bet_item['rr_number1'],
                     'bet_number2' => $custom_bet_item['rr_number2'],
@@ -347,7 +349,7 @@ class Settings_model extends CI_Model {
                     'id'          => $custom_bet_item['id'],
                     'type'        => 'parlay',
                     'title' => "Custom Parlay ".($key+1),
-                    'bet_percent' => $parlay_allocation,
+                    'bet_percent' => floatval($parlay_allocation),
                     'bet_number1' => $custom_bet_item['parlay_number'],
                     'bet_number2' => "0",
                     'bet_number3' => "0",
