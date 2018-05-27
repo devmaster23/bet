@@ -76,7 +76,7 @@
             <div class="form-group col-md-6 col-sm-12">
                 <label for="current_balance">Current Balance</label>
                 <span class="info" id="current_balance">$ <?=$investor['current_balance']?></span>
-                <small id="currentBalanceHelp" class="form-text text-muted">This will be used to pull sportbook information.</small>
+                <small id="currentBalanceHelp" class="form-text text-muted">Sum of all sportsbooks current balance.</small>
             </div>
             
             <div class="form-group col-md-12 col-sm-12">
