@@ -19,6 +19,7 @@
         <div class="col-md-12 text-right">
             <input type="hidden" name="id">
             <textarea name="sportbook_data" style="display: none;"></textarea>
+            <button type="button" class="btn btn-success" id="back_button">Back</button>
             <button type="submit" name="add_submit" id="add_submit" class="btn btn-success" >Submit</button>
         </div>
         <div class="row">

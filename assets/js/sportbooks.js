@@ -92,4 +92,8 @@ $(document).ready(function() {
             });
         }
     } );
+
+    $("#back_button").click(function(){
+        location.href = api_url;
+    })
 } );

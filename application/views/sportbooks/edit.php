@@ -14,6 +14,11 @@
 
 <div id="main" class="sportbook-page">
     <form method="post" class="form">
+        <div class="col-md-12 text-right">
+            <input type="hidden" name="id" value="<?=$sportbook_item['id']?>">
+            <button type="button" class="btn btn-success" id="back_button">Back</button>
+            <button type="submit" name="edit_submit" class="btn btn-success">Submit</button>
+        </div>
         <div class="row">
             <div class="form-group col-md-6 col-sm-12">
                 <label for="title">Title</label>
@@ -61,7 +66,7 @@
                 <textarea rows="5" name="note" class="form-control" id="note" placeholder="Enter Note"><?=$sportbook_item['note']?></textarea>
             </div>
         </div>
-        <div class="row rule-div">
+        <div class="row rule-div" style="margin-bottom: 50px;">
             <div class="col-md-4">
                 <h3>Singe Bet</h3>
                 <div>
@@ -118,10 +123,6 @@
                     <input required type="text" name="rr_max_bet" id="rr_max_bet" value="<?=$sportbook_item['rr_max_bet']?>">
                 </div>
             </div>
-        </div>
-        <div class="col-md-12 text-center" style="margin-bottom: 50px;">
-            <input type="hidden" name="id" value="<?=$sportbook_item['id']?>">
-            <button type="submit" name="edit_submit" class="btn btn-success">Submit</button>
         </div>
     </form>
 </div>
