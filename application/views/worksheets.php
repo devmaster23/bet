@@ -9,7 +9,7 @@
     var settingId = <?php echo $settingId;?>;
     var api_url = "<?php echo site_url('worksheets'); ?>";
 </script>
-<div class="container title">
+<div class="container page-title">
     <h1 class="text-center">Work Sheet</h1>
 </div>
 

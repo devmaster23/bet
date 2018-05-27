@@ -14,7 +14,7 @@
     var activeSetting = <?php echo json_encode($activeSetting) ?>;
     var api_url = "<?php echo site_url('settings'); ?>";
 </script>
-<div class="container title">
+<div class="container page-title">
     <h1 class="text-center">Controll Panel</h1>
 </div>
 

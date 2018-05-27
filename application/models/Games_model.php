@@ -103,10 +103,9 @@ class Games_model extends CI_Model {
 		if(count($validIds))
 		{
 			$this->db->where(array(
-				'id' => 'NOT IN ('.implode(',',$validIds).')',
 				'game_type' => $game_type,
 				'betday' 	=> $betday
-			));
+			))->where_not_in('id', $validIds);
 			$this->db->delete('games');
 		}
 		if(count($insertData)){

@@ -6,11 +6,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<meta charset="utf-8">
 	<title>BetGame - <?php echo $page; ?></title>
 	<link href='<?php echo base_url('assets/vendor/css/bootstrap.min.css') ?>' rel='stylesheet' />
-  <link href='<?php echo base_url('assets/vendor/css/handsontable.full.min.css') ?>' rel='stylesheet' />
   <link href='<?php echo base_url('bower_components/select2/dist/css/select2.min.css') ?>' rel='stylesheet' />
   <link href='<?php echo base_url('assets/vendor/css/handsontable.full.min.css') ?>' rel='stylesheet' />
+  <link href='<?php echo base_url('assets/DataTables/datatables.min.css') ?>' rel='stylesheet' />
   <link href='<?php echo base_url('assets/css/style.css') ?>' rel='stylesheet' />
   <link href='<?php echo base_url('assets/css/setting.css') ?>' rel='stylesheet' />
+  <link href='<?php echo base_url('assets/css/sportbooks.css') ?>' rel='stylesheet' />
+  <link href='<?php echo base_url('assets/css/investors.css') ?>' rel='stylesheet' />
 </head>
 <body>
 
@@ -34,6 +36,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           <li class="nav-item <?php echo ($page == 'settings')?'active':'';?>">
             <a class="nav-link" href="<?php echo site_url('settings'); ?>">Control Panel</a>
           </li>
+          <li class="nav-item <?php echo ($page == 'investors')?'active':'';?>">
+            <a class="nav-link" href="<?php echo site_url('investors'); ?>">Investors</a>
+          </li>
+          <li class="nav-item <?php echo ($page == 'sportbooks')?'active':'';?>">
+            <a class="nav-link" href="<?php echo site_url('sportbooks'); ?>">SportBooks</a>
+          </li>
         </ul>
       </div>
     </nav>
@@ -41,6 +49,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <div class="loading-div">
   <div class="loading-div-inner">
-    <img src="assets/img/loading-icon.gif">
+    <img src="/assets/img/loading-icon.gif">
   </div>
 </div>

@@ -1,0 +1,50 @@
+.investor-page [type=search]{
+    outline: 0 none;
+    outline-offset: 0px;
+    -webkit-appearance: textfield;
+}
+
+.investor-page #investors_tbl .action-div a{
+    color: #187bd6;
+    cursor: pointer;
+    padding: 0px 5px;
+}
+
+.investor-page #investors_tbl .action-div a:hover,
+.investor-page #investors_tbl .action-div a:active
+{
+    color: #16528a;
+}
+
+
+.investor-page .investor_detail_table span{
+    display: inline-block;
+    text-align: right;
+}
+
+.investor-page .investor_detail_table span.label{
+    width: 250px;
+    text-align: left;
+}
+
+.investor-page .form span.info{
+    display: block;
+    padding: .375rem 0rem;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.investor-page .form .rule-div label{
+    display: inline-block;
+    width: 200px;
+}
+.investor-page .form .rule-div input{
+    padding: 2px 8px;
+    text-align: right;
+}
+#sportbook_list{
+    width: 100%;
+}
+#sportbook_list .remove-sportbook-icon .close{
+    float: none;
+}

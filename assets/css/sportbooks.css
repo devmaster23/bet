@@ -1,0 +1,38 @@
+.sportbook-page [type=search]{
+    outline: 0 none;
+    outline-offset: 0px;
+    -webkit-appearance: textfield;
+}
+
+.sportbook-page #sportbooks .action-div a{
+    color: #187bd6;
+    cursor: pointer;
+    padding: 0px 5px;
+}
+
+.sportbook-page #sportbooks .action-div a:hover,
+.sportbook-page #sportbooks .action-div a:active
+{
+    color: #16528a;
+}
+
+
+.sportbook-page .sportbook_detail_table span{
+    display: inline-block;
+    text-align: right;
+}
+
+.sportbook-page .sportbook_detail_table span.label{
+    width: 250px;
+    text-align: left;
+}
+
+.sportbook-page .form .rule-div label{
+    display: inline-block;
+    width: 200px;
+}
+.sportbook-page .form .rule-div input{
+    padding: 2px 8px;
+    text-align: right;
+}
+

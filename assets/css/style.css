@@ -21,6 +21,11 @@
     z-index: 999;
     background-color: rgba(255,255,255,0.8);
 }
+.page-title
+{
+    padding-top: 70px;
+}
+
 #main{
     padding-top: 25px;
 }
@@ -470,4 +475,16 @@
     margin-left: 10px;
 }
 
+td.details-control {
+    background: url('../img/details_open.png') no-repeat center center;
+    cursor: pointer;
+}
+tr.shown td.details-control {
+    background: url('../img/details_close.png') no-repeat center center;
+}
 
+#main.sportbook-page,
+#main.investor-page
+{
+    padding:0px 20px;
+}

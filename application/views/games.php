@@ -8,7 +8,7 @@
 	var betweek = <?php echo $betweek ?>;
 	var api_url = "<?php echo site_url('games'); ?>";
 </script>
-<div class="container title">
+<div class="container page-title">
 	<h1 class="text-center">Enter Games</h1>
 </div>
 
