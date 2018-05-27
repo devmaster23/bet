@@ -31,7 +31,7 @@ class Investor_model extends CI_Model {
     public function getList(){
         $CI =& get_instance();
         $CI->load->model('Investor_sportbooks_model');
-        
+
         $result = [];
         $rows = $this->db->select('*')
             ->from($this->tableName)
@@ -111,8 +111,8 @@ class Investor_model extends CI_Model {
         foreach ($sportbook_data as $sportbook_item) {
             $addSportbookDate[] = $this->formatRelationItem($investor_id, $sportbook_item);
         }
-
-        $this->db->insert_batch($this->relationTableName, $addSportbookDate);
+        if(count($addSportbookDate))
+            $this->db->insert_batch($this->relationTableName, $addSportbookDate);
         return true;
     }
 
