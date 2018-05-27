@@ -119,7 +119,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-12 text-center">
+        <div class="col-md-12 text-center" style="margin-bottom: 50px;">
             <input type="hidden" name="id" value="<?=$sportbook_item['id']?>">
             <button type="submit" name="edit_submit" class="btn btn-success">Submit</button>
         </div>
