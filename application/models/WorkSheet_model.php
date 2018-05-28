@@ -1,30 +1,49 @@
 <?php
 class WorkSheet_model extends CI_Model {
     private $tableName = 'work_sheet';
+    private $CI = null;
+
+    function __construct()
+    {
+        $this->CI =& get_instance();
+        $this->CI->load->model('Settings_model');
+        $this->CI->load->model('Picks_model');
+    }
 
     private function getRobbinSetting($betday, $settingId = -1){
-        $CI =& get_instance();
-        $CI->load->model('Settings_model');
-        return $CI->Settings_model->getActiveSetting($betday, $settingId);
+        if($settingId != -1)
+            return $this->CI->Settings_model->getActiveSetting($betday, $settingId);
+        else
+            return $this->CI->Settings_model->getAppliedSetting($betday);
     }   
 
     public function getBetSummary($betday)
     {
-        $CI =& get_instance();
-        $CI->load->model('Settings_model');
-        $settingList = $CI->Settings_model->getSettingList($betday);
+        $settingList = $this->CI->Settings_model->getSettingList($betday);
         $result = array();
         $result = $settingList;
         return $result;
     }
 
+    public function getSheetData($betday)
+    {
+        $this->CI->Settings_model->getActiveSetting($betday);
+    }
+
     public function getBetSetting($betday, $settingId = -1){
         
         $activeSetting = $this->getRobbinSetting($betday, $settingId);
+        $_SESSION['settingType'] = isset($activeSetting['type'])? $activeSetting['type'] : 0;
+        $_SESSION['settingGroupuserId'] = isset($activeSetting['groupuser_id'])? $activeSetting['groupuser_id'] : 0;
 
-        $this->db->select('*')->from($this->tableName);
-        $this->db->where(array('betday' => $betday));
-        $rows = $this->db->get()->result_array();
+        $rows = $this->db->select('*')->from($this->tableName)
+                ->where(array(
+                    'betday' => $betday,
+                    'type'  => $activeSetting['type'],
+                    'groupuser_id'  => $activeSetting['groupuser_id']
+                ))
+                ->get()->result_array();
+
         $row = isset($rows[0]) ? $rows[0] : [];
         $settingData = json_decode(@$row['sheet_data']);
         
@@ -57,8 +76,16 @@ class WorkSheet_model extends CI_Model {
     }
 
     public function getParlayCount($betday){
+
+        $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
+        $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+
         $this->db->select('*')->from($this->tableName);
-        $this->db->where(array('betday' => $betday));
+        $this->db->where(array(
+            'betday' => $betday,
+            'type' => $type,
+            'groupuser_id' => $groupuser_id
+        ));
         $rows = $this->db->get()->result_array();
         
         $result = 0;
@@ -73,14 +100,19 @@ class WorkSheet_model extends CI_Model {
     }
 
     public function getDisableCount($betday){
-        $CI =& get_instance();
-        $CI->load->model('Picks_model');
-        $pick_data = $CI->Picks_model->getAll($betday);
+        $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
+        $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+
+        $pick_data = $this->CI->Picks_model->getAll($betday);
 
         $activeSetting = $this->getRobbinSetting($betday);
 
         $this->db->select('*')->from($this->tableName);
-        $this->db->where(array('betday' => $betday));
+        $this->db->where(array(
+            'betday' => $betday,
+            'type' => $type,
+            'groupuser_id' => $groupuser_id
+        ));
         $rows = $this->db->get()->result_array();
         
         $result = 0;
@@ -126,10 +158,17 @@ class WorkSheet_model extends CI_Model {
 
     public function getValidRRColumnCount($betday)
     {
+        $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
+        $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+
         $activeSetting = $this->getRobbinSetting($betday);
 
         $this->db->select('*')->from($this->tableName);
-        $this->db->where(array('betday' => $betday));
+        $this->db->where(array(
+            'betday' => $betday,
+            'type' => $type,
+            'groupuser_id' => $groupuser_id
+        ));
         $rows = $this->db->get()->result_array();
 
         $result = 0;
@@ -158,14 +197,20 @@ class WorkSheet_model extends CI_Model {
 
     public function getBetSheet($betday)
     {
-        $CI =& get_instance();
-        $CI->load->model('Picks_model');
-        $pick_data = $CI->Picks_model->getAll($betday);
+
+        $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
+        $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+
+        $pick_data = $this->CI->Picks_model->getAll($betday);
         $activeSetting = $this->getRobbinSetting($betday);
 
-        $this->db->select('*')->from($this->tableName);
-        $this->db->where(array('betday' => $betday));
-        $rows = $this->db->get()->result_array();
+        $rows = $this->db->select('*')->from($this->tableName)
+            ->where(array(
+                'betday' => $betday,
+                'type'  => $type,
+                'groupuser_id'  => $groupuser_id
+            ))
+            ->get()->result_array();
 
 
         $result = array(
@@ -248,9 +293,9 @@ class WorkSheet_model extends CI_Model {
         return $result;
     }
     public function saveData($betday, $setting)
-    {
-        $CI =& get_instance();
-        $CI->load->model('Picks_model');
+    {   
+        $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
+        $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
 
         $settingList = json_decode($setting);
         $data = array();
@@ -274,19 +319,26 @@ class WorkSheet_model extends CI_Model {
 
         $this->db->select('*')->from($this->tableName);
         $this->db->where(array(
-            'betday' =>$betday
+            'betday' =>$betday,
+            'type'  => $type,
+            'groupuser_id'  => $groupuser_id
         ));
         $rows = $this->db->get()->result_array();
         if(count($rows))
         {
             $this->db->where(array(
-                'betday'    =>$betday
+                'betday'    =>$betday,
+                'type'  => $type,
+                'groupuser_id'  => $groupuser_id
             ));
             $this->db->update('work_sheet', $data);
         }
         else{
             $this->db->insert('work_sheet', array_merge(array(
-                'betday'=>$betday
+                'betday'=>$betday,
+                'type'  => $type,
+                'groupuser_id'  => $groupuser_id
+
             ),$data));
         }
 
@@ -295,10 +347,11 @@ class WorkSheet_model extends CI_Model {
 
     private function saveSetting($betday)
     {
-        $CI =& get_instance();
-        $CI->load->model('Picks_model');
-        $candy_data = $CI->Picks_model->getIndividual($betday, 'candy');
-        $pick_data = $CI->Picks_model->getIndividual($betday, 'pick');
+        $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
+        $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+
+        $candy_data = $this->CI->Picks_model->getIndividual($betday, 'candy');
+        $pick_data = $this->CI->Picks_model->getIndividual($betday, 'pick');
 
         $parlayCnt = $this->getParlayCount($betday);
 
@@ -318,20 +371,26 @@ class WorkSheet_model extends CI_Model {
 
         $this->db->select('*')->from('settings');
         $this->db->where(array(
-            'betday' =>$betday
+            'betday' =>$betday,
+            'type'  => $type,
+            'groupuser_id'  => $groupuser_id
         ));
 
         $rows = $this->db->get()->result_array();
         if(count($rows))
         {
             $this->db->where(array(
-                'betday'    =>$betday
+                'betday'    =>$betday,
+                'type'  => $type,
+                'groupuser_id'  => $groupuser_id
             ));
             $this->db->update('settings', $newData);
         }
         else{
             $this->db->insert('settings', array_merge(array(
-                'betday'=>$betday
+                'betday'=>$betday,
+                'type'  => $type,
+                'groupuser_id'  => $groupuser_id
             ),$newData));
         }
 
@@ -339,6 +398,9 @@ class WorkSheet_model extends CI_Model {
 
     public function savePickSelect($betday, $data)
     {
+        $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
+        $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+
         $data = json_decode($data);
         $newData = array(
             'pick_select' => json_encode($data->data)
@@ -346,20 +408,26 @@ class WorkSheet_model extends CI_Model {
 
         $this->db->select('*')->from($this->tableName);
         $this->db->where(array(
-            'betday' =>$betday
+            'betday' =>$betday,
+            'type'  => $type,
+            'groupuser_id'  => $groupuser_id
         ));
         $rows = $this->db->get()->result_array();
         
         if(count($rows))
         {
             $this->db->where(array(
-                'betday'    =>$betday
+                'betday'    =>$betday,
+                'type'  => $type,
+                'groupuser_id'  => $groupuser_id
             ));
             $this->db->update('work_sheet', $newData);
         }
         else{
             $this->db->insert('work_sheet', array_merge(array(
-                'betday'=>$betday
+                'betday'=>$betday,
+                'type'  => $type,
+                'groupuser_id'  => $groupuser_id
             ),$newData));
         }
 
@@ -367,8 +435,13 @@ class WorkSheet_model extends CI_Model {
     }
 
     public function updateParlay($betday, $data){
+        $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
+        $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+
         $this->db->where(array(
-            'betday'    =>$betday
+            'betday'    =>$betday,
+            'type'  => $type,
+            'groupuser_id'  => $groupuser_id
         ));
         $newData = array(
             'parlay_select' => $data

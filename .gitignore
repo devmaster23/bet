@@ -34,3 +34,4 @@ node_modules/*
 /tests/results/
 
 application/config/database2.php
+application/config/config.php

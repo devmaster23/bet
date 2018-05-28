@@ -21,6 +21,18 @@ class Users_model extends CI_Model {
         return $result;   
     }
 
+    public function getUserGroup($userId){
+        $groupId = null;
+        $this->db->select('group_id')
+            ->from($this->tableName)
+            ->where('id',$userId);
+
+        $rows = $this->db->get()->result_array();
+        if(count($rows))
+            $groupId = $rows[0]['group_id'];
+        return $groupId;
+    }
+
     public function q($sql) {
         $result = $this->db->query($sql);
     }

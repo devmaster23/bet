@@ -94,6 +94,9 @@ class Picks_model extends CI_Model {
 
     public function getAllList($betday)
     {
+        $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
+        $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+
         $this->db->select('*')->from('games');
         $this->db->where(array(
             'betday' => $betday
@@ -102,7 +105,9 @@ class Picks_model extends CI_Model {
 
         $this->db->select('pick_select')->from('work_sheet');
         $this->db->where(array(
-            'betday' => $betday
+            'betday' => $betday,
+            'type'  => $type,
+            'groupuser_id'  => $groupuser_id
         ));
         $pickSelectList = $this->db->get()->result_array();
         $pickSelectList = count($pickSelectList) && $pickSelectList[0]['pick_select'] ? json_decode($pickSelectList[0]['pick_select']) : array();
@@ -160,6 +165,9 @@ class Picks_model extends CI_Model {
 
     public function getAll($betday)
     {
+        $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
+        $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+
         $this->db->select('*')->from('games');
         $this->db->where(array(
             'betday' => $betday
@@ -168,7 +176,9 @@ class Picks_model extends CI_Model {
 
         $this->db->select('pick_select')->from('work_sheet');
         $this->db->where(array(
-            'betday' => $betday
+            'betday' => $betday,
+            'type'  => $type,
+            'groupuser_id'  => $groupuser_id
         ));
         $pickSelectList = $this->db->get()->result_array();
         $pickSelectList = count($pickSelectList) && $pickSelectList[0]['pick_select'] ? json_decode($pickSelectList[0]['pick_select']) : array();
@@ -257,8 +267,11 @@ class Picks_model extends CI_Model {
         return $result;
     }
 
-    public function getIndividual($betday, $type = 'candy')
+    public function getIndividual($betday, $individual_type = 'candy')
     {
+        $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
+        $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+
         $this->db->select('*')->from('games');
         $this->db->where(array(
             'betday' => $betday
@@ -267,12 +280,14 @@ class Picks_model extends CI_Model {
 
         $this->db->select('pick_select')->from('work_sheet');
         $this->db->where(array(
-            'betday' => $betday
+            'betday' => $betday,
+            'type'  => $type,
+            'groupuser_id'  => $groupuser_id
         ));
         $pickSelectList = $this->db->get()->result_array();
         $pickSelectList = count($pickSelectList) && $pickSelectList[0]['pick_select'] ? json_decode($pickSelectList[0]['pick_select']) : array();
 
-        $type_item = $type;
+        $type_item = $individual_type;
 
         $ret = array();
         foreach($rows as $key => $item){
@@ -380,10 +395,10 @@ class Picks_model extends CI_Model {
             $item['line'] = (($row['game_rl'] > 0 ) ? '+' : ''). $row['game_rl']. ' ' .$row['game_rl_ml'];
         }
         $item['select'] = $row['id'].'_'.$team_id.'_'.$type.'_'.($first_half ? 1 : 0);
-        $item['selected'] = true;
+        $item['selected'] = false;
         if(in_array($item['select'], $pickSelectList))
         {
-            $item['selected'] = false;
+            $item['selected'] = true;
         }
         $item['key'] = $row['id'];
         $item['team_id'] = $team_id;

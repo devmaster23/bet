@@ -15,9 +15,32 @@ class Settings_model extends CI_Model {
     private $numberOfTeams;
     private $numberOfPicks;
 
+    private $CI;
+
+    private $dbColums = array(
+        'rr_allocation',
+        'rr_number1',
+        'rr_number2',
+        'rr_number3',
+        'rr_number4',
+        'parlay_allocation',
+        'parlay_number1',
+        'pick_allocation',
+        'pick_number1',
+        'description'
+    );
+
 
     function __construct()
     {
+        $this->CI =& get_instance();
+        $this->CI->load->model('Groups_model');
+        $this->CI->load->model('Users_model');
+        $this->CI->load->model('Picks_model');
+        $this->CI->load->model('WorkSheet_model');
+        $this->CI->load->model('CustomBet_model');
+        $this->CI->load->model('CustomBetAllocation_model');
+
         $this->numberOfTeams = array(
             'min' => 3,
             'max' => 8
@@ -98,14 +121,10 @@ class Settings_model extends CI_Model {
         $result = array();
         switch ($categoryType) {
             case 1:
-                $CI =& get_instance();
-                $CI->load->model('Groups_model');
-                $result = $CI->Groups_model->getAll();
+                $result = $this->CI->Groups_model->getAll();
                 break;
             case 2:
-                $CI =& get_instance();
-                $CI->load->model('Users_model');
-                $result = $CI->Users_model->getAll();
+                $result = $this->CI->Users_model->getAll();
                 break;
             case 0:
             default:
@@ -115,7 +134,113 @@ class Settings_model extends CI_Model {
         return $result;
     }
 
+    private function isEmptySetting($data)
+    {
+        $result = true;
+        if(!is_null($data))
+        {
+            foreach ($this->dbColums as $column) {
+                if($data[$column])
+                {
+                    $result = false;
+                    break;
+                }
+            }
+        }
+        return $result;
+    }
+
+    private function getGroupSetting($group_id)
+    {
+        $result = null;
+        $query = $this->db->select('*')
+            ->from('settings')
+            ->where(array(
+                'betday' => $betday,
+                'type'  => 1,
+                'groupuser_id' => $group_id
+            ));
+        $rows = $query->get()->result_array();
+        if(count($rows))
+            $result = $rows[0];
+        return $result;
+    }
+
+    private function getAllSetting()
+    {
+        $result = null;
+        $query = $this->db->select('*')
+            ->from('settings')
+            ->where(array(
+                'betday' => $betday,
+                'type'  => 0,
+            ));
+        $rows = $query->get()->result_array();
+        if(count($rows))
+            $result = $rows[0];
+        return $result;   
+    }
+
+    public function getAppliedSetting($betday)
+    {
+        $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
+        $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+
+        $rows = $this->db->select('*')
+            ->from('settings')
+            ->where(array(
+                'betday' => $betday,
+                'type'  => $type,
+                'groupuser_id'  => $groupuser_id
+            ))
+            ->get()->result_array();
+
+        $result = array(
+            'type'          => 0,
+            'groupuser_id'  => null,
+            'rr_number1'    => 0,
+            'rr_number2'    => 0,
+            'rr_number3'    => 0,
+            'rr_number4'    => 0
+        );
+
+        if(count($rows))
+        {
+
+            $setting = $rows[0];
+            $type = $setting['type'];
+            $groupuser_id= $setting['groupuser_id'];
+            if($this->isEmptySetting($setting))
+            {
+                switch ($type) {
+                    case '2':
+                        $setting = $this->getGroupSetting($groupuser_id);
+                        if($this->isEmptySetting($setting))
+                            $setting = $this->getAllSetting();
+                        break;
+                    case '1':
+                        $setting = $this->getAllSetting();
+                        break;
+                    case '0':
+                    default:
+                        break;
+                }
+            }
+
+            $result['type'] = $setting['type'];
+            $result['groupuser_id'] = $setting['groupuser_id'];
+            $result['rr_number1'] = $setting['rr_number1'];
+            $result['rr_number2'] = $setting['rr_number2'];
+            $result['rr_number3'] = $setting['rr_number3'];
+            $result['rr_number4'] = $setting['rr_number4'];
+        }
+        return $result;
+    }
+
     public function getActiveSetting($betday, $settingId = -1){
+        $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
+        $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+
         $query = $this->db->select('*')
             ->from('settings')
             ->where(array(
@@ -125,7 +250,10 @@ class Settings_model extends CI_Model {
         {
             $query = $query->where('id', $settingId);
         }else{
-            $query = $query->where('active', 1);
+            $query = $query->where(array(
+                'type'  => $type,
+                'groupuser_id'  => $groupuser_id
+            ));
         }
         $rows = $query->get()->result_array();
 
@@ -159,20 +287,17 @@ class Settings_model extends CI_Model {
             ))->order_by('type','asc')
             ->order_by('groupuser_id','asc');
 
-        $CI =& get_instance();
-        $CI->load->model('Groups_model');
-        $CI->load->model('Users_model');
 
         $rows = $query->get()->result_array();
         foreach($rows as $key => &$item)
         {
             switch ($item['type']) {
                 case '1':
-                    $group = $CI->Groups_model->getByID($item['groupuser_id']);
+                    $group = $this->CI->Groups_model->getByID($item['groupuser_id']);
                     $item['title'] = $group['name'];
                     break;
                 case '2':
-                    $user = $CI->Users_model->getByID($item['groupuser_id']);
+                    $user = $this->CI->Users_model->getByID($item['groupuser_id']);
                     $item['title'] = $user['name'];
                     break;
                 case '0':
@@ -195,25 +320,17 @@ class Settings_model extends CI_Model {
         $description = '';
         $bet_analysis = $this->defaultResult;
 
-        $CI =& get_instance();
-        $CI->load->model('Picks_model');
-        $candy_data = $CI->Picks_model->getIndividual($betday, 'candy');
-        $pick_data = $CI->Picks_model->getIndividual($betday, 'pick');
+        $candy_data = $this->CI->Picks_model->getIndividual($betday, 'candy');
+        $pick_data = $this->CI->Picks_model->getIndividual($betday, 'pick');
 
-        $CI =& get_instance();
-        $CI->load->model('WorkSheet_model');
-        $rr_disableCnt = $CI->WorkSheet_model->getDisableCount($betday);
-        $rr_validColumnCnt = $CI->WorkSheet_model->getValidRRColumnCount($betday);
+        $rr_disableCnt = $this->CI->WorkSheet_model->getDisableCount($betday);
+        $rr_validColumnCnt = $this->CI->WorkSheet_model->getValidRRColumnCount($betday);
 
-        $parlayCnt = $CI->WorkSheet_model->getParlayCount($betday);
+        $parlayCnt = $this->CI->WorkSheet_model->getParlayCount($betday);
 
-        $CI =& get_instance();
-        $CI->load->model('CustomBet_model');
-        $custom_bets = $CI->CustomBet_model->getData($betday);
+        $custom_bets = $this->CI->CustomBet_model->getData($betday);
 
-        $CI =& get_instance();
-        $CI->load->model('CustomBetAllocation_model');
-        $custom_bet_allocations = $CI->CustomBetAllocation_model->getByBetday($betday,$categoryType,$categoryGroupUser);
+        $custom_bet_allocations = $this->CI->CustomBetAllocation_model->getByBetday($betday,$categoryType,$categoryGroupUser);
 
         $individualCnt = 0;
         foreach($pick_data as $key => $item)
@@ -396,6 +513,9 @@ class Settings_model extends CI_Model {
         $settingData = $jsonData->data;
         $description = $jsonData->description;
 
+        $_SESSION['settingType'] = $categoryType;
+        $_SESSION['settingGroupuserId'] = $categoryGroupUser;
+
         $query = $this->db->from('settings')
             ->where(array(
                 'betday'    => $betday,
@@ -405,9 +525,7 @@ class Settings_model extends CI_Model {
             $query = $query->where('groupuser_id', $categoryGroupUser);
         $rows = $query->get();
 
-        $CI =& get_instance();
-        $CI->load->model('CustomBetAllocation_model');
-        $custom_bet_allocations = $CI->CustomBetAllocation_model->getByBetday($betday,$categoryType, $categoryGroupUser);
+        $custom_bet_allocations = $this->CI->CustomBetAllocation_model->getByBetday($betday,$categoryType, $categoryGroupUser);
 
         $newData = array(
             'bet_allocation' => $settingData[0]['1'],
@@ -421,15 +539,7 @@ class Settings_model extends CI_Model {
             'pick_allocation' => $settingData[3]['1'],
             'pick_number1'  => $settingData[3]['2'],
             'description'   => $description,
-            'active'        => 1,
         );
-
-        //toggle active
-        $toggleQuery = $this->db->where(array(
-                'betday'    => $betday,
-                'active'      => 1,
-            ));
-        $toggleQuery = $toggleQuery->update('settings', array('active' => '0'));
 
         if ( $rows->num_rows() > 0 ) 
         {
@@ -446,6 +556,8 @@ class Settings_model extends CI_Model {
             $newData['type'] = $categoryType;
             if($categoryType != 0)
                 $newData['groupuser_id'] = $categoryGroupUser;
+            else
+                $newData['groupuser_id'] = 0;
             $this->db->insert('settings', $newData);
         }
 

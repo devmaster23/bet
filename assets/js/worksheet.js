@@ -762,7 +762,7 @@ function updateTable(){
   if(selectType == 'bets_pick')
   {
     let selectArr = [];
-    $("input:checkbox[name=pick_select]:not(:checked)").each(function(){
+    $("input:checkbox[name=pick_select]:checked").each(function(){
       selectArr.push($(this).data('key'));
     });
     url = api_url+'/savePickSelect';

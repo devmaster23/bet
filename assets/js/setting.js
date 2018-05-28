@@ -1,7 +1,7 @@
 var tableObject = null;
 var tableObject1 = null;
 var categoryType = 0;
-var categoryGroupUser = null;
+var categoryGroupUser = 0;
 var custom_fontSize = '20px';
 var custom_rowHeight = 35;
 
