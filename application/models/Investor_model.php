@@ -3,6 +3,7 @@ class Investor_model extends CI_Model {
     private $tableName = 'investors';
     private $relationTableName = 'investor_sportbooks';
     private $pageURL = 'investors';
+    private $CI = null;
 
     private $dbColumns = array(
         'first_name',
@@ -23,14 +24,16 @@ class Investor_model extends CI_Model {
         'sportbook_id',
         'date_opened',
         'opening_balance',
-        'current_balance',
         'login_name',
         'password'
     );
 
-    public function getList(){
-        $CI =& get_instance();
-        $CI->load->model('Investor_sportbooks_model');
+    function __construct()
+    {
+        $this->CI =& get_instance();
+        $this->CI->load->model('Investor_sportbooks_model');
+    }
+    public function getList($betweek){
 
         $result = [];
         $rows = $this->db->select('*')
@@ -42,22 +45,21 @@ class Investor_model extends CI_Model {
             $tmpArr = $item;
             $investorId = $item['id'];
 
-            $tmpArr['sportbooks'] = $CI->Investor_sportbooks_model->getListByInvestorId($investorId);
+            $tmpArr['sportbooks'] = $this->CI->Investor_sportbooks_model->getListByInvestorId($investorId,$betweek);
+            $tmpArr['full_name'] = $tmpArr['first_name'] . ' ' . $tmpArr['last_name'];
             $tmpArr['current_balance'] = 0;
             foreach ($tmpArr['sportbooks'] as $sportbook_item) {
-                $tmpArr['current_balance'] += $sportbook_item['current_balance'];
+                $tmpArr['current_balance'] += $sportbook_item['current_balance_'.$betweek];
             }
-            $tmpArr['custom_action'] = "<div class='action-div' data-id='".$item['id']."'><a class='edit' href='/".$this->pageURL."/edit?id=".$item['id']."'>Edit</i></a><a class='delete'>Delete</a></div>";
+            $tmpArr['custom_action'] = "<div class='action-div' data-id='".$item['id']."'><a class='sportbooks' href='/".$this->pageURL."/sportbooks?id=".$item['id']."'>Sportbooks</i></a><a class='edit' href='/".$this->pageURL."/edit?id=".$item['id']."'>Edit</i></a><a class='delete'>Delete</a></div>";
 
             $result[] = $tmpArr;
         }
         return $result;
     }
 
-    public function getItem($id=null)
+    public function getItem($id=null, $betweek)
     {
-        $CI =& get_instance();
-        $CI->load->model('Investor_sportbooks_model');
 
         $result = null;
         $row = $this->db->select('*')
@@ -70,11 +72,24 @@ class Investor_model extends CI_Model {
         {
             $result = $row[0];
             $investorId = $result['id'];
-            $result['sportbooks'] = $CI->Investor_sportbooks_model->getListByInvestorId($investorId);
+            $result['full_name'] = $result['first_name'] . ' ' . $result['last_name'];
+            $result['sportbooks'] = $this->CI->Investor_sportbooks_model->getListByInvestorId($investorId,$betweek);
             $result['current_balance'] = 0;
             foreach ($result['sportbooks'] as $sportbook_item) {
-                $result['current_balance'] += $sportbook_item['current_balance'];
+                $result['current_balance'] += $sportbook_item['current_balance_'.$betweek];
             }
+        }
+        return $result;
+    }
+
+    public function getInvestorSportboooks($investorId, $betweek){
+        $result = [];
+        $sprotbookList = $this->CI->Investor_sportbooks_model->getListByInvestorId($investorId,$betweek);
+        foreach ($sprotbookList as $key => $sportbook_item) {
+            $tmpArr = $sportbook_item;
+            $tmpArr['current_balance'] = floatval($sportbook_item['current_balance_'.$betweek]);
+            $tmpArr['lastweek_balance'] = $betweek <= 1 ? 'NA': floatval($sportbook_item['current_balance_'.($betweek-1)]);
+            $result[] = $tmpArr;
         }
         return $result;
     }
@@ -167,7 +182,52 @@ class Investor_model extends CI_Model {
             'id' => $id
         ))->delete($this->tableName);
        return ture;
-    }    
+    } 
+
+    public function saveSportbook($betweek,$data){
+        $data = json_decode($data);
+        $sportbookData = $data->data;
+        foreach ($sportbookData as $sportbook_item) {
+            $updateSportbookData = array(
+                'current_balance_'.$betweek => $sportbook_item->current_balance
+            );
+            $this->db->where(array(
+                'id' => $sportbook_item->id
+            ))->update($this->relationTableName,$updateSportbookData);
+        }
+        return true;
+    }   
+
+    public function getOutcome($rules, $parlay)
+    {
+        $result = [];
+        $initial_bet = 1000;
+        if(count($parlay))
+        {   
+            $index = 1;
+            foreach ($parlay[0] as $team) {
+                $tmpArr = array(
+                    'title' => 'After Bet '.$index,
+                );
+                if( $index == 1)
+                    $before = $initial_bet;
+                else
+                    $before = $result[$index-2]['after'];
+                if($team['line'] > 0)
+                    $payout_win = $before * ($team['line']/100);
+                else
+                    $payout_win = $team['line'] == 0 ? 0: $before / ($team['line']/100*(-1));
+                $after = $before + $payout_win;
+                $tmpArr['before'] = number_format((float)$before, 2, '.', '');
+                $tmpArr['payout_win'] = number_format((float)$payout_win, 2, '.', '');
+                $tmpArr['after'] = number_format((float)$after, 2, '.', '');
+
+                $result[] = $tmpArr;
+                $index ++;
+            }
+        }
+        return $result;
+    }
     public function q($sql) {
         $result = $this->db->query($sql);
     }

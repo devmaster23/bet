@@ -22,7 +22,7 @@ function format ( d ) {
 
 var custom_headers = [
     [
-    'id','sportbook_id','Title', 'SiteURL', 'Date Opened', 'Opening Balance ($)', 'Current Balance ($)', 'Login Name', 'Password',
+    'id','sportbook_id','Title', 'SiteURL', 'Date Opened', 'Opening Balance ($)', 'Login Name', 'Password',
     ]
 ];
 
@@ -56,10 +56,6 @@ var sportbookAddSettings = {
             type: 'numeric',
         },
         {
-            data: 'current_balance',
-            type: 'numeric',
-        },
-        {
           data: 'login_name',
           readOnly: false
         },
@@ -74,7 +70,7 @@ var sportbookAddSettings = {
     ],
     minSpareRows: 0,
     columnSorting: true,
-    colWidths: [0,0,150, 150, 150, 200, 200, 200, 90, 50],
+    colWidths: [0,0,150, 150, 150, 200, 200, 90, 50],
     rowHeights: rowHeight,
     height: tableHeight,
     className: "htCenter htMiddle",
@@ -106,20 +102,6 @@ var sportbookAddSettings = {
       var cellProperties = {};
       cellProperties.renderer = defaultValueRenderer;
       return cellProperties;
-    },
-    afterChange: function (change, source) {
-        if(change)
-        {
-            var count_rows = currentTable.countRows();
-            var total_opening_balance = 0;
-            var total_current_balance = 0;
-            for(var i=0; i< count_rows; i++)
-            {
-                total_opening_balance += parseFloat(currentTable.getDataAtRowProp(i,'opening_balance')? currentTable.getDataAtRowProp(i,'opening_balance'): 0);
-                total_current_balance += parseFloat(currentTable.getDataAtRowProp(i,'current_balance')? currentTable.getDataAtRowProp(i,'current_balance'): 0 );
-            }
-            $("#current_balance").html("$ "+total_current_balance);
-        }
     }
 };
 

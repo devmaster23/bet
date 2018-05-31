@@ -36,8 +36,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           <li class="nav-item <?php echo ($page == 'settings')?'active':'';?>">
             <a class="nav-link" href="<?php echo site_url('settings'); ?>">Control Panel</a>
           </li>
-          <li class="nav-item <?php echo ($page == 'investors')?'active':'';?>">
-            <a class="nav-link" href="<?php echo site_url('investors'); ?>">Investors</a>
+          <li class="nav-item dropdown <?php echo ($page == 'investors')?'active':'';?>">
+            <a href="javascript:;" class="dropdown-toggle nav-link" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Investors <b class="caret"></b></a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="<?php echo site_url('investors'); ?>">Investor</a>
+              <a class="dropdown-item" href="javascript:;">Money Allocation</a>
+            </div>
           </li>
           <li class="nav-item <?php echo ($page == 'sportbooks')?'active':'';?>">
             <a class="nav-link" href="<?php echo site_url('sportbooks'); ?>">SportBooks</a>

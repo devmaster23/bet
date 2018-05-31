@@ -19,6 +19,9 @@ function initSelect()
     $('.select2').select2({
         width: '100px'
     });
+    $('.select2-large').select2({
+        width: '300px'
+    });
 }
 
 $(document).ready(function(){

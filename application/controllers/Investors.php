@@ -7,6 +7,7 @@ class Investors extends CI_Controller {
         parent::__construct();
         $this->load->model('Investor_model', 'model');
         $this->load->model('Sportbook_model', 'sportbook_model');
+        $this->load->model('WorkSheet_model', 'workSheet_model');
         $this->load->library('session');
     }
     public function index()
@@ -28,10 +29,14 @@ class Investors extends CI_Controller {
 
     public function edit()
     {
+        $date = new DateTime(date('Y-m-d'));
+        $betweek = $date->format('W');
+        $data['betweek'] = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
         if(isset($_POST['edit_submit']))
         {
             $id = $_POST['id'];
             $this->model->updateItem($id, $_POST);
+            redirect('investors', 'refresh');
         }
         $id = isset($_REQUEST['id'])? $_REQUEST['id'] : null;
         if(is_null($id))
@@ -39,7 +44,7 @@ class Investors extends CI_Controller {
             redirect('/investors', 'refresh');
         }
 
-        $investor = $this->model->getItem($id);
+        $investor = $this->model->getItem($id,$data['betweek']);
         $sportbookList = $this->sportbook_model->getList();
         if(is_null($investor))
             redirect('/investors', 'refresh');
@@ -59,19 +64,64 @@ class Investors extends CI_Controller {
         return true;
     }
 
+    public function sportbooks(){
+        $date = new DateTime(date('Y-m-d'));
+        $betweek = $date->format('W');
+        $data['betweek'] = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
+
+        $id = isset($_REQUEST['id'])? $_REQUEST['id'] : null;
+        if(is_null($id))
+        {
+            redirect('/investors', 'refresh');
+        }
+
+        $investor = $this->model->getItem($id,$data['betweek']);
+
+        $data['investor'] = $investor;
+        $data['betweek'] = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
+
+        $this->load->view('investors/sportbooks', $data);
+    }
+
+    public function loadsportbooks(){
+        $investorId = $_POST['investorId'];
+        $betweek = $_POST['betweek'];
+        $investor_sportbooks = $this->model->getInvestorSportboooks($investorId, $betweek);
+        $data['sportbook_list'] = $investor_sportbooks;
+        header('Content-Type: application/json');
+        echo json_encode( $data);
+    }
+
     public function loadInvestors(){
-        $data['data'] = $this->model->getList();
+        $date = new DateTime(date('Y-m-d'));
+        $betweek = $date->format('W');
+        $data['betweek'] = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
+
+        $data['data'] = $this->model->getList($data['betweek']);
         header('Content-Type: application/json');
         echo json_encode( $data );
         die;
     }
 
-    public function saveData(){
+    public function loadRules(){
         $betweek = $_POST['betweek'];
-        $game_type = $_POST['game_type'];
-        $games = $_POST['games'];
+        $sportbookId = $_POST['sportbookId'];
 
-        $data['games'] = $this->model->saveGames($betweek, $game_type, $games);
+        $rules = $this->sportbook_model->getItem($sportbookId);
+        $parlay = $this->workSheet_model->getParlay($betweek);
+        $data['outcome'] = $this->model->getOutcome($rules, $parlay);
+        $data['rules'] = $rules;
+        $data['parlay'] = $parlay;
+        header('Content-Type: application/json');
+        echo json_encode( $data );
+        die;
+    }
+
+    public function saveSportbookData(){
+        $betweek = $_POST['betweek'];
+        $data = $_POST['data'];
+
+        $this->model->saveSportbook($betweek, $data);
         echo 'success';
         die;
     }

@@ -75,6 +75,61 @@ class WorkSheet_model extends CI_Model {
         return $ret;
     }
 
+    public function getParlay($betday)
+    {
+        $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
+        $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+
+        $rows = $this->db->select('*')->from($this->tableName)
+            ->where(array(
+                'betday' => $betday,
+                'type'  => $type,
+                'groupuser_id'  => $groupuser_id
+            ))
+            ->get()->result_array();
+
+        $result = array();
+
+        if(count($rows))
+        {
+            $pick_data = $this->CI->Picks_model->getAll($betday);
+            $activeSetting = $this->getRobbinSetting($betday);
+
+            $row = $rows[0];
+            $settingData = json_decode($row['sheet_data']);
+            $robin_1 = @$activeSetting['rr_number1'];
+            $robin_2 = @$activeSetting['rr_number2'];
+            $robin_3 = @$activeSetting['rr_number3'];
+            $parlayIds = empty($row['parlay_select'])? array() : json_decode($row['parlay_select']);
+
+            foreach ($parlayIds as $selected_parlay) {
+                $tmpArr = explode('_', $selected_parlay);
+                $i = $tmpArr[0];
+                $j = $tmpArr[1];
+
+                $itemArr = [];
+                $candy_item = $this->getTeamFromPick($pick_data, $i, 'candy');
+                if(is_null($candy_item['team']))
+                    continue;
+                $candy_key = $this->getTeamKey($pick_data, $i, 'candy');
+
+                $disableList = array();
+                for($k=0; $k<$robin_1-1; $k++){
+                    $team_row_id = $settingData[$k][$j];
+                    $team_info = $this->getTeamFromPick($pick_data, $team_row_id-1);
+                    $team_key = $this->getTeamKey($pick_data, $team_row_id-1);
+
+                    array_push($itemArr,$team_info);    
+                    if($candy_item['team'] != null && $team_info['team'] != null && ($candy_item['team'] == $team_info['team'] || $candy_key == $team_key))
+                        $disableList[] = $k;
+                }  
+                array_push($itemArr,$candy_item);
+                $result[] = $itemArr;
+            }
+        }
+        return $result;
+    }
+
     public function getParlayCount($betday){
 
         $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;

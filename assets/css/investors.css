@@ -9,6 +9,9 @@
     cursor: pointer;
     padding: 0px 5px;
 }
+.investor-page #investors_tbl .action-div a.sportbooks{
+    color: #c50000;
+}
 
 .investor-page #investors_tbl .action-div a:hover,
 .investor-page #investors_tbl .action-div a:active
@@ -42,9 +45,35 @@
     padding: 2px 8px;
     text-align: right;
 }
-#sportbook_list{
+.investor-page #sportbook_list{
     width: 100%;
 }
-#sportbook_list .remove-sportbook-icon .close{
+.investor-page #sportbook_list .remove-sportbook-icon .close{
     float: none;
+}
+.investor-page .sub-title{
+    font-size: 17px;
+    font-style: italic;
+}
+
+.investor-page #user_sportbook_year_table{
+    display: none;
+}
+
+.investor-page .rule-div label{
+    display: inline-block;
+    width: 200px;
+}
+.investor-page .rule-div span.sp_value{
+    padding: 2px 8px;
+    text-align: right;
+}
+.investor-page .sportbook-select-div{
+    display: flex;
+    align-items: center;
+}
+.investor-page .sportbook-select-div label{
+    font-size: 20px;
+    font-weight: bold;
+    padding:0px 20px;
 }
