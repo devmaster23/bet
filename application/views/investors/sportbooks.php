@@ -58,7 +58,7 @@
         </select>
     </div>
     <div class="row rule-div">
-        <div class="col-md-12">
+        <div class="col-md-12 mt-5">
             <h4>Single Bet</h4>
         </div>
         <div class="col-md-4">
@@ -75,7 +75,7 @@
             
         </div>
 
-        <div class="col-md-12">
+        <div class="col-md-12 mt-5">
             <h4>Parlay</h4>
         </div>
         <div class="col-md-4">
@@ -102,7 +102,7 @@
             <div id="parlay_outcome_table"></div>
         </div>
 
-        <div class="col-md-12">
+        <div class="col-md-12 mt-5">
             <h4>Round Robin</h4>
         </div>
         <div class="col-md-4">
