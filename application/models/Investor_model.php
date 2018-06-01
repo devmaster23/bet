@@ -281,6 +281,8 @@ class Investor_model extends CI_Model {
 
                 foreach ($dataItem as $key => $item) {
                     $teams[] = $item['team'];
+                    if($item['team'] == '' || $item['line'] == '')
+                        continue;
                     $lines[] = $item['line'];
                     $outcome = $outcome + (($item['line'] > 0) ? $outcome * $item['line'] / 100 : @($outcome  / $item['line']) * 100 * (-1));
                 }
