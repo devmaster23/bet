@@ -239,6 +239,72 @@ var parlayOutcomeSetting = {
   }
 }
 
+var rrTeamSetting = {
+  columns: [
+      {
+        data: 'team',
+        readOnly: true
+      },
+      {
+        data: 'line',
+        type: 'numeric',
+        readOnly: true
+      }
+  ],
+  minSpareRows: 0,
+  columnSorting: true,
+  colWidths: [250,150,],
+  rowHeights: rowHeight,
+  height: 300,
+  className: "htCenter htMiddle",
+  rowHeaders: false,
+  colHeaders: ['Team', 'Money Line'],
+  outsideClickDeselects: false,
+  cells: function (row, col, prop) {
+    var cellProperties = {};
+    cellProperties.renderer = defaultValueRendererRule;
+    return cellProperties;
+  }
+}
+
+var rrTeamOutcomeSetting = {
+  columns: [
+      {
+        data: 'team',
+        readOnly: true
+      },
+      {
+        data: 'line',
+        type: 'numeric',
+        readOnly: true
+      },
+      {
+        data: 'bet',
+        type: 'numeric',
+        readOnly: true
+      },
+      {
+        data: 'outcome',
+        type: 'numeric',
+        readOnly: true
+      }
+  ],
+  minSpareRows: 0,
+  columnSorting: true,
+  colWidths: [250,150,150,150],
+  rowHeights: rowHeight,
+  height: 300,
+  className: "htCenter htMiddle",
+  rowHeaders: false,
+  colHeaders: ['Team', 'Money Line', 'Bet', 'Outcome'],
+  outsideClickDeselects: false,
+  cells: function (row, col, prop) {
+    var cellProperties = {};
+    cellProperties.renderer = defaultValueRendererRule;
+    return cellProperties;
+  }
+}
+
 function createSheets(data) {
     var container = $('div#user_sportbook_week_table')[0];
     var dataWeek = data.slice()
@@ -293,8 +359,28 @@ function updateRules(data){
   $("#rr_min_bet").val(data.rules.rr_min_bet)
   $("#rr_max_bet").val(data.rules.rr_max_bet)
 
-  loadParlayTeamTable(data.parlay)
-  loadParlayOutcome(data.outcome)
+  loadParlayTeamTable(data.parlay);
+  loadParlayOutcome(data.parlay_outcome);
+  loadRRTeamTable(data.roundrobin);
+  loadRROutcome(data.rr_outcome);
+}
+
+function loadRRTeamTable(data) {
+  var container = $('div#rr_team_table')[0];
+  parlayTeamSetting.data = data;
+  new Handsontable(container, parlayTeamSetting);
+}
+
+function loadRROutcome(data) {
+  var container1 = $('div#rr1_outcome_table')[0];
+  rr1TeamOutcomeSetting = Object.assign({}, rrTeamOutcomeSetting);
+  rr1TeamOutcomeSetting.data = data.sheet1;
+  new Handsontable(container1, rr1TeamOutcomeSetting);
+
+  var container2 = $('div#rr2_outcome_table')[0];
+  rr2TeamOutcomeSetting = Object.assign({}, rrTeamOutcomeSetting);
+  rr2TeamOutcomeSetting.data = data.sheet2;
+  new Handsontable(container2, rr2TeamOutcomeSetting);
 }
 
 function loadParlayTeamTable(data){

@@ -129,7 +129,9 @@
             </div>
         </div>
         <div class="col-md-8">
-            
+            <div id="rr_team_table"></div>
+            <div id="rr1_outcome_table" class="mb-5"></div>
+            <div id="rr2_outcome_table" class="mb-5"></div>
         </div>
     </div>
 </div>

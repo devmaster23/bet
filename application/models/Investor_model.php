@@ -228,6 +228,115 @@ class Investor_model extends CI_Model {
         }
         return $result;
     }
+
+    public function getRROutcome($activeSetting, $rules, $teamList)
+    {
+        $result = array(
+            'sheet1'=> [],
+            'sheet2'=> [],
+            'sheet3'=> []
+        );
+
+        $rr1 = $activeSetting['rr_number1'];
+        $rr2 = $activeSetting['rr_number2'];
+        $rr3 = $activeSetting['rr_number3'];
+        $rr4 = $activeSetting['rr_number4'];
+
+        // sheet 1
+        $result['sheet1'] = $this->buildRuleSheet($rr1, $rr2, $teamList);
+        $result['sheet2'] = $this->buildRuleSheet($rr1, $rr3, $teamList);
+        $result['sheet3'] = $this->buildRuleSheet($rr1, $rr4, $teamList);
+        return $result;
+    }
+
+    private function buildRuleSheet($rr1, $rr2, $teamList)
+    {   
+        $data = [];
+        $startArray = range(1,$rr1);
+        $keyList = self::getRRKey($startArray, $rr2);
+        foreach ($keyList as $keyItem) {
+            $teamArr = [];
+            foreach ($keyItem as $key) {
+                $teamArr[] = $teamList[$key-1];
+            }
+            $data[] = $teamArr;
+        }
+
+        $result = [];
+        $initial_bet = 100;
+        $overall_bet = 0;
+        $overall_outcome = 0;
+        foreach ($data as $dataItem) {
+            $row = array(
+                'team' => '',
+                'line' => '',
+                'bet'  => $initial_bet,
+                'outcome' => 0
+            );
+            if(count($dataItem))
+            {
+                $teams = [];
+                $lines = [];
+                $outcome = $initial_bet;
+
+                foreach ($dataItem as $key => $item) {
+                    $teams[] = $item['team'];
+                    $lines[] = $item['line'];
+                    $outcome = $outcome + (($item['line'] > 0) ? $outcome * $item['line'] / 100 : @($outcome  / $item['line']) * 100 * (-1));
+                }
+                $row['team'] = join(', ',$teams);
+                $row['line'] = join(' / ',$lines);
+                $row['outcome'] = number_format((float)$outcome, 2, '.', '');
+
+                $overall_bet += $initial_bet;
+                $overall_outcome += $outcome;
+            }
+            $result[] = $row;
+        }
+
+        $result[] = array(
+            'team' => 'A '.$rr1.'-'.$rr2.' Round Robbin is',
+            'line' => count($data).' Parlays',
+            'bet'  => $overall_bet,
+            'outcome' => number_format((float)$overall_outcome, 2, '.', '')
+        );
+
+        return $result;
+    }
+
+    private function getRRKey($startArray, $size, $combinations = array()) {
+
+        # if it's the first iteration, the first set 
+        # of combinations is the same as the set of characters
+        if (empty($combinations)) {
+            $combinations = $startArray;
+        }
+
+        # we're done if we're at size 1
+        if ($size == 1) {
+            return $combinations;
+        }
+
+        # initialise array to put new values in
+        $new_combinations = array();
+
+        # loop through existing combinations and character set to create strings
+        foreach ($combinations as $combination) {
+            foreach ($startArray as $char) {
+                if(is_array($combination))
+                    $tmpArr = $combination;
+                else
+                    $tmpArr = [$combination];
+                if($char <= end($tmpArr))
+                    continue;
+                $tmpArr[] = $char;
+                $new_combinations[] = $tmpArr;
+            }
+        }
+        # call same function again for the next iteration
+        return self::getRRKey($startArray, $size - 1, $new_combinations);
+
+    }
     public function q($sql) {
         $result = $this->db->query($sql);
     }

@@ -130,6 +130,18 @@ class WorkSheet_model extends CI_Model {
         return $result;
     }
 
+
+    public function getRRCombination($betday){
+        $result = [];
+        $bets = $this->getParlay($betday);
+        if(count($bets))
+        {
+            $result = $bets[0];
+
+        }
+        return $result;
+    }
+
     public function getParlayCount($betday){
 
         $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;

@@ -8,6 +8,7 @@ class Investors extends CI_Controller {
         $this->load->model('Investor_model', 'model');
         $this->load->model('Sportbook_model', 'sportbook_model');
         $this->load->model('WorkSheet_model', 'workSheet_model');
+        $this->load->model('Settings_model', 'setting_model');
         $this->load->library('session');
     }
     public function index()
@@ -108,10 +109,16 @@ class Investors extends CI_Controller {
         $sportbookId = $_POST['sportbookId'];
 
         $rules = $this->sportbook_model->getItem($sportbookId);
+        $activeSetting = $this->setting_model->getActiveSetting($betweek);
         $parlay = $this->workSheet_model->getParlay($betweek);
-        $data['outcome'] = $this->model->getOutcome($rules, $parlay);
+        $roundrobin = $this->workSheet_model->getRRCombination($betweek);
+
         $data['rules'] = $rules;
+        $data['setting'] = $activeSetting;
         $data['parlay'] = $parlay;
+        $data['parlay_outcome'] = $this->model->getOutcome($rules, $parlay);
+        $data['roundrobin'] = $roundrobin;
+        $data['rr_outcome'] = $this->model->getRROutcome($activeSetting, $rules, $roundrobin);
         header('Content-Type: application/json');
         echo json_encode( $data );
         die;
