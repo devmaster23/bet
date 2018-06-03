@@ -19,12 +19,12 @@ var custom_headers = [
 var custom_headers_mlb = [
     [
         '',
-        {label: 'MLB', colspan: 6}, 
-        {label: 'Game', colspan: 4},
-        {label: '1st Half', colspan: 2}
+        {label: 'MLB', colspan: 7}, 
+        {label: 'Game', colspan: 7},
+        {label: '1st Half', colspan: 3}
     ],
     [
-        '','Date','Time','VRN','Away Team','@','Home Team','RL', 'RL ML','Money Line','Total','Money Line','Total'
+        '','Date','Time','VRN','Away Team','@','VRN','Home Team','RL', 'RL ML','ML','RL', 'RL ML','ML','Total','ML','ML','Total'
     ]
 ];
 
@@ -174,6 +174,11 @@ var hotSettings_mlb = {
           readOnly: true
         },
         {
+          data: 'vrn2',
+          type: 'numeric',
+          readOnly: true
+        },
+        {
           data: 'team2',
           readOnly: false
         },
@@ -193,6 +198,21 @@ var hotSettings_mlb = {
           readOnly: false
         },
         {
+          data: 'home_game_rl',
+          type: 'numeric',
+          readOnly: true
+        },
+        {
+          data: 'home_game_rl_ml',
+          type: 'numeric',
+          readOnly: true
+        },
+        {
+          data: 'home_game_ml',
+          type: 'numeric',
+          readOnly: true
+        },
+        {
           data: 'game_total',
           type: 'numeric',
           readOnly: false
@@ -203,13 +223,18 @@ var hotSettings_mlb = {
           readOnly: true
         },
         {
+          data: 'home_first_half_ml',
+          type: 'numeric',
+          readOnly: true
+        },
+        {
           data: 'first_half_total',
           type: 'numeric',
           readOnly: true
         },
     ],
     minSpareRows: 1,
-    colWidths: [110, 80, 60, 250, 50, 200, 90, 90, 120, 90, 120, 90],
+    colWidths: [110, 80, 60, 150, 50, 60, 150, 80, 80, 80, 80, 80, 80,80, 80, 80, 80],
     rowHeights: rowHeight,
     className: "htCenter htMiddle",
     rowHeaders: true,
@@ -274,8 +299,30 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
   {
     td.style.textAlign = "left";
   }
-  td.style.fontSize = fontSize;
   Handsontable.renderers.TextRenderer.apply(this, args);
+  if (prop == 'vrn2')
+  {
+    var vrn1 = instance.getDataAtRowProp(row,'vrn1');
+    if(vrn1 != null)
+      td.innerHTML = eval(vrn1) + 1;
+  }
+
+  if (prop == 'home_game_rl' || prop == 'home_game_rl_ml' || prop == 'home_game_ml')
+  {
+    var org_prop = prop.substring(5);
+    var org_val = instance.getDataAtRowProp(row,org_prop);
+    if(org_val != null)
+      td.innerHTML = eval(org_val) * -1;
+  }
+
+  if (prop == 'home_first_half_ml'){
+    var org_val = instance.getDataAtRowProp(row,'first_half_ml');
+    if(org_val != null)
+      td.innerHTML = eval(org_val) * -1;
+  }
+
+  td.style.fontSize = fontSize;
+  return td;
 }
   
 function createSheets(games) {
