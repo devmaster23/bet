@@ -128,12 +128,15 @@ var sportbooksSettingsYear = {
 
 function defaultValueRenderer(instance, td, row, col, prop, value, cellProperties) {
   var args = arguments;
+  td.style.textAlign = "left";
+  td.style.fontSize = fontSize;
+  Handsontable.renderers.TextRenderer.apply(this, args);
   if (prop == 'opening_balance' || prop == 'lastweek_balance' || prop == 'current_balance')
   {
     td.style.textAlign = "right";
+    if(value != null)
+      td.innerHTML = value + " $";
   }
-  td.style.fontSize = fontSize;
-  Handsontable.renderers.TextRenderer.apply(this, args);
   if (prop == 'current_change')
   { 
     var current_balance = eval(instance.getDataAtRowProp(row,'current_balance')),
@@ -225,7 +228,7 @@ var parlayOutcomeSetting = {
   ],
   minSpareRows: 0,
   columnSorting: true,
-  colWidths: [200,150,150,150],
+  colWidths: [200,250,150,150],
   rowHeights: rowHeight,
   height: 300,
   className: "htCenter htMiddle",
@@ -291,7 +294,7 @@ var rrTeamOutcomeSetting = {
   ],
   minSpareRows: 0,
   columnSorting: true,
-  colWidths: [250,150,150,150],
+  colWidths: [250,250,150,150],
   rowHeights: rowHeight,
   height: 300,
   className: "htCenter htMiddle",

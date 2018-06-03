@@ -28,7 +28,7 @@
 	</div>
 	<div class="content-div">
 		<div class="tab-content enter-game">
-			<div class="tab-pane" id="ncaa_m" role="tabpanel">
+			<div class="tab-pane active" id="ncaa_m" role="tabpanel">
 				<div class="sheet" data-type="ncaa_m">
 				</div>
 			</div>
@@ -48,7 +48,7 @@
 				<div class="sheet" data-type="soccer">
 				</div>
 			</div>
-			<div class="tab-pane active" id="mlb" role="tabpanel">
+			<div class="tab-pane" id="mlb" role="tabpanel">
 				<div class="sheet" data-type="mlb">
 				</div>
 			</div>
@@ -59,7 +59,7 @@
 	</div>
 	<ul id="sheets" class="nav nav-tabs bottom-sheet" role="tablist">
 		<li class="nav-item">
-			<a class="nav-link" data-toggle="tab" data-type="ncaa_m" href="#ncaa_m" aria-selected="true">NCAA M</a>
+			<a class="nav-link active" data-toggle="tab" data-type="ncaa_m" href="#ncaa_m" aria-selected="true">NCAA M</a>
 		</li>
 		<li class="nav-item">
 			<a class="nav-link" data-toggle="tab" data-type="nba" href="#nba" aria-selected="true">NBA</a>
@@ -74,7 +74,7 @@
 			<a class="nav-link" data-toggle="tab" data-type="soccer" href="#soccer" aria-selected="true">Soccer</a>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link active" data-toggle="tab" data-type="mlb" href="#mlb" aria-selected="true">MLB</a>
+			<a class="nav-link" data-toggle="tab" data-type="mlb" href="#mlb" aria-selected="true">MLB</a>
 		</li>
 	</ul>
 </div>

@@ -82,22 +82,6 @@ var sportbookAddSettings = {
     },
     outsideClickDeselects: false,
     nestedHeaders: custom_headers,
-    // columnSummary: function() {
-    //   var configArray = [];
-    //   var summaryTypes = ['', '', '', '', '', 'sum', 'sum', '', '', ''];
-    //   for (var i = 0; i < 9; i++) {
-    //     if(summaryTypes[i] == '')
-    //         continue;
-    //     configArray.push({
-    //       sourceColumn: i,
-    //       destinationRow: 0,
-    //       destinationColumn: i,
-    //       type: summaryTypes[i],
-    //       forceNumeric: true
-    //     });
-    //   }
-    //   return configArray;
-    // },
     cells: function (row, col, prop) {
       var cellProperties = {};
       cellProperties.renderer = defaultValueRenderer;
@@ -108,12 +92,17 @@ var sportbookAddSettings = {
 function defaultValueRenderer(instance, td, row, col, prop, value, cellProperties) {
   var args = arguments;
   td.style.color = "#000";
-  if (prop == 'opening_balance' || prop == 'current_balance')
-  {
-    td.style.textAlign = "right";
-  }
+  td.style.textAlign = 'left';
   td.style.fontSize = fontSize;
   Handsontable.renderers.TextRenderer.apply(this, args);
+  if (prop == 'opening_balance' || prop == 'current_balance')
+  {
+    if(value != null)
+    {
+        td.style.textAlign = "right";
+        td.innerHTML = value + " $";
+    }
+  }
   if (prop == 'action')
   {
     td.innerHTML = '<span class="remove-sportbook-icon" data-id="'+row+'"><button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></span>';

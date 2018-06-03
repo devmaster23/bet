@@ -364,23 +364,17 @@ class Settings_model extends CI_Model {
             $settings[1]['bet_number3'] = $data['rr_number3'];
             $settings[1]['bet_number4'] = $data['rr_number4'];
 
-            if($parlayCnt)
-            {
-                $settings[] = array(
-                    'title' => $this->headerName[2],
-                    'bet_percent' => floatval($data['parlay_allocation']),
-                    'bet_number1' => $parlayCnt
-                );
-            }
-
-            if($individualCnt)
-            {
-                $settings[] = array(
-                    'title' => $this->headerName[3],
-                    'bet_percent' => floatval($data['pick_allocation']),
-                    'bet_number1' => $individualCnt
-                );
-            }
+            $settings[] = array(
+                'title' => $this->headerName[2],
+                'bet_percent' => floatval($data['parlay_allocation']),
+                'bet_number1' => $parlayCnt
+            );
+            
+            $settings[] = array(
+                'title' => $this->headerName[3],
+                'bet_percent' => floatval($data['pick_allocation']),
+                'bet_number1' => $individualCnt
+            );
 
             $bet_analysis_index = 0;
             $bet_analysis[$bet_analysis_index]['title'] = '';
@@ -528,16 +522,16 @@ class Settings_model extends CI_Model {
         $custom_bet_allocations = $this->CI->CustomBetAllocation_model->getByBetday($betday,$categoryType, $categoryGroupUser);
 
         $newData = array(
-            'bet_allocation' => $settingData[0]['1'],
-            'rr_allocation' => $settingData[1]['1'],
-            'rr_number1' => $settingData[1]['2'],
-            'rr_number2' => $settingData[1]['4'],
-            'rr_number3' => $settingData[1]['5'],
-            'rr_number4' => $settingData[1]['6'],
-            'parlay_allocation' => $settingData[2]['1'],
-            'parlay_number1' => $settingData[2]['2'],
-            'pick_allocation' => $settingData[3]['1'],
-            'pick_number1'  => $settingData[3]['2'],
+            'bet_allocation' => @$settingData[0]['1'],
+            'rr_allocation' => @$settingData[1]['1'],
+            'rr_number1' => @$settingData[1]['2'],
+            'rr_number2' => @$settingData[1]['4'],
+            'rr_number3' => @$settingData[1]['5'],
+            'rr_number4' => @$settingData[1]['6'],
+            'parlay_allocation' => @$settingData[2]['1'],
+            'parlay_number1' => @$settingData[2]['2'],
+            'pick_allocation' => @$settingData[3]['1'],
+            'pick_number1'  => @$settingData[3]['2'],
             'description'   => $description,
         );
 

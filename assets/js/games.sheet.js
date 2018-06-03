@@ -98,7 +98,7 @@ var hotSettings = {
         },
     ],
     minSpareRows: 1,
-    colWidths: [110, 80, 60, 250, 50, 200, 90, 90, 90, 90, 90, 90],
+    colWidths: [110, 80, 60, 170, 50, 170, 90, 90, 90, 90, 90, 90],
     rowHeights: rowHeight,
     className: "htCenter htMiddle",
     rowHeaders: true,

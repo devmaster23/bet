@@ -392,7 +392,30 @@ class Picks_model extends CI_Model {
 
         if ($gameType == 'mlb')
         {
-            $item['line'] = (($row['game_rl'] > 0 ) ? '+' : ''). $row['game_rl']. ' ' .$row['game_rl_ml'];
+            $value = 0;
+            switch ($type) {
+                case 'pts':
+                    $value = (($row['game_rl'] > 0 ) ? '+' : ''). $row['game_rl']. ' ' .$row['game_rl_ml'];
+                    break;
+                case 'ml':
+                    $value = $row['game_ml'];
+                    break;
+                case 'total':
+                default:
+                    $value = $row['game_total'];
+                    break;
+            }
+            if($team_id == 2)
+            {
+                $value *= -1;
+                if($type =='total')
+                {
+                    $value = $row['first_half_total'];
+                }
+            }
+
+            $item['line'] = $value;
+
         }
         $item['select'] = $row['id'].'_'.$team_id.'_'.$type.'_'.($first_half ? 1 : 0);
         $item['selected'] = false;

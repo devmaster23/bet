@@ -33,6 +33,35 @@ class Investor_model extends CI_Model {
         $this->CI =& get_instance();
         $this->CI->load->model('Investor_sportbooks_model');
     }
+
+    private function formatPhoneNumber($phoneNumber)
+    {
+        $phoneNumber = preg_replace('/[^0-9]/','',$phoneNumber);
+
+        if(strlen($phoneNumber) > 10) {
+            $countryCode = substr($phoneNumber, 0, strlen($phoneNumber)-10);
+            $areaCode = substr($phoneNumber, -10, 3);
+            $nextThree = substr($phoneNumber, -7, 3);
+            $lastFour = substr($phoneNumber, -4, 4);
+
+            $phoneNumber = '+'.$countryCode.' ('.$areaCode.') '.$nextThree.'-'.$lastFour;
+        }
+        else if(strlen($phoneNumber) == 10) {
+            $areaCode = substr($phoneNumber, 0, 3);
+            $nextThree = substr($phoneNumber, 3, 3);
+            $lastFour = substr($phoneNumber, 6, 4);
+
+            $phoneNumber = '('.$areaCode.') '.$nextThree.'-'.$lastFour;
+        }
+        else if(strlen($phoneNumber) == 7) {
+            $nextThree = substr($phoneNumber, 0, 3);
+            $lastFour = substr($phoneNumber, 3, 4);
+
+            $phoneNumber = $nextThree.'-'.$lastFour;
+        }
+
+        return $phoneNumber;
+    }
     public function getList($betweek){
 
         $result = [];
@@ -47,6 +76,7 @@ class Investor_model extends CI_Model {
 
             $tmpArr['sportbooks'] = $this->CI->Investor_sportbooks_model->getListByInvestorId($investorId,$betweek);
             $tmpArr['full_name'] = $tmpArr['first_name'] . ' ' . $tmpArr['last_name'];
+            $tmpArr['phone_number'] = $this->formatPhoneNumber($tmpArr['phone_number']);
             $tmpArr['current_balance'] = 0;
             foreach ($tmpArr['sportbooks'] as $sportbook_item) {
                 $tmpArr['current_balance'] += $sportbook_item['current_balance_'.$betweek];
@@ -253,6 +283,7 @@ class Investor_model extends CI_Model {
     {   
         $data = [];
         $startArray = range(1,$rr1);
+        $result = [];
         if(is_array($startArray) && count($startArray) && $rr2 > 0){
             $keyList = self::getRRKey($startArray, $rr2);
             foreach ($keyList as $keyItem) {
@@ -263,7 +294,6 @@ class Investor_model extends CI_Model {
                 $data[] = $teamArr;
             }
 
-            $result = [];
             $initial_bet = 100;
             $overall_bet = 0;
             $overall_outcome = 0;
