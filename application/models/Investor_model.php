@@ -253,55 +253,57 @@ class Investor_model extends CI_Model {
     {   
         $data = [];
         $startArray = range(1,$rr1);
-        $keyList = self::getRRKey($startArray, $rr2);
-        foreach ($keyList as $keyItem) {
-            $teamArr = [];
-            foreach ($keyItem as $key) {
-                $teamArr[] = $teamList[$key-1];
-            }
-            $data[] = $teamArr;
-        }
-
-        $result = [];
-        $initial_bet = 100;
-        $overall_bet = 0;
-        $overall_outcome = 0;
-        foreach ($data as $dataItem) {
-            $row = array(
-                'team' => '',
-                'line' => '',
-                'bet'  => $initial_bet,
-                'outcome' => 0
-            );
-            if(count($dataItem))
-            {
-                $teams = [];
-                $lines = [];
-                $outcome = $initial_bet;
-
-                foreach ($dataItem as $key => $item) {
-                    $teams[] = $item['team'];
-                    if($item['team'] == '' || $item['line'] == '')
-                        continue;
-                    $lines[] = $item['line'];
-                    $outcome = $outcome + (($item['line'] > 0) ? $outcome * $item['line'] / 100 : @($outcome  / $item['line']) * 100 * (-1));
+        if(is_array($startArray) && count($startArray) && $rr2 > 0){
+            $keyList = self::getRRKey($startArray, $rr2);
+            foreach ($keyList as $keyItem) {
+                $teamArr = [];
+                foreach ($keyItem as $key) {
+                    $teamArr[] = $teamList[$key-1];
                 }
-                $row['team'] = join(', ',$teams);
-                $row['line'] = join(' / ',$lines);
-                $row['outcome'] = number_format((float)$outcome, 2, '.', '');
-
-                $overall_bet += $initial_bet;
-                $overall_outcome += $outcome;
+                $data[] = $teamArr;
             }
-            $result[] = $row;
-        }
 
-        $result[] = array(
-            'team' => 'A '.$rr1.'-'.$rr2.' Round Robbin is',
-            'line' => count($data).' Parlays',
-            'bet'  => $overall_bet,
-            'outcome' => number_format((float)$overall_outcome, 2, '.', '')
-        );
+            $result = [];
+            $initial_bet = 100;
+            $overall_bet = 0;
+            $overall_outcome = 0;
+            foreach ($data as $dataItem) {
+                $row = array(
+                    'team' => '',
+                    'line' => '',
+                    'bet'  => $initial_bet,
+                    'outcome' => 0
+                );
+                if(count($dataItem))
+                {
+                    $teams = [];
+                    $lines = [];
+                    $outcome = $initial_bet;
+
+                    foreach ($dataItem as $key => $item) {
+                        $teams[] = $item['team'];
+                        if($item['team'] == '' || $item['line'] == '')
+                            continue;
+                        $lines[] = $item['line'];
+                        $outcome = $outcome + (($item['line'] > 0) ? $outcome * $item['line'] / 100 : @($outcome  / $item['line']) * 100 * (-1));
+                    }
+                    $row['team'] = join(', ',$teams);
+                    $row['line'] = join(' / ',$lines);
+                    $row['outcome'] = number_format((float)$outcome, 2, '.', '');
+
+                    $overall_bet += $initial_bet;
+                    $overall_outcome += $outcome;
+                }
+                $result[] = $row;
+            }
+
+            $result[] = array(
+                'team' => 'A '.$rr1.'-'.$rr2.' Round Robbin is',
+                'line' => count($data).' Parlays',
+                'bet'  => $overall_bet,
+                'outcome' => number_format((float)$overall_outcome, 2, '.', '')
+            );
+        }
 
         return $result;
     }
