@@ -15,7 +15,7 @@
     var api_url = "<?php echo site_url('settings'); ?>";
 </script>
 <div class="container page-title">
-    <h1 class="text-center">Controll Panel</h1>
+  <h1 class="text-center">Control Panel</h1>
 </div>
 
 <div id="main">

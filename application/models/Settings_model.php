@@ -64,16 +64,27 @@ class Settings_model extends CI_Model {
                 'bet_number2'    => null,
                 'bet_number3'    => null,
                 'bet_number4'    => null,
+            ),
+            array(
+                'title' => $this->headerName[2],
+                'bet_percent'    => 0,
+                'bet_number1'    => null,
+            ),
+            array(
+                'title' => $this->headerName[3],
+                'bet_percent'    => 0,
+                'bet_number1'    => null,
             )
         );
 
         $this->defaultResult = array(
             array(
-                'rr1'           => null,
-                'rr2'           => null,
-                'sheet'         => null,
-                'order'         => 1,
-                'bets'          => null
+                'title'     => '',
+                'rr1'       => 'Structure',
+                'rr2'       => '',
+                'sheet'     => 'Sheets',
+                'order'     => 'Orders',
+                'bets'      => '# Bets'
             )
         );
 
@@ -364,27 +375,19 @@ class Settings_model extends CI_Model {
             $settings[1]['bet_number3'] = $data['rr_number3'];
             $settings[1]['bet_number4'] = $data['rr_number4'];
 
-            $settings[] = array(
+            $settings[2] = array(
                 'title' => $this->headerName[2],
                 'bet_percent' => floatval($data['parlay_allocation']),
                 'bet_number1' => $parlayCnt
             );
             
-            $settings[] = array(
+            $settings[3] = array(
                 'title' => $this->headerName[3],
                 'bet_percent' => floatval($data['pick_allocation']),
                 'bet_number1' => $individualCnt
             );
 
-            $bet_analysis_index = 0;
-            $bet_analysis[$bet_analysis_index]['title'] = '';
-            $bet_analysis[$bet_analysis_index]['rr1'] = 'Structure';
-            $bet_analysis[$bet_analysis_index]['rr2'] = '';
-            $bet_analysis[$bet_analysis_index]['sheet'] = 'Sheets';
-            $bet_analysis[$bet_analysis_index]['order'] = 'Orders';
-            $bet_analysis[$bet_analysis_index]['bets'] = '# Bets';
-
-            $bet_analysis_index++;
+            $bet_analysis_index = 1;
             $bet_analysis[$bet_analysis_index]['title'] = 'Round Robbin 1';
             $bet_analysis[$bet_analysis_index]['rr1'] = $data['rr_number1'];
             $bet_analysis[$bet_analysis_index]['rr2'] = $data['rr_number2'];
