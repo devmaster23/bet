@@ -39,10 +39,12 @@ class Orders extends CI_Controller {
         if(isset($_POST['sportbookID']))
         {
             $sportbookID = $_POST['sportbookID'];
+            $selectedBet = $bets[$betIndex-1];
             if($sportbookID != "" && isset($bets[$betIndex-1]))
             {
-                $selectedBet = $bets[$betIndex-1];
                 $this->model->addOrder($data['betweek'], $investorId, $sportbookID, $selectedBet['select']);
+            }else{
+                $this->model->removeOrder($data['betweek'], $investorId, $selectedBet['select']);
             }
         }
         if(is_null($investorId))
