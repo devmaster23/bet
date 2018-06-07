@@ -13,6 +13,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   <link href='<?php echo base_url('assets/css/setting.css') ?>' rel='stylesheet' />
   <link href='<?php echo base_url('assets/css/sportbooks.css') ?>' rel='stylesheet' />
   <link href='<?php echo base_url('assets/css/investors.css') ?>' rel='stylesheet' />
+  <link href='<?php echo base_url('assets/css/orders.css') ?>' rel='stylesheet' />
 </head>
 <body>
 
@@ -45,6 +46,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           </li>
           <li class="nav-item <?php echo ($page == 'sportbooks')?'active':'';?>">
             <a class="nav-link" href="<?php echo site_url('sportbooks'); ?>">SportBooks</a>
+          </li>
+          <li class="nav-item <?php echo ($page == 'orders')?'active':'';?>">
+            <a class="nav-link" href="<?php echo site_url('orders'); ?>">Orders</a>
           </li>
         </ul>
       </div>

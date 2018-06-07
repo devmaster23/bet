@@ -95,6 +95,10 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
   td.style.textAlign = 'left';
   td.style.fontSize = fontSize;
   Handsontable.renderers.TextRenderer.apply(this, args);
+  if (prop == 'login_name' || prop == 'password')
+  {
+    td.style.textAlign = "center";
+  }
   if (prop == 'opening_balance' || prop == 'current_balance')
   {
     if(value != null)
@@ -161,8 +165,7 @@ $(document).ready(function() {
                 "data":           null,
                 "defaultContent": ""
             },
-            { "data": "first_name" },
-            { "data": "last_name" },
+            { "data": "full_name" },
             { "data": "email" },
             { "data": "phone_number" },
             { "data": "starting_bankroll" },

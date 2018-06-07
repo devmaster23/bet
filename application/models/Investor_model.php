@@ -75,6 +75,8 @@ class Investor_model extends CI_Model {
             $investorId = $item['id'];
 
             $tmpArr['sportbooks'] = $this->CI->Investor_sportbooks_model->getListByInvestorId($investorId,$betweek);
+            $tmpArr['bets'] = 0;
+            $tmpArr['accounts'] = count($tmpArr['sportbooks']);
             $tmpArr['full_name'] = $tmpArr['first_name'] . ' ' . $tmpArr['last_name'];
             $tmpArr['phone_number'] = $this->formatPhoneNumber($tmpArr['phone_number']);
             $tmpArr['current_balance'] = 0;
@@ -156,8 +158,9 @@ class Investor_model extends CI_Model {
         foreach ($sportbook_data as $sportbook_item) {
             $addSportbookDate[] = $this->formatRelationItem($investor_id, $sportbook_item);
         }
-        if(count($addSportbookDate))
-            $this->db->insert_batch($this->relationTableName, $addSportbookDate);
+        foreach ($addSportbookDate as $newItem) {
+            $this->db->insert($this->relationTableName, $newItem);
+        }
         return true;
     }
 
@@ -172,7 +175,7 @@ class Investor_model extends CI_Model {
             'id' => $id
         ))->update($this->tableName,$updateDate);
 
-        $addSportbookDate = [];
+        $addSportbookDate = array();
         $sportbook_data = json_decode($data['sportbook_data']);
 
         $validIds = [];
@@ -180,7 +183,7 @@ class Investor_model extends CI_Model {
             $rowData = $this->formatRelationItem($id, $sportbook_item);
             if($sportbook_item->relation_id == -1)
             {
-                $addSportbookDate[] = $rowData;
+                array_push($addSportbookDate, $rowData);
             }else{
                 $validIds[] = $sportbook_item->relation_id;
                 $updateSportbookData = $rowData;
@@ -199,8 +202,8 @@ class Investor_model extends CI_Model {
             ->delete($this->relationTableName);
         }
 
-        if(count($addSportbookDate)){
-            $this->db->insert_batch($this->relationTableName, $addSportbookDate);
+        foreach ($addSportbookDate as $newItem) {
+            $this->db->insert($this->relationTableName, $newItem);
         }
 
         return true;

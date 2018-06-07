@@ -267,10 +267,10 @@ class Picks_model extends CI_Model {
         return $result;
     }
 
-    public function getIndividual($betday, $individual_type = 'candy')
+    public function getIndividual($betday, $individual_type = 'candy', $categoryType = null, $categoryGroupUser = null)
     {
-        $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
-        $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+        $type = !is_null($categoryType)? $categoryType : (isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0);
+        $groupuser_id = !is_null($categoryGroupUser)? $categoryGroupUser : (isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0);
 
         $this->db->select('*')->from('games');
         $this->db->where(array(

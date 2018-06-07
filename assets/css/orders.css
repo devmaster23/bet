@@ -1,0 +1,110 @@
+.order-page [type=search]{
+    outline: 0 none;
+    outline-offset: 0px;
+    -webkit-appearance: textfield;
+}
+
+.order-page #investors_tbl .action-div a{
+    color: #187bd6;
+    cursor: pointer;
+    padding: 0px 5px;
+}
+.order-page #investors_tbl .action-div a.sportbooks{
+    color: #c50000;
+}
+
+.order-page #investors_tbl .action-div a:hover,
+.order-page #investors_tbl .action-div a:active
+{
+    color: #16528a;
+}
+
+.order-page .enter_order-page{
+    display: flex;
+}
+
+.order-page .enter_order-page{
+    display: flex;
+}
+.order-page .enter_order-page .bet-div{
+    flex: 0 350px;
+    margin-right: 20px;
+}
+.order-page .enter_order-page .bet-div hr{
+   border-width: 2px; 
+}
+
+.order-page .enter_order-page .iframe-div{
+    flex: 1 0;
+}
+.order-page .enter_order-page .iframe-div iframe{
+    width: 100%;
+    border: 0px;
+}
+.order-page .enter_order-page .bet-div label{
+    width: 150px;
+    font-weight: bold;
+}
+
+.order-page .enter_order-page .bet-div .bet-info{
+    margin-top: 20px;
+}
+.order-page .enter_order-page .bet-div .title{
+    margin-left: 30px;
+    font-weight: bold;
+}
+.order-page .enter_order-page .bet-div table{
+    margin-top: 20px;
+    text-align: center;
+}
+.order-page .enter_order-page .bet-div .summary{
+    display: block;
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 30px;
+    color: #0085ff;
+}
+
+.order-page .enter_order-page .bet-info table tbody{
+    background-color: #bee0a9;
+}
+.order-page .enter_order-page .sportbookList{
+    height: 400px;
+    overflow-y: scroll;
+}
+.order-page .enter_order-page .sportbookList table td{
+    border-color: #333;
+    padding: 5px;
+}
+.order-page .enter_order-page .sportbookList .sportbook-tr{
+    cursor: pointer;
+}
+.order-page .enter_order-page .sportbookList .sportbook-tr.selected{
+    background-color: #f3de3a;
+}
+
+.order-page .enter_order-page .action-div{
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.order-page .enter_order-page .action-div form
+{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.order-page .enter_order-page .action-div .prev-img,
+.order-page .enter_order-page .action-div .next-img{
+    width: 80px;
+}
+
+.order-page .enter_order-page .action-div .next-img{
+    width: 80px;
+    transform: rotate(180deg); 
+}
+
+.order-page .enter_order-page .action-div #save-btn{
+    height: 50px;
+}

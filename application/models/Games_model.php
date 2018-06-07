@@ -108,10 +108,9 @@ class Games_model extends CI_Model {
 			))->where_not_in('id', $validIds);
 			$this->db->delete('games');
 		}
-		if(count($insertData)){
-			$this->db->insert_batch('games', $insertData);
+		foreach ($insertData as $newItem) {
+			$this->db->insert('games', $newItem);
 		}
-
 	}
 	public function q($sql) {
 		$result = $this->db->query($sql);

@@ -274,7 +274,13 @@ class Settings_model extends CI_Model {
             'rr_number1'    => 0,
             'rr_number2'    => 0,
             'rr_number3'    => 0,
-            'rr_number4'    => 0
+            'rr_number4'    => 0,
+            'rr_number4'    => 0,
+            'parlay_allocation'    => 0,
+            'parlay_number1'    => 0,
+            'pick_allocation'    => 0,
+            'pick_number1'    => 0,
+            'description'   => '',
         );
 
         if(count($rows))
@@ -286,6 +292,11 @@ class Settings_model extends CI_Model {
             $result['rr_number2'] = $data['rr_number2'];
             $result['rr_number3'] = $data['rr_number3'];
             $result['rr_number4'] = $data['rr_number4'];
+            $result['parlay_allocation'] = $data['parlay_allocation'];
+            $result['parlay_number1'] = $data['parlay_number1'];
+            $result['pick_allocation'] = $data['pick_allocation'];
+            $result['pick_number1'] = $data['pick_number1'];
+            $result['description'] = $data['description'];
         }
         return $result;
     }
@@ -331,8 +342,8 @@ class Settings_model extends CI_Model {
         $description = '';
         $bet_analysis = $this->defaultResult;
 
-        $candy_data = $this->CI->Picks_model->getIndividual($betday, 'candy');
-        $pick_data = $this->CI->Picks_model->getIndividual($betday, 'pick');
+        $candy_data = $this->CI->Picks_model->getIndividual($betday, 'candy',$categoryType, $categoryGroupUser);
+        $pick_data = $this->CI->Picks_model->getIndividual($betday, 'pick',$categoryType, $categoryGroupUser);
 
         $rr_disableCnt = $this->CI->WorkSheet_model->getDisableCount($betday);
         $rr_validColumnCnt = $this->CI->WorkSheet_model->getValidRRColumnCount($betday);

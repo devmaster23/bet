@@ -282,7 +282,7 @@ var pickTableSettings = {
     ],
     minSpareRows: 0,
     minSpareCols: 0,
-    colWidths: [50, 100, 50,60, 250, 120,80,60],
+    colWidths: [50, 100, 50,100, 150, 120,80,60],
     rowHeights: rowHeight,
     className: "htCenter htMiddle",
     height: tableHeight,
@@ -381,7 +381,7 @@ function allDefaultValueRenderer(instance, td, row, col, prop, value, cellProper
   var args = arguments;
   td.style.fontSize = fontSize;
   td.style.color = '#000';
-  if (prop == 'pick_team' || prop == 'wrapper_team' || prop == 'candy_team')
+  if (prop == 'pick_team' || prop == 'wrapper_team' || prop == 'candy_team' || prop == 'team')
   {
     td.style.textAlign = "left";
   }

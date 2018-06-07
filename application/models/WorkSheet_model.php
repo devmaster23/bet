@@ -417,8 +417,8 @@ class WorkSheet_model extends CI_Model {
         $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
         $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
 
-        $candy_data = $this->CI->Picks_model->getIndividual($betday, 'candy');
-        $pick_data = $this->CI->Picks_model->getIndividual($betday, 'pick');
+        $candy_data = $this->CI->Picks_model->getIndividual($betday, 'candy',$type);
+        $pick_data = $this->CI->Picks_model->getIndividual($betday, 'pick',$groupuser_id);
 
         $parlayCnt = $this->getParlayCount($betday);
 

@@ -539,7 +539,8 @@ tr.shown td.details-control {
 }
 
 #main.sportbook-page,
-#main.investor-page
+#main.investor-page,
+#main.order-page
 {
     padding:0px 20px;
 }
