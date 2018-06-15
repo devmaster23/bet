@@ -63,9 +63,15 @@
             </div>
             <div class="bet-info clearfix">
                 <?php 
-                    if(!is_null($bet)){       
+                    if(!is_null($bet)){
+                        $title = 'Single Bet';
+                        $betType = $bet['bet_type'];
+                        if($betType == 'rr')
+                            $title = 'Round Robin';
+                        else if($betType == 'parlay')
+                            $title = 'Parlay';
                 ?>
-                <span class="title">Single Bet</span>
+                <span class="title"><?=$title?></span>
                 <table class="table">
                     <thead>
                         <tr>
@@ -77,6 +83,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <?php if($betType == 'single') { ?>
                         <tr>
                             <td><b><?=$bet['vrn']?></b></td>
                             <td><b><?=$bet['type']?></b></td>
@@ -84,6 +91,19 @@
                             <td><?=$bet['amount']?></td>
                             <td><?=$bet['time']?></td>
                         </tr>
+                        <?php } else{ 
+                            for ($i=0; $i< $rr1; $i++) {
+                        ?>
+                        <tr>
+                            <td><b><?=$bet[$i]['vrn']?></b></td>
+                            <td><b><?=$bet[$i]['type']?></b></td>
+                            <td><?=$bet[$i]['team']?></td>
+                            <td><?=$bet['amount']?></td>
+                            <td><?=$bet[$i]['time']?></td>
+                        </tr>
+                        <?php 
+                            } 
+                        } ?>
                     </tbody>
                 </table>
                 <div class="float-right">
@@ -127,7 +147,7 @@
                         ?>
                         <tr class="sportbook-tr <?=$clsSelected?>" data-id="<?=$item['sportbook_id']?>">
                             <td><?=$item['title']?></td>
-                            <td><?=$item['current_balance']?></td>
+                            <td>$<?=$item['current_balance']?></td>
                             <td><?=$item['bet_count']?></td>
                         </tr>
                         <?php

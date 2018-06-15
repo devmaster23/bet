@@ -127,12 +127,18 @@ class Order_model extends CI_Model {
     public function getSportbook($sportbooks, $betweek, $investorId, $bet)
     {
         $result = $sportbooks;
+        usort($result, function($a,$b){
+            if ($a['bet_count']==$b['bet_count']) return 0;
+            return ($a['bet_count']<$b['bet_count'])?1:-1;
+        });
+        
+
         $rows = $this->db->select('*')
         ->from($this->tableName)
         ->where(array(
             'investor_id' => $investorId,
             'betday' => $betweek,
-            'bet_id' => $bet['select']
+            'bet_id' => $bet['title']
         ))->get()->result_array();
         foreach ($result as &$item) {
             $item['selected'] = false;

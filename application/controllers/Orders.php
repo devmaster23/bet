@@ -10,6 +10,7 @@ class Orders extends CI_Controller {
         $this->load->model('Sportbook_model', 'sportbook_model');
         $this->load->model('Picks_model', 'pick_model');
         $this->load->model('Settings_model', 'setting_model');
+        $this->load->model('WorkSheet_model', 'worksheet_model');
         $this->load->library('session');
     }
     public function index()
@@ -34,7 +35,25 @@ class Orders extends CI_Controller {
         $date = new DateTime(date('Y-m-d'));
         $betweek = $date->format('W');
         $data['betweek'] = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
-        $bets = $this->pick_model->getIndividual($data['betweek'], 'pick');
+
+        $worksheet = $this->worksheet_model->getRROrders($data['betweek']);
+
+        $bets = array();
+
+        if(isset($worksheet['data']['rr']))
+        {
+            $bets = array_merge($bets, $worksheet['data']['rr']);
+        }
+
+        if(isset($worksheet['data']['parlay']))
+        {
+            $bets = array_merge($bets, $worksheet['data']['parlay']);
+        }
+
+        if(isset($worksheet['data']['single']))
+        {
+            $bets = array_merge($bets, $worksheet['data']['single']);
+        }
 
         if(isset($_POST['sportbookID']))
         {
@@ -42,9 +61,9 @@ class Orders extends CI_Controller {
             $selectedBet = $bets[$betIndex-1];
             if($sportbookID != "" && isset($bets[$betIndex-1]))
             {
-                $this->model->addOrder($data['betweek'], $investorId, $sportbookID, $selectedBet['select']);
+                $this->model->addOrder($data['betweek'], $investorId, $sportbookID, $selectedBet['title']);
             }else{
-                $this->model->removeOrder($data['betweek'], $investorId, $selectedBet['select']);
+                $this->model->removeOrder($data['betweek'], $investorId, $selectedBet['title']);
             }
         }
         if(is_null($investorId))
@@ -62,6 +81,7 @@ class Orders extends CI_Controller {
         {
             $bet['amount'] = 100;
         }
+        $data['rr1'] = @$worksheet['rr1'];
         $data['investor'] = $investor;
         $data['bet'] = $bet;
         $data['sportbookList'] = $this->model->getSportbook($investor['sportbooks'], $data['betweek'], $investorId, $data['bet']);

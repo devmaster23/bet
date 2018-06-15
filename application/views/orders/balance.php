@@ -67,7 +67,7 @@
             <hr/>
             <div class="clearfix">
                 <div class="float-right">
-                    <span class="summary"> Bet <?=$sportbook_id?> of <?=$sportbook_count?></span>
+                    <span class="summary"> Sportbook <?=$sportbook_id?> of <?=$sportbook_count?></span>
                 </div>
             </div>
             
@@ -97,7 +97,7 @@
                         <tr>
                             <td>Title</td>
                             <td>Balance</td>
-                            <td>Bet</td>
+                            <td>Bet<br/>Amount</td>
                             <td>#Bets</td>
                         </tr>
                     </tfoot>

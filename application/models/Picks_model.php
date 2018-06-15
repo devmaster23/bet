@@ -418,6 +418,8 @@ class Picks_model extends CI_Model {
 
         }
         $item['select'] = $row['id'].'_'.$team_id.'_'.$type.'_'.($first_half ? 1 : 0);
+        $item['title'] = $item['select'];
+        $item['bet_type'] = 'single';
         $item['selected'] = false;
         if(in_array($item['select'], $pickSelectList))
         {

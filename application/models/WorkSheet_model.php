@@ -294,6 +294,7 @@ class WorkSheet_model extends CI_Model {
             $robin_1 = @$activeSetting['rr_number1'];
             $robin_2 = @$activeSetting['rr_number2'];
             $robin_3 = @$activeSetting['rr_number3'];
+            $robin_4 = @$activeSetting['rr_number4'];
             $parlayIds = empty($row['parlay_select'])? array() : json_decode($row['parlay_select']);
 
             $validColumnArr = array();
@@ -331,8 +332,127 @@ class WorkSheet_model extends CI_Model {
                     $ret[$i][$j]['disabled'] = $disableList;
                 }
             }
-            $result['type'] = $robin_1.'-'.$robin_2.'-'.$robin_3;
+            $result['type'] = $robin_1.'-'.$robin_2.'-'.$robin_3.'-'.$robin_4;
             $result['date'] = $row['date'];
+            $result['data'] = $ret;
+        }
+        return $result;
+    }
+
+
+    public function getRROrders($betday)
+    {
+
+        $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
+        $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+
+        $pick_data = $this->CI->Picks_model->getAll($betday);
+        $activeSetting = $this->getRobbinSetting($betday);
+
+        $rows = $this->db->select('*')->from($this->tableName)
+            ->where(array(
+                'betday' => $betday,
+                'type'  => $type,
+                'groupuser_id'  => $groupuser_id
+            ))
+            ->get()->result_array();
+
+
+        $result = array(
+            'rr1'   => 0,
+            'rr2'   => 0,
+            'rr3'   => 0,
+            'rr4'   => 0,
+            'betday' => $betday,
+            'data'   => array()
+        );
+
+        $roundrobins = array();
+
+        $ret = array(
+            'rr' => array(),
+            'parlay' => array(),
+            'single' => array()
+        );
+
+        $ret['single'] = $this->CI->Picks_model->getIndividual($betday, 'pick');
+        
+        if(count($rows))
+        {
+            $row = $rows[0];
+            $settingData = json_decode($row['sheet_data']);
+            $robin_1 = @$activeSetting['rr_number1'];
+            $robin_2 = @$activeSetting['rr_number2'];
+            $robin_3 = @$activeSetting['rr_number3'];
+            $robin_4 = @$activeSetting['rr_number4'];
+            $parlayIds = empty($row['parlay_select'])? array() : json_decode($row['parlay_select']);
+
+            $validColumnArr = array();
+            for($i =0; $i < $robin_2; $i ++)
+            {
+                $arrayItem = $settingData[$i];
+                foreach ($arrayItem as $key1 => $value) {
+                    if(!is_null($value) && $value != '')
+                        $validColumnArr[$key1] = true;
+                }
+            }
+
+            for($j=0; $j<count($validColumnArr); $j++){
+                for($i=0; $i<60; $i++){
+
+                    $candy_item = $this->getTeamFromPick($pick_data, $i, 'candy');
+                    if(is_null($candy_item['team']))
+                        continue;
+                    $candy_key = $this->getTeamKey($pick_data, $i, 'candy');
+                
+                    $tmpArr = array();
+                    $disableList = array();
+                    for($k=0; $k<$robin_1-1; $k++){
+                        $team_row_id = $settingData[$k][$j];
+                        $team_info = $this->getTeamFromPick($pick_data, $team_row_id-1);
+                        $team_key = $this->getTeamKey($pick_data, $team_row_id-1);
+
+                        array_push($tmpArr,$team_info);    
+                        if($candy_item['team'] != null && $team_info['team'] != null && ($candy_item['team'] == $team_info['team'] || $candy_key == $team_key))
+                            $disableList[] = $k;
+                    }
+                    if(count($disableList))
+                        continue;
+                    array_push($tmpArr,$candy_item);
+                    $tmpArr['title'] = chr(65+$j).($i+1);
+                    $is_parlay = in_array($i."_".$j, $parlayIds) ? 1 : 0;
+
+                    if($is_parlay)
+                    {
+                        $tmpArr['bet_type'] = 'parlay';
+                        $ret['parlay'][] = $tmpArr;
+                    }
+                    $tmpArr['bet_type'] = 'rr';
+                    if(!isset($roundrobins[$j]))
+                        $roundrobins[$j] = [];    
+                    $roundrobins[$j][] = $tmpArr;                    
+                }
+            }
+
+            $maxIndex = 0;
+            foreach ($roundrobins as $subArr) {
+                $maxIndex = $maxIndex > count($subArr) ? $maxIndex : count($subArr);
+            }
+
+            for($i = 0; $i < $maxIndex; $i ++)
+            {
+                for($j = 0; $j < count($roundrobins); $j ++)
+                {
+                    if(!isset($roundrobins[$j][$i]))
+                        continue;
+                    $ret['rr'][] = $roundrobins[$j][$i];
+                }
+            }
+
+            $result['rr1'] = $robin_1;
+            $result['rr2'] = $robin_2;
+            $result['rr3'] = $robin_3;
+            $result['rr4'] = $robin_4;
             $result['data'] = $ret;
         }
         return $result;

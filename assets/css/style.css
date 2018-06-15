@@ -259,11 +259,19 @@
     justify-content: space-between;
     padding: 0px 20px;
 }
-.game-week-select-div{
+
+.header-div .header-left-div{
+    display: flex;
+    align-items: center;
+}
+.game-week-select-div,
+.investor-select-div{
+    margin-right: 20px;
     display: flex;
 }
 
-.game-week-select-div label{
+.game-week-select-div label,
+.investor-select-div label{
     padding-right: 20px;
     font-size: 20px;
     font-weight: bold;

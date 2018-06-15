@@ -41,7 +41,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <a href="javascript:;" class="dropdown-toggle nav-link" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Investors <b class="caret"></b></a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" href="<?php echo site_url('investors'); ?>">Investor</a>
-              <a class="dropdown-item" href="javascript:;">Money Allocation</a>
+              <a class="dropdown-item" href="<?php echo site_url('allocations'); ?>">Money Allocation</a>
             </div>
           </li>
           <li class="nav-item <?php echo ($page == 'sportbooks')?'active':'';?>">
