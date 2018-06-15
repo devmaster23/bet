@@ -53,6 +53,7 @@ function assignBets(){
             'investorId': investorId
         },
         success: function(data) {
+            initPage();
             $(".loading-div").hide()
         }
     });
