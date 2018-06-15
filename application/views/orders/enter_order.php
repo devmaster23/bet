@@ -30,12 +30,12 @@
                 <span><?=$investor['full_name']?></span>
             </div>
             <div>
-                <label>Last Updated</label>
-                <span>?</span>
+                <label>IP Source</label>
+                <span><?=$investor['full_name']?></span>
             </div>
             <div>
                 <label>IP Investor</label>
-                <span>?</span>
+                <span><?=$investor['ip']?></span>
             </div>
             <hr/>
             <div>

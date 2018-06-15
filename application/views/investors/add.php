@@ -38,6 +38,11 @@
             </div>
 
             <div class="form-group col-md-6 col-sm-12">
+                <label for="ip">IP Address</label>
+                <input required type="text" name="ip" class="form-control" id="ip" placeholder="IP Address e.g (100.100.100.100)">
+            </div>
+
+            <div class="form-group col-md-6 col-sm-12">
                 <label for="phone_number">Phone Number</label>
                 <input required type="text" name="phone_number" class="form-control" id="phone_number" placeholder="Enter Phone Number">
             </div>

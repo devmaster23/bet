@@ -15,6 +15,7 @@ class Investor_model extends CI_Model {
         'zip_code',
         'country',
         'email',
+        'ip',
         'phone_number',
         'starting_bankroll',
         'notes'
