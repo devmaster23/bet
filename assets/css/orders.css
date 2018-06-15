@@ -35,8 +35,23 @@
 }
 
 .order-page .enter_order-page .iframe-div{
+    position: relative;
     flex: 1 0;
+    display: flex;
+    justify-content: center;
 }
+
+.order-page .enter_order-page .iframe-div .vpn-alert{
+    position: fixed;
+    top: 50%;
+    text-align: center;
+    font-size: 20px;
+}
+.order-page .enter_order-page .iframe-div b{
+    color: #e21a1a;
+    font-size: 35px;
+}
+
 .order-page .enter_order-page .iframe-div iframe{
     width: 100%;
     border: 0px;

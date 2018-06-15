@@ -31,7 +31,7 @@
             </div>
             <div>
                 <label>IP Source</label>
-                <span><?=$investor['full_name']?></span>
+                <span><?=$ip_source?></span>
             </div>
             <div>
                 <label>IP Investor</label>
@@ -165,8 +165,12 @@
             </div>
         </div>
         <div class="iframe-div">
+            <?php if($ip_source == $investor['ip']){ ?>
             <iframe src="<?=$iframe_src?>" onload="this.height=screen.height;">    
             </iframe>
+            <?php } else { ?>
+            <span class="vpn-alert"><b>Access is forbidden </b><br/> Check your VPN Connection</span>
+            <?php }?>
         </div>
     </div>
 </div>

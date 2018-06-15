@@ -49,7 +49,7 @@ class Orders extends CI_Controller {
     }
 
     public function enter_order(){
-        echo $this->get_client_ip();die;
+        $ip_source = $this->get_client_ip();
         $investorId = isset($_REQUEST['id'])? $_REQUEST['id'] : null;
         $betIndex = isset($_REQUEST['bet_id'])? $_REQUEST['bet_id'] : 1;
         $date = new DateTime(date('Y-m-d'));
@@ -101,6 +101,8 @@ class Orders extends CI_Controller {
         {
             $bet['amount'] = 100;
         }
+
+        $data['ip_source'] = $ip_source;
         $data['rr1'] = @$worksheet['rr1'];
         $data['investor'] = $investor;
         $data['bet'] = $bet;
