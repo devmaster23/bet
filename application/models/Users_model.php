@@ -11,7 +11,7 @@ class Users_model extends CI_Model {
     }
 
     public function getByID($id){
-        $this->db->select('id, name')
+        $this->db->select('id, name, group_id')
             ->from($this->tableName)
             ->where('id',$id);
         $rows = $this->db->get()->result_array();

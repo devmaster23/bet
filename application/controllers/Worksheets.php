@@ -14,10 +14,11 @@ class Worksheets extends CI_Controller {
     {
         $date = new DateTime(date('Y-m-d'));
         $betweek = $date->format('W');
-        
         $settingId = isset($_GET['id'])?$_GET['id']:-1;
         $data['betweek'] = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
+        $setting = $this->model->getActiveSetting($data['betweek'],$settingId);
         $data['settingId'] = $settingId;
+        $data['setting'] = $setting;
         $this->load->view('worksheets', $data);
     }
 

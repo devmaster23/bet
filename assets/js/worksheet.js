@@ -5,6 +5,7 @@ var allTableObject = null;
 var settingTableObject = null;
 var settingTableObject1 = null;
 var betData = null;
+var pageTitle = 'Summary';
 
 var all_custom_headers = [
     [
@@ -521,7 +522,7 @@ function createBetSummary(data){
         "<thead><tr>"+
           "<td colspan='2'></td>"+
           "<td colspan='5'>Round Robbins</td>"+
-          "<td colspan='2'>Parlay</td>"+
+          "<td colspan='2'>Parlays</td>"+
           "<td colspan='2'>Individual Picks</td>"+
         "</tr></thead>";
 
@@ -830,6 +831,7 @@ $(document).on('click','#sheets .nav-link',function(){
 });
 
 function initPage(){
+  updatePageTitle();
   loadSettingTable();
   var selectType = $('#sheets .nav-link.active').data('type');
   if(selectType == 'bet_summary')
@@ -887,6 +889,11 @@ $(document).on('click','.parlay-icon', function(){
       }
   });
 })
+
+function updatePageTitle(){
+  pageTitle = $('#sheets .nav-link.active').html();
+  $('#pageTitle').html(pageTitle);
+}
 
 $(document).ready(function() {
 

@@ -1,6 +1,7 @@
 var tableObject = null;
 var allTableObject = null;
 var allTabelTimeOut = null;
+var pageTitle = 'All Picks';
 
 var title_types ={
     'ncaa_m': 'NCAA M', 
@@ -503,15 +504,10 @@ function updateTable(){
     var betweek = $('.game-week-select').val()
     var selectType = $('#sheets .nav-link.active').data('type');
     var hot = tableObject;
-    var tableData = hot.getData();
+    var tableData = hot.getSourceData();
 
     var cleanedGridData = {};
     $.each( tableData, function( rowKey, object) {
-        if(rowKey % 2 != 0)
-        {
-          object[1] = tableData[rowKey-1][1];
-          object[2] = tableData[rowKey-1][2];
-        }
         if(selectType == 'mlb')
         {
           object.splice(8, 0, "");
@@ -591,7 +587,13 @@ $(document).on('click','#sheets .nav-link',function(){
   initPage();  
 });
 
+function updatePageTitle(){
+  pageTitle = $('#sheets .nav-link.active').html();
+  $('#pageTitle').html(pageTitle);
+}
+
 function initPage(){
+  updatePageTitle();
   var selectType = $('#sheets .nav-link.active').data('type');
   if(selectType == 'all_picks')
   {

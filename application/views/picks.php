@@ -9,7 +9,7 @@
     var api_url = "<?php echo site_url('picks'); ?>";
 </script>
 <div class="container page-title">
-    <h1 class="text-center">Enter Picks</h1>
+    <h1 class="text-center" id="pageTitle">Enter Picks</h1>
 </div>
 
 <div id="main">

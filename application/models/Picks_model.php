@@ -20,7 +20,7 @@ class Picks_model extends CI_Model {
         'game_total',
         'first_half_pts',
         'first_half_ml',
-        'first_half_total'
+        'first_half_total',
     );
     private $pickJsonTpl = array(
         'game_type' => 'game_type',
@@ -441,17 +441,17 @@ class Picks_model extends CI_Model {
                 $team = 'team2';
 
             $gameData = array();
-            $row_id = $item[0];
+            $row_id = $item->id;
 
-            foreach($this->gameJsonTpl as $index => $game_data_index){
-                if(!in_array($game_data_index, array('game_pts','game_ml','game_total','first_half_pts','first_half_ml','first_half_total')))
+            foreach($this->gameJsonTpl as $index){
+                if(!in_array($index, array('game_pts','game_ml','game_total','first_half_pts','first_half_ml','first_half_total')))
                 {
                     continue;
                 }
-                $game_data_index = $team.'_'.$game_data_index;
+                $game_data_index = $team.'_'.$index;
                 $value = '';
-                if(!is_null($item[$index]))
-                    $value = $item[$index];
+                if(!is_null($item->$index))
+                    $value = $item->$index;
                 $gameData[$game_data_index] = $value;
             }
 

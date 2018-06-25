@@ -1,4 +1,4 @@
-
+var pageTitle = "NCAA M";
 var currentTable = null;
 var defaultRowTpl ={
   '5' : '@'
@@ -356,6 +356,7 @@ function createSheets(games) {
 }
 
 function loadTable(){
+  updatePageTitle()
   $(".loading-div").show()
   var betweek = $('.game-week-select').val()
   $.ajax({
@@ -399,11 +400,15 @@ function updateTable(){
     });
 }
 
+function updatePageTitle(){
+  pageTitle = $('#sheets .nav-link.active').html();
+  $('#pageTitle').html(pageTitle);
+}
+
 $(document).on('click','#sheets .nav-link',function(){
   loadTable();
 });
 
 $(document).ready(function() {
-  // $('#sheets').tab();
   loadTable();
 });

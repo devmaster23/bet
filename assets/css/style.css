@@ -253,6 +253,11 @@
     background-color: rgb(146, 208, 80) !important;
 }
 
+.enter-game .handsontable table.htCore tbody tr td:nth-of-type(3)
+{
+    text-transform: uppercase;
+}
+
 .header-div{
     display: flex;
     align-items: center;
@@ -462,6 +467,7 @@
 }
 #bet_summary table td.title{
     width: 200px;
+    text-align: left;
 }
 #bet_summary table td.title a{
     color: #2f93d2;
@@ -551,4 +557,12 @@ tr.shown td.details-control {
 #main.order-page
 {
     padding:0px 20px;
+}
+
+#main .control-header{
+    padding: 0px 20px;
+}
+#main .control-header p{
+    text-align: center;
+    font-size: 22px;
 }

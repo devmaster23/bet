@@ -10,7 +10,7 @@
     var api_url = "<?php echo site_url('worksheets'); ?>";
 </script>
 <div class="container page-title">
-    <h1 class="text-center">Work Sheet</h1>
+    <h1 class="text-center" id="pageTitle">Work Sheet</h1>
 </div>
 
 <div id="main" class="worksheets">
@@ -26,6 +26,9 @@
         <div class="save-button-div">
             <button type="button" class="btn btn-success enter-pick_save-button" onClick="updateTable()">Update</button>
         </div>
+    </div>
+    <div class="control-header">
+        <p><?=$setting['title']?></p>
     </div>
     <div class="content-div">
         <div class="tab-content">

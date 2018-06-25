@@ -192,6 +192,30 @@ class Settings_model extends CI_Model {
         return $result;   
     }
 
+    private function getSettingTitle($categoryType = 0, $groupuser_id = null)
+    {
+        $result = '';
+        switch ($categoryType) {
+            case 1:
+                $group_item = $this->CI->Groups_model->getByID($groupuser_id);
+                $result = $group_item['name'];
+                break;
+            case 2:
+                $user_item = $this->CI->Users_model->getByID($groupuser_id);
+                $group_id = $user_item['group_id'];
+                $group_item = $this->CI->Groups_model->getByID($group_id);
+
+                $result = '( '. $group_item['name'] . ' ) '  . $user_item['name'];
+                break;
+            case 0:
+            default:
+                $result = 'All';
+                # code...
+                break;
+        }
+        return $result;
+    }
+
     public function getAppliedSetting($betday)
     {
         $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
@@ -212,7 +236,13 @@ class Settings_model extends CI_Model {
             'rr_number1'    => 0,
             'rr_number2'    => 0,
             'rr_number3'    => 0,
-            'rr_number4'    => 0
+            'rr_number4'    => 0,
+            'parlay_allocation'    => 0,
+            'parlay_number1'    => 0,
+            'pick_allocation'    => 0,
+            'pick_number1'    => 0,
+            'description'   => '',
+            'title'         => 'Default'
         );
 
         if(count($rows))
@@ -244,6 +274,12 @@ class Settings_model extends CI_Model {
             $result['rr_number2'] = $setting['rr_number2'];
             $result['rr_number3'] = $setting['rr_number3'];
             $result['rr_number4'] = $setting['rr_number4'];
+            $result['parlay_allocation'] = $setting['parlay_allocation'];
+            $result['parlay_number1'] = $setting['parlay_number1'];
+            $result['pick_allocation'] = $setting['pick_allocation'];
+            $result['pick_number1'] = $setting['pick_number1'];
+            $result['description'] = $setting['description'];
+            $result['title'] = $this->getSettingTitle($setting['type'],$setting['groupuser_id']);
         }
         return $result;
     }
