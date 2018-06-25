@@ -378,10 +378,12 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
   Handsontable.renderers.TextRenderer.apply(this, args);
 }
 function coverRenderer (instance, td, row, col, prop, value, cellProperties) {
-  // td.style.backgroundColor = 'yellow';
-  var jsonObj = {};
-  var checked = false;
-  var checkedList = [];
+  var jsonObj = {},
+    checked = false,
+    checkedList = [];
+  
+  var displayValueIndex = prop + '_value';
+  var displayValue = instance.getDataAtRowProp(row, displayValueIndex);
 
   try{
     jsonObj = JSON.parse(value);
@@ -403,7 +405,7 @@ function coverRenderer (instance, td, row, col, prop, value, cellProperties) {
   }catch(e){
   }
 
-  $(td).html('<div class="pick-check-box" checked="'+checked+'" data-pick="'+checkedList[0]+'" data-wrapper="'+checkedList[1]+'" data-candy="'+checkedList[2]+'" data-toggle="popover" data-placement="bottom" data-html="true" data-row="'+row+'" data-prop="'+prop+'"></div>');
+  $(td).html('<div class="pick-check-box" checked="'+checked+'" data-pick="'+checkedList[0]+'" data-wrapper="'+checkedList[1]+'" data-candy="'+checkedList[2]+'" data-toggle="popover" data-placement="bottom" data-html="true" data-row="'+row+'" data-prop="'+prop+'">'+displayValue+'</div>');
   return td;
 }
 

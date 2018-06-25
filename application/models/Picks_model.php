@@ -73,6 +73,7 @@ class Picks_model extends CI_Model {
                         $db_column = $db_column.$i;
                     }else if(!in_array($db_column, array('id','date','time')))
                     {
+                        $new_item[$key.'_value'] = $row[$db_column];
                         $db_column = 'team'.$i.'_'.$db_column;
                     }
                     $value = $row[$db_column];
