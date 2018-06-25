@@ -510,13 +510,9 @@ function updateTable(){
 
     var cleanedGridData = {};
     $.each( tableData, function( rowKey, object) {
-        if(selectType == 'mlb')
-        {
-          object.splice(8, 0, "");
-        }
-        if (!hot.isEmptyRow(rowKey)) cleanedGridData[rowKey] = object;
+      if (!hot.isEmptyRow(rowKey)) cleanedGridData[rowKey] = object;
     });
-
+    
     $.ajax({
         url: api_url+'/saveData',
         type: 'POST',
