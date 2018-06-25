@@ -305,7 +305,7 @@
     text-align: center;
 }
 .pick-check-box[checked="true"]{
-    background-color: #ff7475;
+    background-color: #8ea9db;
     color: #fff;
 }
 .popover{

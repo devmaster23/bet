@@ -50,6 +50,10 @@ class Picks_model extends CI_Model {
         return ($f==24) ? date("G:i", $time) : date("g:i A", $time);    
     }
 
+    private function addPlusMinus($value){
+        return $value > 0 ? '+'.$value : $value;
+    }
+
     public function get($betday) {
         $this->db->select('*')->from('games');
         $this->db->where(array('betday' => $betday));
@@ -73,7 +77,13 @@ class Picks_model extends CI_Model {
                         $db_column = $db_column.$i;
                     }else if(!in_array($db_column, array('id','date','time')))
                     {
-                        $new_item[$key.'_value'] = $row[$db_column];
+                        if($type == 'mlb' && $db_column == 'game_pts')
+                        {
+
+                            $new_item[$key.'_value'] = $this->addPlusMinus($row['game_rl']). ' ' . $this->addPlusMinus($row['game_rl_ml']);
+                        }else{
+                            $new_item[$key.'_value'] = $row[$db_column];
+                        }
                         $db_column = 'team'.$i.'_'.$db_column;
                     }
                     $value = $row[$db_column];
