@@ -50,7 +50,9 @@ class Picks_model extends CI_Model {
         return ($f==24) ? date("G:i", $time) : date("g:i A", $time);    
     }
 
-    private function addPlusMinus($value){
+    private function addPlusMinus($value,$revert = false){
+        if($revert)
+            $value = $value * -1;
         return $value > 0 ? '+'.$value : $value;
     }
 
@@ -77,13 +79,21 @@ class Picks_model extends CI_Model {
                         $db_column = $db_column.$i;
                     }else if(!in_array($db_column, array('id','date','time')))
                     {
+                        $pick_value = 0;
                         if($type == 'mlb' && $db_column == 'game_pts')
                         {
-
-                            $new_item[$key.'_value'] = $this->addPlusMinus($row['game_rl']). ' ' . $this->addPlusMinus($row['game_rl_ml']);
+                            if($i == 1)
+                                $pick_value  = $this->addPlusMinus($row['game_rl']). ' ' . $this->addPlusMinus($row['game_rl_ml']);
+                            else
+                                $pick_value  = $this->addPlusMinus($row['game_rl'], true). ' ' . $this->addPlusMinus($row['game_rl_ml'], true);
                         }else{
-                            $new_item[$key.'_value'] = $row[$db_column];
+                            if($i == 1)
+                                $pick_value = $row[$db_column];
+                            else
+                                $pick_value = $row[$db_column] * -1;
                         }
+                        $new_item[$key.'_value'] = $pick_value;
+
                         $db_column = 'team'.$i.'_'.$db_column;
                     }
                     $value = $row[$db_column];

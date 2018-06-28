@@ -20,11 +20,11 @@ var custom_headers_mlb = [
     [
         '',
         {label: 'MLB', colspan: 7}, 
-        {label: 'Game', colspan: 7},
+        {label: 'Game', colspan: 11},
         {label: '1st Half', colspan: 3}
     ],
     [
-        '','Date','Time','VRN','Away Team','@','VRN','Home Team','RL', 'RL ML','ML','RL', 'RL ML','ML','Total','ML','ML','Total'
+        '','Date','Time','VRN','Away Team','@','VRN','Home Team','ML','RL', 'RL ML','RRL','RRL ML','ML','RL', 'RL ML','RRL','RRL ML','Total','ML','ML','Total'
     ]
 ];
 
@@ -183,6 +183,11 @@ var hotSettings_mlb = {
           readOnly: false
         },
         {
+          data: 'game_ml',
+          type: 'numeric',
+          readOnly: false
+        },
+        {
           data: 'game_rl',
           editor: 'select',
           selectOptions: ['-1.5', '1.5']
@@ -193,9 +198,19 @@ var hotSettings_mlb = {
           readOnly: false
         },
         {
-          data: 'game_ml',
+          data: 'game_rrl',
           type: 'numeric',
-          readOnly: false
+          readOnly: true
+        },
+        {
+          data: 'game_rrl_ml',
+          type: 'numeric',
+          readOnly: true
+        },
+        {
+          data: 'home_game_ml',
+          type: 'numeric',
+          readOnly: true
         },
         {
           data: 'home_game_rl',
@@ -208,7 +223,12 @@ var hotSettings_mlb = {
           readOnly: true
         },
         {
-          data: 'home_game_ml',
+          data: 'home_game_rrl',
+          type: 'numeric',
+          readOnly: true
+        },
+        {
+          data: 'home_game_rrl_ml',
           type: 'numeric',
           readOnly: true
         },
@@ -234,7 +254,7 @@ var hotSettings_mlb = {
         },
     ],
     minSpareRows: 1,
-    colWidths: [110, 80, 60, 150, 50, 60, 150, 80, 80, 80, 80, 80, 80,80, 80, 80, 80],
+    colWidths: [110, 80, 60, 150, 50, 60, 150, 80, 80, 80, 80, 80, 80,80, 80, 80, 80,80, 80, 80, 80],
     rowHeights: rowHeight,
     className: "htCenter htMiddle",
     rowHeaders: true,
@@ -305,6 +325,37 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
     var vrn1 = instance.getDataAtRowProp(row,'vrn1');
     if(vrn1 != null)
       td.innerHTML = eval(vrn1) + 1;
+  }
+  if (prop == 'game_rrl')
+  {
+    var org_prop = 'game_rl'
+    var org_val = instance.getDataAtRowProp(row,org_prop);
+    if(org_val != null)
+      td.innerHTML = eval(org_val) * -1; 
+  }
+
+  if (prop == 'game_rrl_ml')
+  {
+    var org_prop = 'game_rl_ml'
+    var org_val = instance.getDataAtRowProp(row,org_prop);
+    if(org_val != null)
+      td.innerHTML = eval(org_val) * -1; 
+  }
+
+  if (prop == 'home_game_rrl')
+  {
+    var org_prop = 'game_rl'
+    var org_val = instance.getDataAtRowProp(row,org_prop);
+    if(org_val != null)
+      td.innerHTML = eval(org_val); 
+  }
+
+  if (prop == 'home_game_rrl_ml')
+  {
+    var org_prop = 'game_rl_ml'
+    var org_val = instance.getDataAtRowProp(row,org_prop);
+    if(org_val != null)
+      td.innerHTML = eval(org_val); 
   }
 
   if (prop == 'home_game_rl' || prop == 'home_game_rl_ml' || prop == 'home_game_ml')

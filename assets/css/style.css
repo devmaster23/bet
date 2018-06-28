@@ -182,7 +182,7 @@
 }
 
 .enter-game #mlb .handsontable table.htCore thead tr:first-of-type th:nth-of-type(10),
-.enter-game #mlb .handsontable table.htCore thead tr:first-of-type th:nth-of-type(17){
+.enter-game #mlb .handsontable table.htCore thead tr:first-of-type th:nth-of-type(21){
     background-color: rgb(142, 169, 219) !important;
     color: white !important;
     font-size: 22px !important;
@@ -193,30 +193,33 @@
 .enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(10),
 .enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(11),
 .enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(12),
-.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(16),
-.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(17),
-.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(18)
+.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(13),
+.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(14),
+.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(18),
+.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(19),
+.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(20),
+.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(21),
+.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(22)
 {   
     background-color: rgb(255, 94, 94) !important;
 }
 
 .enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(8),
 .enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(9),
-.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(13),
-.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(14),
-.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(15){
+.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(15),
+.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(16),
+.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(17),
+.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(18),
+.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(19),
+.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(20){
     color: white !important;
     font-size: 18px !important;
     background-color: rgb(146, 208, 80) !important;
 }
 
-.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(16),
-.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(19){
+.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(20),
+.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(23){
     background-color: rgb(58, 56, 56) !important;
-}
-
-.enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(18){
-    background-color: rgb(146, 208, 80) !important;   
 }
 
 .pick-game .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(2)
