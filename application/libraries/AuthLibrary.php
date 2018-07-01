@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class AuthLibrary {
+class Authlibrary {
 
     /**
      * Mark a user as logged in and create autologin cookie if wanted
