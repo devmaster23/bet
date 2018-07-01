@@ -34,6 +34,15 @@
             </div>
 
             <div class="form-group col-md-6 col-sm-12">
+                <label for="last_name">User Group</label>
+                <select class="form-control" name="group_id">
+                    <?php foreach ($group_list as $group) { ?>
+                    <option value="<?=$group['id']?>" <?=$investor['group_id'] == $group['id'] ? 'selected': ''; ?> ><?=$group['name']?></option>
+                    <?php } ?>
+                </select>
+            </div>
+
+            <div class="form-group col-md-6 col-sm-12">
                 <label for="email">Email</label>
                 <input required type="text" name="email" class="form-control" id="email" placeholder="Enter Email" value="<?=$investor['email']?>">
             </div>

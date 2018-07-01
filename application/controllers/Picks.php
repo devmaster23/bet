@@ -2,7 +2,15 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Picks extends CI_Controller {
-
+    private $pageTitles = array(
+        'all_picks'  => 'All Picks',
+        'ncaa_m' =>'NCAA M(College Basketball)', 
+        'nba' =>'NBA', 
+        'football' =>'NFL',
+        'ncaa_f' =>'NCAA F',
+        'soccer' =>'SOC',
+        'mlb' =>'MLB'
+    );
     public function __construct() {
         parent::__construct();
         $this->load->model('Picks_model', 'model');
@@ -11,15 +19,21 @@ class Picks extends CI_Controller {
     public function index()
     {
         $date = new DateTime(date('Y-m-d'));
+        $pageType = isset($_GET['type'])? $_GET['type']: 'all_picks';
         $betweek = $date->format('W');
         $data['betweek'] = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
+        $data['pageType'] = $pageType;
+        $data['pageTitle'] = $this->pageTitles[$pageType];
         $this->load->view('picks', $data);
     }
 
     public function loadData(){
         $betweek = $_POST['betweek'];
+        $pageType = $_POST['type'];
         $_SESSION['betday'] = $betweek;
-        $data['picks'] = $this->model->get($betweek);
+        $data['picks'] = $this->model->get($betweek, $pageType);
+        $data['pageType'] = $pageType;
+        $data['pageTitle'] = $this->pageTitles[$pageType];
         header('Content-Type: application/json');
         echo json_encode( $data);
     }

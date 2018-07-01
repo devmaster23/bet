@@ -2,18 +2,21 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Investors extends CI_Controller {
-
+    private $pageType = 'investors';
     public function __construct() {
         parent::__construct();
         $this->load->model('Investor_model', 'model');
         $this->load->model('Sportbook_model', 'sportbook_model');
         $this->load->model('WorkSheet_model', 'workSheet_model');
         $this->load->model('Settings_model', 'setting_model');
+        $this->load->model('Groups_model', 'groups_model');
         $this->load->library('session');
     }
     public function index()
     {
-        $this->load->view('investors');
+        $data['pageType'] = $this->pageType;
+        $data['pageTitle'] = 'Investors';
+        $this->load->view('investors', $data);
     }
 
     public function add()
@@ -24,7 +27,10 @@ class Investors extends CI_Controller {
             redirect('/investors', 'refresh');
         }
         $sportbookList = $this->sportbook_model->getList();
+        $groupList = $this->groups_model->getAll();
         $data['sportbook_list'] = $sportbookList;
+        $data['group_list'] = $groupList;
+        $data['pageType'] = $this->pageType;
         $this->load->view('investors/add', $data);
     }
 
@@ -47,11 +53,14 @@ class Investors extends CI_Controller {
 
         $investor = $this->model->getItem($id,$data['betweek']);
         $sportbookList = $this->sportbook_model->getList();
+        $groupList = $this->groups_model->getAll();
         if(is_null($investor))
             redirect('/investors', 'refresh');
 
         $data['investor'] = $investor;
         $data['sportbook_list'] = $sportbookList;
+        $data['group_list'] = $groupList;
+        $data['pageType'] = $this->pageType;
 
         $this->load->view('investors/edit', $data);
     }
@@ -80,6 +89,7 @@ class Investors extends CI_Controller {
 
         $data['investor'] = $investor;
         $data['betweek'] = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
+        $data['pageType'] = $this->pageType;
 
         $this->load->view('investors/sportbooks', $data);
     }

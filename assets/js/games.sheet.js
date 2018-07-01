@@ -7,12 +7,12 @@ var defaultRowTpl ={
 var custom_headers = [
     [
         '',
-        {label: 'NCAA M(College Basketball)', colspan: 6}, 
-        {label: 'Game', colspan: 3},
-        {label: '1st Half', colspan: 3}
+        {label: 'NCAA M', colspan: 6}, 
+        {label: 'Game', colspan: 5},
+        {label: '1st Half', colspan: 5}
     ],
     [
-        '','Date','Time','VRN','Away Team','@','Home Team','PTS','ML','Total','PTS','ML','Total'
+        '','Date','Time','VRN','Away Team','@','Home Team','PTS','ML','Total','PTS','ML','PTS','ML','Total','PTS','ML'
     ]
 ];
 
@@ -82,6 +82,16 @@ var hotSettings = {
           readOnly: false
         },
         {
+          data: 'game_pts_home',
+          type: 'numeric',
+          readOnly: true
+        },
+        {
+          data: 'game_ml_home',
+          type: 'numeric',
+          readOnly: true
+        },
+        {
           data: 'first_half_pts',
           type: 'numeric',
           readOnly: true
@@ -96,9 +106,19 @@ var hotSettings = {
           type: 'numeric',
           readOnly: true
         },
+        {
+          data: 'first_half_pts_home',
+          type: 'numeric',
+          readOnly: true
+        },
+        {
+          data: 'first_half_ml_home',
+          type: 'numeric',
+          readOnly: true
+        },
     ],
     minSpareRows: 1,
-    colWidths: [110, 80, 60, 170, 50, 170, 90, 90, 90, 90, 90, 90],
+    colWidths: [110, 80, 60, 170, 50, 170, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80],
     rowHeights: rowHeight,
     className: "htCenter htMiddle",
     rowHeaders: true,
@@ -126,9 +146,14 @@ var hotSettings = {
               first_half_pts  = (ref_value? Math.floor(ref_value) / 2 : 0).toFixed(1);
               first_half_pts = parseFloat(first_half_pts) * 10 / 10;
               first_half_ml = getPTS(first_half_pts);
+
+          currentTable.setDataAtRowProp(row,'game_pts_home',ref_value*(-1),"sss");
           currentTable.setDataAtRowProp(row,'game_ml',game_ml,"sss");
+          currentTable.setDataAtRowProp(row,'game_ml_home',game_ml*(-1),"sss");
           currentTable.setDataAtRowProp(row,'first_half_pts',first_half_pts,"sss");
           currentTable.setDataAtRowProp(row,'first_half_ml',first_half_ml,"sss");
+          currentTable.setDataAtRowProp(row,'first_half_pts_home',first_half_pts*(-1),"sss");
+          currentTable.setDataAtRowProp(row,'first_half_ml_home',first_half_ml*(-1),"sss");
         }
 
         if (prop == 'game_total'){
@@ -240,17 +265,17 @@ var hotSettings_mlb = {
         {
           data: 'first_half_ml',
           type: 'numeric',
-          readOnly: true
+          readOnly: false
         },
         {
           data: 'home_first_half_ml',
           type: 'numeric',
-          readOnly: true
+          readOnly: false
         },
         {
           data: 'first_half_total',
           type: 'numeric',
-          readOnly: true
+          readOnly: false
         },
     ],
     minSpareRows: 1,
@@ -275,9 +300,24 @@ var hotSettings_mlb = {
         var row = change[0][0],
             prop = change[0][1],
             ref_value = change[0][3];
-        if (prop == 'game_ml'){
-          var value = ref_value?ref_value/2:0;
-          currentTable.setDataAtRowProp(row,'first_half_ml',value,"sss");
+        if (prop == 'game_rl'){
+          var ptsObj = getPTS(ref_value);
+
+          var game_ml         = getPTS(ref_value),
+              game_rrl        = ref_value * (-1),
+              game_rrl_ml     = getPTS(game_rrl),
+              first_half_pts  = (ref_value? Math.floor(ref_value) / 2 : 0).toFixed(1);
+              first_half_pts = parseFloat(first_half_pts) * 10 / 10;
+              first_half_ml = getPTS(first_half_pts);
+
+          currentTable.setDataAtRowProp(row,'game_ml',game_ml,"sss");
+          currentTable.setDataAtRowProp(row,'game_rl_ml',game_ml,"sss");
+          currentTable.setDataAtRowProp(row,'game_rrl',game_rrl,"sss");
+          currentTable.setDataAtRowProp(row,'game_rrl_ml',game_rrl_ml,"sss");
+          currentTable.setDataAtRowProp(row,'first_half_pts',first_half_pts,"sss");
+          // currentTable.setDataAtRowProp(row,'first_half_ml',first_half_ml,"sss");
+          // currentTable.setDataAtRowProp(row,'first_half_pts_home',first_half_pts*(-1),"sss");
+          // currentTable.setDataAtRowProp(row,'first_half_ml_home',first_half_ml*(-1),"sss");
         }
 
         if (prop == 'game_total'){
@@ -326,6 +366,14 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
     if(vrn1 != null)
       td.innerHTML = eval(vrn1) + 1;
   }
+  if (prop == 'game_pts_home' || prop == 'game_ml_home' || prop == 'first_half_pts_home' || prop == 'first_half_ml_home')
+  {
+    var org_prop = prop.substr(0,prop.length-5);
+    var org_val = instance.getDataAtRowProp(row,org_prop);
+    if(org_val != null)
+      td.innerHTML = eval(org_val) * -1; 
+  }
+
   if (prop == 'game_rrl')
   {
     var org_prop = 'game_rl'
@@ -378,48 +426,35 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
   
 function createSheets(games) {
 
-  var title_types ={
-    'ncaa_m': 'NCAA M', 
-    'nba': 'NBA', 
-    'football': 'NFL',
-    'ncaa_f': 'NCAA F',
-    'soccer': 'SOC',
-    'mlb': 'MLB'
-  };
 
-  var selectType = $('#sheets .nav-link.active').data('type');
-  var title = title_types[selectType];
+  var data = games[pageType] || [];
+  var container = $('div.sheet')[0];
 
-  var data = games[selectType] || [];
-  var container = $('div.sheet[data-type="'+selectType+'"]')[0];
-
-  var title = (selectType == 'ncaa_m')? title+'(College Basketball)': title;
-
-  if (selectType == 'mlb')
+  if (pageType == 'mlb')
     tmpSetting = Object.assign({},hotSettings_mlb);
   else
     tmpSetting = Object.assign({},hotSettings);
 
-  tmpSetting['nestedHeaders'][0][1].label = '<label class="enter-game__header-item" data-class-name="enter-game__header1-title">'+title+'</label>';
+  tmpSetting['nestedHeaders'][0][1].label = '<label class="enter-game__header-item" data-class-name="enter-game__header1-title">'+pageTitle+'</label>';
 
   currentTable = new Handsontable(container, tmpSetting);
   currentTable.loadData(data);
 }
 
 function loadTable(){
-  updatePageTitle()
   $(".loading-div").show()
   var betweek = $('.game-week-select').val()
   $.ajax({
       url: api_url+'/loadData',
       type: 'POST',
       data: {
-        betweek: betweek
+        betweek: betweek,
+        pageType: pageType
       },
       dataType: 'json',
       success: function(data) {
+          pageTitle = data['pageTitle']
           createSheets(data['games']);
-          var selectType = $('#sheets .nav-link.active').data('type');
           $(".loading-div").hide()
       }
   });
@@ -430,7 +465,6 @@ function updateTable(){
 
     var betweek = $('.game-week-select').val()
     var tableData = currentTable.getSourceData();
-    var selectType = $('#sheets .nav-link.active').data('type');
     var cleanedGridData = {};
     $.each( tableData, function( rowKey, object) {
         if (!currentTable.isEmptyRow(rowKey)) cleanedGridData[rowKey] = object;
@@ -441,7 +475,7 @@ function updateTable(){
         type: 'POST',
         data: {
           betweek: betweek,
-          game_type: selectType,
+          game_type: pageType,
           games: JSON.stringify({data: cleanedGridData})
         },
         success: function(data) {
@@ -451,14 +485,6 @@ function updateTable(){
     });
 }
 
-function updatePageTitle(){
-  pageTitle = $('#sheets .nav-link.active').html();
-  $('#pageTitle').html(pageTitle);
-}
-
-$(document).on('click','#sheets .nav-link',function(){
-  loadTable();
-});
 
 $(document).ready(function() {
   loadTable();

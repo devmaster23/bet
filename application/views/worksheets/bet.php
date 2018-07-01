@@ -1,12 +1,13 @@
 <?php
-    $page = 'picks';
+    $page = 'worksheets';
     $scripts = [
-        base_url('assets/js/picks.sheet.js'),
+        base_url('assets/js/worksheet.js'),
     ];
     $this->load->view('header', array('page' => $page)) ?>
 <script>
     var betweek = <?php echo $betweek ?>;
-    var api_url = "<?php echo site_url('picks'); ?>";
+    var settingId = <?php echo $settingId;?>;
+    var api_url = "<?php echo site_url('worksheets'); ?>";
     var pageType = "<?php echo $pageType; ?>";
     var pageTitle = "<?php echo $pageTitle; ?>";
 </script>
@@ -14,7 +15,7 @@
     <h1 class="text-center" id="pageTitle"><?php echo $pageTitle?></h1>
 </div>
 
-<div id="main">
+<div id="main" class="worksheets">
     <div class="header-div">
         <div class="game-week-select-div">
             <label>Bet Day</label>
@@ -28,11 +29,22 @@
             <button type="button" class="btn btn-success enter-pick_save-button" onClick="updateTable()">Update</button>
         </div>
     </div>
-
+    <div class="control-header">
+        <p><?=$setting['title']?></p>
+    </div>
     <div class="content-div">
-        <div class="tab-content">
-            <div class="<?php echo $pageType == 'all_picks' ? 'all-picks' : 'pick-game'?>" id="<?php echo $pageType?>">
-                <div class="sheet">
+        <div id="bets">
+            <div class="bets-inner">
+                <div class="setting_div">
+                    <div class="sheet setting_sheet" data-type="setting_sheet">
+                    </div>
+                    <div class="sheet setting_sheet1" data-type="setting_sheet1">
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="all-picks">
+                    <div class="sheet" data-type="bets">
+                    </div>
                 </div>
             </div>
         </div>

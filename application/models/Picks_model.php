@@ -17,6 +17,8 @@ class Picks_model extends CI_Model {
         'team',
         'game_pts',
         'game_ml',
+        'game_rl',
+        'game_rrl',
         'game_total',
         'first_half_pts',
         'first_half_ml',
@@ -27,7 +29,7 @@ class Picks_model extends CI_Model {
         'vrn'       => 'vrn',
         'type'      => 'type',
         'team'      => 'team',
-        'line'      => 'game_ml',
+        'line'      => 'line',
         'time'      => 'time',
         'count'     => 'count'
     );
@@ -56,9 +58,13 @@ class Picks_model extends CI_Model {
         return $value > 0 ? '+'.$value : $value;
     }
 
-    public function get($betday) {
+    public function get($betday, $type=null) {
         $this->db->select('*')->from('games');
         $this->db->where(array('betday' => $betday));
+        if(!is_null($type))
+        {
+            $this->db->where('game_type', $type);
+        }
         $rows = $this->db->get()->result_array();
         
         $ret = array();
@@ -79,24 +85,33 @@ class Picks_model extends CI_Model {
                         $db_column = $db_column.$i;
                     }else if(!in_array($db_column, array('id','date','time')))
                     {
-                        $pick_value = 0;
-                        if($type == 'mlb' && $db_column == 'game_pts')
+                        if($type == 'mlb' && $db_column == 'game_rl')
                         {
                             if($i == 1)
                                 $pick_value  = $this->addPlusMinus($row['game_rl']). ' ' . $this->addPlusMinus($row['game_rl_ml']);
                             else
                                 $pick_value  = $this->addPlusMinus($row['game_rl'], true). ' ' . $this->addPlusMinus($row['game_rl_ml'], true);
-                        }else{
+                        }else if($type == 'mlb' && $db_column == 'game_rrl')
+                        {
                             if($i == 1)
-                                $pick_value = $row[$db_column];
+                                $pick_value  = $this->addPlusMinus($row['game_rl'], true). ' ' . $this->addPlusMinus($row['game_rl_ml'], true);
                             else
-                                $pick_value = $row[$db_column] * -1;
+                                $pick_value  = $this->addPlusMinus($row['game_rl']). ' ' . $this->addPlusMinus($row['game_rl_ml']);
+                        }else if($db_column != 'game_total' && $db_column != 'first_half_total')
+                        {
+                            if($i == 1)
+                                $pick_value = @$row[$db_column];
+                            else
+                                $pick_value = @$row[$db_column] * -1;
+                        }else{
+                            $pick_value = $row[$db_column];
                         }
                         $new_item[$key.'_value'] = $pick_value;
 
                         $db_column = 'team'.$i.'_'.$db_column;
                     }
-                    $value = $row[$db_column];
+
+                    $value = @$row[$db_column];
                     if($db_column == 'date')
                     {
                         $value = date_format(date_create($value),"M d, Y");
@@ -207,14 +222,20 @@ class Picks_model extends CI_Model {
         foreach($rows as $key => $item){
             $team1_game_pts = json_decode($item['team1_game_pts']);
             $team1_game_ml = json_decode($item['team1_game_ml']);
+            $team1_game_rl = json_decode($item['team1_game_rl']);
+            $team1_game_rrl = json_decode($item['team1_game_rrl']);
             $team1_game_total = json_decode($item['team1_game_total']);
+            
             $team1_first_half_pts = json_decode($item['team1_first_half_pts']);
             $team1_first_half_ml = json_decode($item['team1_first_half_ml']);
             $team1_first_half_total = json_decode($item['team1_first_half_total']);
             
             $team2_game_pts = json_decode($item['team2_game_pts']);
             $team2_game_ml = json_decode($item['team2_game_ml']);
+            $team2_game_rl = json_decode($item['team2_game_rl']);
+            $team2_game_rrl = json_decode($item['team2_game_rrl']);
             $team2_game_total = json_decode($item['team2_game_total']);
+
             $team2_first_half_pts = json_decode($item['team2_first_half_pts']);
             $team2_first_half_ml = json_decode($item['team2_first_half_ml']);
             $team2_first_half_total = json_decode($item['team2_first_half_total']);
@@ -229,6 +250,10 @@ class Picks_model extends CI_Model {
                     $ret[$type_item][] = $this->getPickData($item, 1, 'pts', false, $pickSelectList);
                 if(isset($team1_game_ml->$type_item) && $team1_game_ml->$type_item)
                     $ret[$type_item][] = $this->getPickData($item, 1, 'ml', false, $pickSelectList);
+                if(isset($team1_game_rl->$type_item) && $team1_game_rl->$type_item)
+                    $ret[$type_item][] = $this->getPickData($item, 1, 'rl', false, $pickSelectList);
+                if(isset($team1_game_rrl->$type_item) && $team1_game_rrl->$type_item)
+                    $ret[$type_item][] = $this->getPickData($item, 1, 'rrl', false, $pickSelectList);
                 if(isset($team1_game_total->$type_item) && $team1_game_total->$type_item)
                     $ret[$type_item][] = $this->getPickData($item, 1, 'total', false, $pickSelectList);
 
@@ -243,6 +268,10 @@ class Picks_model extends CI_Model {
                     $ret[$type_item][] = $this->getPickData($item, 2, 'pts', false, $pickSelectList);
                 if(isset($team2_game_ml->$type_item) && $team2_game_ml->$type_item)
                     $ret[$type_item][] = $this->getPickData($item, 2, 'ml', false, $pickSelectList);
+                if(isset($team2_game_rl->$type_item) && $team2_game_rl->$type_item)
+                    $ret[$type_item][] = $this->getPickData($item, 1, 'rl', false, $pickSelectList);
+                if(isset($team2_game_rrl->$type_item) && $team2_game_rrl->$type_item)
+                    $ret[$type_item][] = $this->getPickData($item, 1, 'rrl', false, $pickSelectList);
                 if(isset($team2_game_total->$type_item) && $team2_game_total->$type_item)
                     $ret[$type_item][] = $this->getPickData($item, 2, 'total', false, $pickSelectList);
 
@@ -388,13 +417,32 @@ class Picks_model extends CI_Model {
                         $value = substr($value,0,2);
                 }else
                 {
-                    if($gameType == 'mlb' && $type == 'pts')
-                        $value = 'RL';
-                    else
-                        $value = strtoupper($type);
+                    $value = strtoupper($type);
                 }
                 if($first_half)
                     $value = '1st '.$value;
+            }
+            else if($db_column == 'line')
+            {
+                if($type == 'rl')
+                {
+                    $revert = ($team_id == 2) ? true: false;
+                    $value = $this->addPlusMinus($row['game_rl'],$revert). ' ' . $this->addPlusMinus($row['game_rl_ml'],$revert);
+                }else if($type == 'rrl')
+                {
+                    $revert = ($team_id == 2) ? false: true;
+                    $value = $this->addPlusMinus($row['game_rl'],!$revert). ' ' . $this->addPlusMinus($row['game_rl_ml'],!$revert);
+                }else{
+                    if($first_half == false)
+                    {
+                        $line_column = 'game_'.$type;
+                    }else{
+                        $line_column = 'first_half_'.$type;
+                    }
+                    $value = $row[$line_column];
+                    if($team_id == 2 && $type != 'total')
+                        $value = $value * -1;
+                }
             }
             else if($db_column == 'count')
             {
@@ -411,33 +459,6 @@ class Picks_model extends CI_Model {
             $item[$key] = $value;
         }
 
-        if ($gameType == 'mlb')
-        {
-            $value = 0;
-            switch ($type) {
-                case 'pts':
-                    $value = (($row['game_rl'] > 0 ) ? '+' : ''). $row['game_rl']. ' ' .$row['game_rl_ml'];
-                    break;
-                case 'ml':
-                    $value = $row['game_ml'];
-                    break;
-                case 'total':
-                default:
-                    $value = $row['game_total'];
-                    break;
-            }
-            if($team_id == 2)
-            {
-                $value *= -1;
-                if($type =='total')
-                {
-                    $value = $row['first_half_total'];
-                }
-            }
-
-            $item['line'] = $value;
-
-        }
         $item['select'] = $row['id'].'_'.$team_id.'_'.$type.'_'.($first_half ? 1 : 0);
         $item['title'] = $item['select'];
         $item['bet_type'] = 'single';
@@ -465,7 +486,7 @@ class Picks_model extends CI_Model {
             $row_id = $item->id;
 
             foreach($this->gameJsonTpl as $index){
-                if(!in_array($index, array('game_pts','game_ml','game_total','first_half_pts','first_half_ml','first_half_total')))
+                if(!in_array($index, array('game_pts','game_ml','game_rl','game_rrl','game_total','first_half_pts','first_half_ml','first_half_total')))
                 {
                     continue;
                 }

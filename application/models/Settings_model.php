@@ -35,7 +35,7 @@ class Settings_model extends CI_Model {
     {
         $this->CI =& get_instance();
         $this->CI->load->model('Groups_model');
-        $this->CI->load->model('Users_model');
+        $this->CI->load->model('Investor_model');
         $this->CI->load->model('Picks_model');
         $this->CI->load->model('WorkSheet_model');
         $this->CI->load->model('CustomBet_model');
@@ -135,7 +135,7 @@ class Settings_model extends CI_Model {
                 $result = $this->CI->Groups_model->getAll();
                 break;
             case 2:
-                $result = $this->CI->Users_model->getAll();
+                $result = $this->CI->Investor_model->getAll();
                 break;
             case 0:
             default:
@@ -201,7 +201,7 @@ class Settings_model extends CI_Model {
                 $result = $group_item['name'];
                 break;
             case 2:
-                $user_item = $this->CI->Users_model->getByID($groupuser_id);
+                $user_item = $this->CI->Investor_model->getByID($groupuser_id);
                 $group_id = $user_item['group_id'];
                 $group_item = $this->CI->Groups_model->getByID($group_id);
 
@@ -355,7 +355,7 @@ class Settings_model extends CI_Model {
                     $item['title'] = $group['name'];
                     break;
                 case '2':
-                    $user = $this->CI->Users_model->getByID($item['groupuser_id']);
+                    $user = $this->CI->Investor_model->getByID($item['groupuser_id']);
                     $item['title'] = $user['name'];
                     break;
                 case '0':

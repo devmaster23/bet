@@ -15,5 +15,6 @@ if (isset($scripts)):
 	endforeach;
 endif;
 ?>
+</div></div></div></div></div>
 </body>
 </html>

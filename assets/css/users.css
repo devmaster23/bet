@@ -1,0 +1,38 @@
+.user-page [type=search]{
+    outline: 0 none;
+    outline-offset: 0px;
+    -webkit-appearance: textfield;
+}
+
+.user-page #users .action-div a{
+    color: #187bd6;
+    cursor: pointer;
+    padding: 0px 5px;
+}
+
+.user-page #users .action-div a:hover,
+.user-page #users .action-div a:active
+{
+    color: #16528a;
+}
+
+
+.user-page .sportbook_detail_table span{
+    display: inline-block;
+    text-align: right;
+}
+
+.user-page .sportbook_detail_table span.label{
+    width: 250px;
+    text-align: left;
+}
+
+.user-page .form .rule-div label{
+    display: inline-block;
+    width: 200px;
+}
+.user-page .form .rule-div input{
+    padding: 2px 8px;
+    text-align: right;
+}
+

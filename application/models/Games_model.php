@@ -24,9 +24,11 @@ class Games_model extends CI_Model {
 	    return ($f==24) ? date("G:i", $time) : date("g:i A", $time);	
   	}
 
-	public function getGames($betday) {
+	public function getGames($betday, $type = null) {
 		$this->db->select('*')->from('games');
 		$this->db->where(array('betday' => $betday));
+		if(!is_null($type))
+			$this->db->where('game_type', $type);
 		$rows = $this->db->get()->result_array();
 		
 		$ret = array();

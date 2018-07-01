@@ -2,6 +2,13 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Worksheets extends CI_Controller {
+    private $pageTitles = array(
+        'bets'  => 'Bets',
+        'bet_summary' =>'Summary', 
+        'bet_sheet' =>'RR and Parlay', 
+        'bets_pick' =>'Picks',
+        'bets_custom' =>'Custom',
+    );
 
     public function __construct() {
         parent::__construct();
@@ -14,12 +21,15 @@ class Worksheets extends CI_Controller {
     {
         $date = new DateTime(date('Y-m-d'));
         $betweek = $date->format('W');
+        $pageType = isset($_GET['type'])? $_GET['type']: 'bets';
         $settingId = isset($_GET['id'])?$_GET['id']:-1;
         $data['betweek'] = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
         $setting = $this->model->getActiveSetting($data['betweek'],$settingId);
         $data['settingId'] = $settingId;
         $data['setting'] = $setting;
-        $this->load->view('worksheets', $data);
+        $data['pageType'] = $pageType;
+        $data['pageTitle'] = $this->pageTitles[$pageType];
+        $this->load->view('worksheets/'.$pageType, $data);
     }
 
     public function loadCustomBet(){

@@ -19,6 +19,8 @@ class Allocations extends CI_Controller {
         $data['betweek'] = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
         $data['investors'] = $investors;
         $data['investorId'] = $investorId;
+        $data['pageType'] = 'allocations';
+        $data['pageTitle'] = 'Allocation of Money';
 
         $this->load->view('allocations',$data);
     }

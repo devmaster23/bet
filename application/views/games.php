@@ -7,9 +7,11 @@
 <script>
 	var betweek = <?php echo $betweek ?>;
 	var api_url = "<?php echo site_url('games'); ?>";
+	var pageType = "<?php echo $pageType; ?>";
+	var pageTitle = "<?php echo $pageTitle; ?>";
 </script>
 <div class="container page-title">
-	<h1 class="text-center" id="pageTitle"></h1>
+	<h1 class="text-center" id="pageTitle"><?php echo $pageTitle?></h1>
 </div>
 
 <div id="main">
@@ -27,55 +29,11 @@
 		</div>
 	</div>
 	<div class="content-div">
-		<div class="tab-content enter-game">
-			<div class="tab-pane active" id="ncaa_m" role="tabpanel">
-				<div class="sheet" data-type="ncaa_m">
-				</div>
-			</div>
-			<div class="tab-pane" id="nba" role="tabpanel">
-				<div class="sheet" data-type="nba">
-				</div>
-			</div>
-			<div class="tab-pane" id="football" role="tabpanel">
-				<div class="sheet" data-type="football">
-				</div>
-			</div>
-			<div class="tab-pane" id="ncaa_f" role="tabpanel">
-				<div class="sheet" data-type="ncaa_f">
-				</div>
-			</div>
-			<div class="tab-pane" id="soccer" role="tabpanel">
-				<div class="sheet" data-type="soccer">
-				</div>
-			</div>
-			<div class="tab-pane" id="mlb" role="tabpanel">
-				<div class="sheet" data-type="mlb">
-				</div>
+		<div class="enter-game">
+			<div id="<?php echo $pageType?>">
+				<div class="sheet"></div>
 			</div>
 		</div>
-	</div>
-	<div class="footer-div">
-	
-	</div>
-	<ul id="sheets" class="nav nav-tabs bottom-sheet" role="tablist">
-		<li class="nav-item">
-			<a class="nav-link active" data-toggle="tab" data-type="ncaa_m" href="#ncaa_m" aria-selected="true">NCAA M</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" data-toggle="tab" data-type="nba" href="#nba" aria-selected="true">NBA</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" data-toggle="tab" data-type="football" href="#football" aria-selected="true">Football</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" data-toggle="tab" data-type="ncaa_f" href="#ncaa_f" aria-selected="true">NCAA F</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" data-toggle="tab" data-type="soccer" href="#soccer" aria-selected="true">Soccer</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" data-toggle="tab" data-type="mlb" href="#mlb" aria-selected="true">MLB</a>
-		</li>
-	</ul>
+	</div>	
 </div>
 <?php $this->load->view('footer', array('scripts' => $scripts)) ?>

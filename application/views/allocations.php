@@ -1,5 +1,5 @@
 <?php
-    $page = 'allocations';
+    $page = 'investors';
     $scripts = [
         base_url('assets/js/allocations.js'),
     ];
@@ -8,7 +8,7 @@
     var api_url = "<?php echo site_url('allocations'); ?>";
 </script>
 <div class="container page-title">
-    <h1 class="text-center">Allocation of Money</h1>
+    <h1 class="text-center"><?php echo $pageTitle;?></h1>
 </div>
 
 <div id="main" class="sportbook-page">

@@ -30,11 +30,11 @@ var custom_headers_mlb = [
       '',
       '',
       {label: 'MLB', colspan: 3}, 
-      {label: 'Game', colspan: 3},
+      {label: 'Game', colspan: 4},
       {label: '1st Five', colspan: 2}
     ],
     [
-      '','VRN','Date','Time','Team','Run Line','Money Line','Total','Money Line','Total'
+      '','VRN','Date','Time','Team','ML','RL','RRL','Total','ML','Total'
     ]
 ];
 
@@ -167,12 +167,17 @@ var hotSettings_mlb = {
           readOnly: true
         },
         {
-          data: 'game_pts',
+          data: 'game_ml',
           renderer: coverRenderer,
           readOnly: true
         },
         {
-          data: 'game_ml',
+          data: 'game_rl',
+          renderer: coverRenderer,
+          readOnly: true
+        },
+        {
+          data: 'game_rrl',
           renderer: coverRenderer,
           readOnly: true
         },
@@ -194,7 +199,7 @@ var hotSettings_mlb = {
     ],
     minSpareRows: 0,
     minSpareCols: 0,
-    colWidths: [60, 130, 100, 250, 90,90,90,90,90],
+    colWidths: [60, 130, 100, 250, 90,90,90,90,90,90],
     rowHeights: rowHeight,
     className: "htCenter htMiddle",
     height: tableHeight,
@@ -424,40 +429,25 @@ function isEmptyRow(instance, row) {
   }
 
 function createSheets(picks) {
-  var title_types ={
-    'ncaa_m': 'NCAA M', 
-    'nba': 'NBA', 
-    'football': 'NFL',
-    'ncaa_f': 'NCAA F',
-    'soccer': 'SOC',
-    'mlb': 'MLB'
-  };
-
-  var selectType = $('#sheets .nav-link.active').data('type');
-  var title = title_types[selectType];
-
-  var data = picks[selectType] || [];
-  var container = $('div.sheet[data-type="'+selectType+'"]')[0];
-  var title = (selectType == 'ncaa_m')? title+'(College Basketball)': title;
-
   
 
-  if(selectType == 'mlb')
+  var data = picks[pageType] || [];
+  var container = $('div.sheet')[0];
+
+  if(pageType == 'mlb')
   {
     tmpSetting = Object.assign({},hotSettings_mlb);
   }else{
     tmpSetting = Object.assign({},hotSettings);
   }
-
-  tmpSetting['nestedHeaders'][0][1].label = '<label class="enter-game__header-item" data-class-name="enter-game__header1-title">'+title+'</label>';
+  tmpSetting['nestedHeaders'][0][1].label = '<label class="enter-game__header-item" data-class-name="enter-game__header1-title">'+pageTitle+'</label>';
 
   tableObject = new Handsontable(container, tmpSetting);
   tableObject.loadData(data);
 }
 
 function createAllPickSheets(data){
-  var key = 'all_picks';
-  var container = $('div.sheet[data-type="'+key+'"]')[0];
+  var container = $('div.sheet')[0];
   allHotSettings['data'] = data;
   if(allTableObject == null)
     allTableObject = new Handsontable(container, allHotSettings);
@@ -472,9 +462,11 @@ function loadAllPickTable(){
       url: api_url+'/loadAllPickData',
       type: 'POST',
       data: {
-        betweek: betweek
+        betweek: betweek,
+        type: pageType,
       },
       success: function(data) {
+        pageTitle = data['pageTitle'];
         createAllPickSheets(data);
         $(".loading-div").hide()
       }
@@ -488,11 +480,13 @@ function loadTable(){
       url: api_url+'/loadData',
       type: 'POST',
       data: {
-        betweek: betweek
+        betweek: betweek,
+        type: pageType,
       },
       success: function(data) {
-          createSheets(data['picks']);
-          $(".loading-div").hide()
+        pageTitle = data['pageTitle'];
+        createSheets(data['picks']);
+        $(".loading-div").hide()
       }
   });
 } 
@@ -504,7 +498,6 @@ function updateTable(){
     $(".loading-div").show()
 
     var betweek = $('.game-week-select').val()
-    var selectType = $('#sheets .nav-link.active').data('type');
     var hot = tableObject;
     var tableData = hot.getSourceData();
 
@@ -518,7 +511,7 @@ function updateTable(){
         type: 'POST',
         data: {
           betweek: betweek,
-          game_type: selectType,
+          game_type: pageType,
           picks: JSON.stringify({data: cleanedGridData})
         },
         success: function(data) {
@@ -552,9 +545,8 @@ function setStyle(){
 function mergeFields(){
   if(tableObject != null)
   {
-    var selectType = $('#sheets .nav-link.active').data('type');
-    var title = title_types[selectType];
-    title = (selectType == 'ncaa_m')? title+'(College Basketball)': title;
+    var title = title_types[pageType];
+    title = (pageType == 'ncaa_m')? title+'(College Basketball)': title;
 
     var cleanedGridData = [];
     $.each( tableObject.getData(), function( rowKey, object) {
@@ -576,24 +568,13 @@ function mergeFields(){
           ]);
         }
       }
-      tableObject.updateSettings(hotOptions);
     }
+    tableObject.updateSettings(hotOptions);
   }
 }
 
-$(document).on('click','#sheets .nav-link',function(){
-  initPage();  
-});
-
-function updatePageTitle(){
-  pageTitle = $('#sheets .nav-link.active').html();
-  $('#pageTitle').html(pageTitle);
-}
-
 function initPage(){
-  updatePageTitle();
-  var selectType = $('#sheets .nav-link.active').data('type');
-  if(selectType == 'all_picks')
+  if(pageType == 'all_picks')
   {
     $(".save-button-div").hide();
     loadAllPickTable();
@@ -618,7 +599,6 @@ $(document).ready(function() {
   });
   $(document).on('change','.pick-checkbox',function(){
 
-    var selectType = $('#sheets .nav-link.active').data('type');
     var hot = tableObject,
         tableData = hot.getSourceData(),
         $popoverDiv = $(this).parents('#popup-div'),

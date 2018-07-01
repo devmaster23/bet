@@ -2,7 +2,7 @@ var refData = [{"id":"1","PTS":"0","ML":"0"}, {"id":"2","PTS":"-20","ML":"0"}, {
 
 var rowHeight = 30,
     fontSize = '15px',
-    tableHeight = '700';
+    tableHeight = '600';
 
 var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 if(h)
@@ -11,7 +11,7 @@ if(h)
         footerObj = document.getElementById('sheets');
     var headerHeight = headerObj ? headerObj.offsetHeight: 0,
         footerHeight = footerObj ? footerObj.offsetHeight: 0;
-    tableHeight = h - headerHeight - footerHeight - 90;
+    // tableHeight = h - headerHeight - footerHeight - 90;
 }
 
 function initSelect()

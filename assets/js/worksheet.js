@@ -5,7 +5,6 @@ var allTableObject = null;
 var settingTableObject = null;
 var settingTableObject1 = null;
 var betData = null;
-var pageTitle = 'Summary';
 
 var all_custom_headers = [
     [
@@ -429,8 +428,7 @@ function createAllPickSheets(data){
 }
 
 function createPickSheets(data){
-  var key = 'bets_pick';
-  var container = $('div.sheet[data-type="'+key+'"]')[0];
+  var container = $('#bets_pick')[0];
   pickTableSettings['data'] = data;
   if(pickTableObject == null)
     pickTableObject = new Handsontable(container, pickTableSettings);
@@ -749,18 +747,20 @@ function mergeFields(){
 function updateTable(){
   $(".loading-div").show()
   var betweek = $('.game-week-select').val()
-  var tableData = settingTableObject.getData();
-  var tableData1 = settingTableObject1.getData();
-  var selectType = $('#sheets .nav-link.active').data('type');
-  var url = api_url+'/saveData';
-  var postData = {
-    betweek: betweek,
-    setting: JSON.stringify({
-      data: tableData,
-      data1: tableData1
-    })
+  if(pageType == 'bets')
+  {
+    var tableData = settingTableObject.getData();
+    var tableData1 = settingTableObject1.getData()
+    var url = api_url+'/saveData';
+    var postData = {
+      betweek: betweek,
+      setting: JSON.stringify({
+        data: tableData,
+        data1: tableData1
+      })
+    }
   }
-  if(selectType == 'bets_pick')
+  if(pageType == 'bets_pick')
   {
     let selectArr = [];
     $("input:checkbox[name=pick_select]:checked").each(function(){
@@ -773,7 +773,7 @@ function updateTable(){
         data: selectArr
       })
     }
-  }else if(selectType == 'bets_custom')
+  }else if(pageType == 'bets_custom')
   {
     url = api_url+'/saveCustomBet';
     let data = [];
@@ -826,21 +826,17 @@ function updateTable(){
   });
 }
 
-$(document).on('click','#sheets .nav-link',function(){
-  initPage();  
-});
-
 function initPage(){
-  updatePageTitle();
-  loadSettingTable();
-  var selectType = $('#sheets .nav-link.active').data('type');
-  if(selectType == 'bet_summary')
+  
+    
+  if(pageType == 'bet_summary')
   {
     $(".save-button-div").hide();
     loadSummary();
   }
-  if(selectType == 'bets')
+  else if(pageType == 'bets')
   {
+    loadSettingTable();
     $(".save-button-div").show();
     loadAllPickTable();
     // allTabelTimeOut = setInterval(function(){
@@ -850,18 +846,18 @@ function initPage(){
   }else{
     // clearInterval(allTabelTimeOut);
   }
-  if(selectType == 'bet_sheet')
+  if(pageType == 'bet_sheet')
   {
     $(".save-button-div").hide();
     loadBetSheet();
   }
-  if(selectType == 'bets_pick')
+  if(pageType == 'bets_pick')
   {
     $(".save-button-div").show();
     loadPickData();
   }
 
-  if(selectType == 'bets_custom')
+  if(pageType == 'bets_custom')
   {
     $(".save-button-div").show();
     loadBetCustomData();
@@ -890,11 +886,6 @@ $(document).on('click','.parlay-icon', function(){
   });
 })
 
-function updatePageTitle(){
-  pageTitle = $('#sheets .nav-link.active').html();
-  $('#pageTitle').html(pageTitle);
-}
-
 $(document).ready(function() {
 
   initPage();
@@ -905,8 +896,7 @@ $(document).ready(function() {
     }
   });
   $(document).on('change','.pick-checkbox',function(){
-    var selectType = $('#sheets .nav-link.active').data('type');
-    var hot = tableObject[selectType],
+    var hot = tableObject[pageType],
         tableData = hot.getSourceData(),
         $popoverDiv = $(this).parents('#popup-div'),
         row = $popoverDiv.data('row'),
