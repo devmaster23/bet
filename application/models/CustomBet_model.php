@@ -15,6 +15,8 @@ class CustomBet_model extends CI_Model {
     public function saveCustomBet($betday, $data){
         $betData = json_decode($data);
         $validIds = array();
+        $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
+        $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
         foreach($betData->data as $key => $betItem){
             $id = $betItem->id;
             $row_data = array(
@@ -44,6 +46,9 @@ class CustomBet_model extends CI_Model {
         {
             $this->db->where_not_in('id', $validIds);
             $this->db->delete($this->tableName);
+        }else{
+            $this->db->where('betday', $betday)
+                ->delete($this->tableName);
         }
 
     }

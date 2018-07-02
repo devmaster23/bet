@@ -85,30 +85,20 @@ class Picks_model extends CI_Model {
                         $db_column = $db_column.$i;
                     }else if(!in_array($db_column, array('id','date','time')))
                     {
-                        if($type == 'mlb' && $db_column == 'game_rl')
+                        if($type == 'mlb' && ($db_column == 'game_rl' || $db_column == 'game_rrl'))
                         {
-                            if($i == 1)
-                                $pick_value  = $this->addPlusMinus($row['game_rl']). ' ' . $this->addPlusMinus($row['game_rl_ml']);
-                            else
-                                $pick_value  = $this->addPlusMinus($row['game_rl'], true). ' ' . $this->addPlusMinus($row['game_rl_ml'], true);
-                        }else if($type == 'mlb' && $db_column == 'game_rrl')
+                            $value_db_column = 'team'.$i.'_'.$db_column;
+                            $pick_value  = $this->addPlusMinus($row[$value_db_column]). ' ' . $this->addPlusMinus($row[$value_db_column.'_ml']);
+                        }else if($db_column == 'game_total' || $db_column == 'first_half_total')
                         {
-                            if($i == 1)
-                                $pick_value  = $this->addPlusMinus($row['game_rl'], true). ' ' . $this->addPlusMinus($row['game_rl_ml'], true);
-                            else
-                                $pick_value  = $this->addPlusMinus($row['game_rl']). ' ' . $this->addPlusMinus($row['game_rl_ml']);
-                        }else if($db_column != 'game_total' && $db_column != 'first_half_total')
-                        {
-                            if($i == 1)
-                                $pick_value = @$row[$db_column];
-                            else
-                                $pick_value = @$row[$db_column] * -1;
-                        }else{
                             $pick_value = $row[$db_column];
+                        }else{
+                            $value_db_column = 'team'.$i.'_'.$db_column;
+                            $pick_value = $row[$value_db_column];
                         }
                         $new_item[$key.'_value'] = $pick_value;
 
-                        $db_column = 'team'.$i.'_'.$db_column;
+                        $db_column = 'team'.$i.'_'.$db_column.'_sel';
                     }
 
                     $value = @$row[$db_column];
@@ -149,19 +139,19 @@ class Picks_model extends CI_Model {
         $pickSelectList = count($pickSelectList) && $pickSelectList[0]['pick_select'] ? json_decode($pickSelectList[0]['pick_select']) : array();
         $ret = array();
         foreach($rows as $key => $item){
-            $team1_game_pts = json_decode($item['team1_game_pts']);
-            $team1_game_ml = json_decode($item['team1_game_ml']);
-            $team1_game_total = json_decode($item['team1_game_total']);
-            $team1_first_half_pts = json_decode($item['team1_first_half_pts']);
-            $team1_first_half_ml = json_decode($item['team1_first_half_ml']);
-            $team1_first_half_total = json_decode($item['team1_first_half_total']);
+            $team1_game_pts = json_decode($item['team1_game_pts_sel']);
+            $team1_game_ml = json_decode($item['team1_game_ml_sel']);
+            $team1_game_total = json_decode($item['team1_game_total_sel']);
+            $team1_first_half_pts = json_decode($item['team1_first_half_pts_sel']);
+            $team1_first_half_ml = json_decode($item['team1_first_half_ml_sel']);
+            $team1_first_half_total = json_decode($item['team1_first_half_total_sel']);
             
-            $team2_game_pts = json_decode($item['team2_game_pts']);
-            $team2_game_ml = json_decode($item['team2_game_ml']);
-            $team2_game_total = json_decode($item['team2_game_total']);
-            $team2_first_half_pts = json_decode($item['team2_first_half_pts']);
-            $team2_first_half_ml = json_decode($item['team2_first_half_ml']);
-            $team2_first_half_total = json_decode($item['team2_first_half_total']);
+            $team2_game_pts = json_decode($item['team2_game_pts_sel']);
+            $team2_game_ml = json_decode($item['team2_game_ml_sel']);
+            $team2_game_total = json_decode($item['team2_game_total_sel']);
+            $team2_first_half_pts = json_decode($item['team2_first_half_pts_sel']);
+            $team2_first_half_ml = json_decode($item['team2_first_half_ml_sel']);
+            $team2_first_half_total = json_decode($item['team2_first_half_total_sel']);
 
             foreach($this->pickType as $type_item)
             {   
@@ -220,25 +210,25 @@ class Picks_model extends CI_Model {
         $pickSelectList = count($pickSelectList) && $pickSelectList[0]['pick_select'] ? json_decode($pickSelectList[0]['pick_select']) : array();
         $ret = array();
         foreach($rows as $key => $item){
-            $team1_game_pts = json_decode($item['team1_game_pts']);
-            $team1_game_ml = json_decode($item['team1_game_ml']);
-            $team1_game_rl = json_decode($item['team1_game_rl']);
-            $team1_game_rrl = json_decode($item['team1_game_rrl']);
-            $team1_game_total = json_decode($item['team1_game_total']);
+            $team1_game_pts = json_decode($item['team1_game_pts_sel']);
+            $team1_game_ml = json_decode($item['team1_game_ml_sel']);
+            $team1_game_rl = json_decode($item['team1_game_rl_sel']);
+            $team1_game_rrl = json_decode($item['team1_game_rrl_sel']);
+            $team1_game_total = json_decode($item['team1_game_total_sel']);
             
-            $team1_first_half_pts = json_decode($item['team1_first_half_pts']);
-            $team1_first_half_ml = json_decode($item['team1_first_half_ml']);
-            $team1_first_half_total = json_decode($item['team1_first_half_total']);
+            $team1_first_half_pts = json_decode($item['team1_first_half_pts_sel']);
+            $team1_first_half_ml = json_decode($item['team1_first_half_ml_sel']);
+            $team1_first_half_total = json_decode($item['team1_first_half_total_sel']);
             
-            $team2_game_pts = json_decode($item['team2_game_pts']);
-            $team2_game_ml = json_decode($item['team2_game_ml']);
-            $team2_game_rl = json_decode($item['team2_game_rl']);
-            $team2_game_rrl = json_decode($item['team2_game_rrl']);
-            $team2_game_total = json_decode($item['team2_game_total']);
+            $team2_game_pts = json_decode($item['team2_game_pts_sel']);
+            $team2_game_ml = json_decode($item['team2_game_ml_sel']);
+            $team2_game_rl = json_decode($item['team2_game_rl_sel']);
+            $team2_game_rrl = json_decode($item['team2_game_rrl_sel']);
+            $team2_game_total = json_decode($item['team2_game_total_sel']);
 
-            $team2_first_half_pts = json_decode($item['team2_first_half_pts']);
-            $team2_first_half_ml = json_decode($item['team2_first_half_ml']);
-            $team2_first_half_total = json_decode($item['team2_first_half_total']);
+            $team2_first_half_pts = json_decode($item['team2_first_half_pts_sel']);
+            $team2_first_half_ml = json_decode($item['team2_first_half_ml_sel']);
+            $team2_first_half_total = json_decode($item['team2_first_half_total_sel']);
 
             foreach($this->pickType as $type_item)
             {   
@@ -341,19 +331,19 @@ class Picks_model extends CI_Model {
 
         $ret = array();
         foreach($rows as $key => $item){
-            $team1_game_pts = json_decode($item['team1_game_pts']);
-            $team1_game_ml = json_decode($item['team1_game_ml']);
-            $team1_game_total = json_decode($item['team1_game_total']);
-            $team1_first_half_pts = json_decode($item['team1_first_half_pts']);
-            $team1_first_half_ml = json_decode($item['team1_first_half_ml']);
-            $team1_first_half_total = json_decode($item['team1_first_half_total']);
+            $team1_game_pts = json_decode($item['team1_game_pts_sel']);
+            $team1_game_ml = json_decode($item['team1_game_ml_sel']);
+            $team1_game_total = json_decode($item['team1_game_total_sel']);
+            $team1_first_half_pts = json_decode($item['team1_first_half_pts_sel']);
+            $team1_first_half_ml = json_decode($item['team1_first_half_ml_sel']);
+            $team1_first_half_total = json_decode($item['team1_first_half_total_sel']);
             
-            $team2_game_pts = json_decode($item['team2_game_pts']);
-            $team2_game_ml = json_decode($item['team2_game_ml']);
-            $team2_game_total = json_decode($item['team2_game_total']);
-            $team2_first_half_pts = json_decode($item['team2_first_half_pts']);
-            $team2_first_half_ml = json_decode($item['team2_first_half_ml']);
-            $team2_first_half_total = json_decode($item['team2_first_half_total']);
+            $team2_game_pts = json_decode($item['team2_game_pts_sel']);
+            $team2_game_ml = json_decode($item['team2_game_ml_sel']);
+            $team2_game_total = json_decode($item['team2_game_total_sel']);
+            $team2_first_half_pts = json_decode($item['team2_first_half_pts_sel']);
+            $team2_first_half_ml = json_decode($item['team2_first_half_ml_sel']);
+            $team2_first_half_total = json_decode($item['team2_first_half_total_sel']);
 
             if(isset($team1_game_pts->$type_item) && $team1_game_pts->$type_item)
                 $ret[] = $this->getPickData($item, 1, 'pts', false, $pickSelectList);
@@ -424,24 +414,23 @@ class Picks_model extends CI_Model {
             }
             else if($db_column == 'line')
             {
-                if($type == 'rl')
+                if($first_half == false)
+                    $value_db_column = 'game_';   
+                else
+                    $value_db_column = 'first_half_';
+                $value_db_column = $value_db_column.$type;
+
+                if($type != 'total')
                 {
-                    $revert = ($team_id == 2) ? true: false;
-                    $value = $this->addPlusMinus($row['game_rl'],$revert). ' ' . $this->addPlusMinus($row['game_rl_ml'],$revert);
-                }else if($type == 'rrl')
+                    $value_db_column = 'team'.$team_id.'_game_'.$type;
+                }
+
+                if($type == 'rl' || $type == 'rrl')
                 {
-                    $revert = ($team_id == 2) ? false: true;
-                    $value = $this->addPlusMinus($row['game_rl'],!$revert). ' ' . $this->addPlusMinus($row['game_rl_ml'],!$revert);
+                    $value_db_column = 'team'.$team_id.'_game_'.$type;
+                    $value = $this->addPlusMinus($row[$value_db_column]). ' ' . $this->addPlusMinus($row[$value_db_column.'_ml']);
                 }else{
-                    if($first_half == false)
-                    {
-                        $line_column = 'game_'.$type;
-                    }else{
-                        $line_column = 'first_half_'.$type;
-                    }
-                    $value = $row[$line_column];
-                    if($team_id == 2 && $type != 'total')
-                        $value = $value * -1;
+                    $value = $row[$value_db_column];
                 }
             }
             else if($db_column == 'count')
@@ -490,7 +479,7 @@ class Picks_model extends CI_Model {
                 {
                     continue;
                 }
-                $game_data_index = $team.'_'.$index;
+                $game_data_index = $team.'_'.$index.'_sel';
                 $value = '';
                 if(!is_null($item->$index))
                     $value = $item->$index;

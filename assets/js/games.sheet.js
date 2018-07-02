@@ -67,14 +67,14 @@ var hotSettings = {
           readOnly: false
         },
         {
-          data: 'game_pts',
+          data: 'team1_game_pts',
           type: 'numeric',
           readOnly: false
         },
         {
-          data: 'game_ml',
+          data: 'team1_game_ml',
           type: 'numeric',
-          readOnly: true
+          readOnly: false
         },
         {
           data: 'game_total',
@@ -82,39 +82,39 @@ var hotSettings = {
           readOnly: false
         },
         {
-          data: 'game_pts_home',
+          data: 'team2_game_pts',
           type: 'numeric',
           readOnly: true
         },
         {
-          data: 'game_ml_home',
+          data: 'team2_game_ml',
           type: 'numeric',
-          readOnly: true
+          readOnly: false
         },
         {
-          data: 'first_half_pts',
+          data: 'team1_first_half_pts',
           type: 'numeric',
-          readOnly: true
+          readOnly: false
         },
         {
-          data: 'first_half_ml',
+          data: 'team1_first_half_ml',
           type: 'numeric',
-          readOnly: true
+          readOnly: false
         },
         {
           data: 'first_half_total',
           type: 'numeric',
-          readOnly: true
+          readOnly: false
         },
         {
-          data: 'first_half_pts_home',
+          data: 'team2_first_half_pts',
           type: 'numeric',
           readOnly: true
         },
         {
-          data: 'first_half_ml_home',
+          data: 'team2_first_half_ml',
           type: 'numeric',
-          readOnly: true
+          readOnly: false
         },
     ],
     minSpareRows: 1,
@@ -139,26 +139,11 @@ var hotSettings = {
         var row = change[0][0],
             prop = change[0][1],
             ref_value = change[0][3];
-        if (prop == 'game_pts'){
-          var ptsObj = getPTS(ref_value);
-
-          var game_ml         = getPTS(ref_value),
-              first_half_pts  = (ref_value? Math.floor(ref_value) / 2 : 0).toFixed(1);
-              first_half_pts = parseFloat(first_half_pts) * 10 / 10;
-              first_half_ml = getPTS(first_half_pts);
-
-          currentTable.setDataAtRowProp(row,'game_pts_home',ref_value*(-1),"sss");
-          currentTable.setDataAtRowProp(row,'game_ml',game_ml,"sss");
-          currentTable.setDataAtRowProp(row,'game_ml_home',game_ml*(-1),"sss");
-          currentTable.setDataAtRowProp(row,'first_half_pts',first_half_pts,"sss");
-          currentTable.setDataAtRowProp(row,'first_half_ml',first_half_ml,"sss");
-          currentTable.setDataAtRowProp(row,'first_half_pts_home',first_half_pts*(-1),"sss");
-          currentTable.setDataAtRowProp(row,'first_half_ml_home',first_half_ml*(-1),"sss");
+        if (prop == 'team1_game_pts'){
+          currentTable.setDataAtRowProp(row,'team2_game_pts',ref_value*(-1),"sss");
         }
-
-        if (prop == 'game_total'){
-          var value = ref_value?ref_value/2:0;
-          currentTable.setDataAtRowProp(row,'first_half_total',value,"sss");
+        if (prop == 'team1_first_half_pts'){
+          currentTable.setDataAtRowProp(row,'team2_first_half_pts',ref_value*(-1),"sss");
         }
       }
     }
@@ -208,54 +193,54 @@ var hotSettings_mlb = {
           readOnly: false
         },
         {
-          data: 'game_ml',
+          data: 'team1_game_ml',
           type: 'numeric',
           readOnly: false
         },
         {
-          data: 'game_rl',
+          data: 'team1_game_rl',
           editor: 'select',
           selectOptions: ['-1.5', '1.5']
         },
         {
-          data: 'game_rl_ml',
+          data: 'team1_game_rl_ml',
           type: 'numeric',
           readOnly: false
         },
         {
-          data: 'game_rrl',
+          data: 'team1_game_rrl',
           type: 'numeric',
           readOnly: true
         },
         {
-          data: 'game_rrl_ml',
+          data: 'team1_game_rrl_ml',
+          type: 'numeric',
+          readOnly: false
+        },
+        {
+          data: 'team2_game_ml',
+          type: 'numeric',
+          readOnly: false
+        },
+        {
+          data: 'team2_game_rl',
           type: 'numeric',
           readOnly: true
         },
         {
-          data: 'home_game_ml',
+          data: 'team2_game_rl_ml',
+          type: 'numeric',
+          readOnly: false
+        },
+        {
+          data: 'team2_game_rrl',
           type: 'numeric',
           readOnly: true
         },
         {
-          data: 'home_game_rl',
+          data: 'team2_game_rrl_ml',
           type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'home_game_rl_ml',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'home_game_rrl',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'home_game_rrl_ml',
-          type: 'numeric',
-          readOnly: true
+          readOnly: false
         },
         {
           data: 'game_total',
@@ -263,12 +248,12 @@ var hotSettings_mlb = {
           readOnly: false
         },
         {
-          data: 'first_half_ml',
+          data: 'team1_first_half_ml',
           type: 'numeric',
           readOnly: false
         },
         {
-          data: 'home_first_half_ml',
+          data: 'team2_first_half_ml',
           type: 'numeric',
           readOnly: false
         },
@@ -300,30 +285,12 @@ var hotSettings_mlb = {
         var row = change[0][0],
             prop = change[0][1],
             ref_value = change[0][3];
-        if (prop == 'game_rl'){
-          var ptsObj = getPTS(ref_value);
-
-          var game_ml         = getPTS(ref_value),
-              game_rrl        = ref_value * (-1),
-              game_rrl_ml     = getPTS(game_rrl),
-              first_half_pts  = (ref_value? Math.floor(ref_value) / 2 : 0).toFixed(1);
-              first_half_pts = parseFloat(first_half_pts) * 10 / 10;
-              first_half_ml = getPTS(first_half_pts);
-
-          currentTable.setDataAtRowProp(row,'game_ml',game_ml,"sss");
-          currentTable.setDataAtRowProp(row,'game_rl_ml',game_ml,"sss");
-          currentTable.setDataAtRowProp(row,'game_rrl',game_rrl,"sss");
-          currentTable.setDataAtRowProp(row,'game_rrl_ml',game_rrl_ml,"sss");
-          currentTable.setDataAtRowProp(row,'first_half_pts',first_half_pts,"sss");
-          // currentTable.setDataAtRowProp(row,'first_half_ml',first_half_ml,"sss");
-          // currentTable.setDataAtRowProp(row,'first_half_pts_home',first_half_pts*(-1),"sss");
-          // currentTable.setDataAtRowProp(row,'first_half_ml_home',first_half_ml*(-1),"sss");
+        if (prop == 'team1_game_rl'){
+          currentTable.setDataAtRowProp(row,'team1_game_rrl',ref_value * (-1),"sss");
+          currentTable.setDataAtRowProp(row,'team2_game_rl',ref_value * (-1),"sss");
+          currentTable.setDataAtRowProp(row,'team2_game_rrl',ref_value,"sss");
         }
 
-        if (prop == 'game_total'){
-          var value = ref_value?ref_value/2:0;
-          currentTable.setDataAtRowProp(row,'first_half_total',value,"sss");
-        }
       }
     }
 };
@@ -366,59 +333,59 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
     if(vrn1 != null)
       td.innerHTML = eval(vrn1) + 1;
   }
-  if (prop == 'game_pts_home' || prop == 'game_ml_home' || prop == 'first_half_pts_home' || prop == 'first_half_ml_home')
-  {
-    var org_prop = prop.substr(0,prop.length-5);
-    var org_val = instance.getDataAtRowProp(row,org_prop);
-    if(org_val != null)
-      td.innerHTML = eval(org_val) * -1; 
-  }
+  // if (prop == 'team2_game_pts' || prop == 'team2_game_ml' || prop == 'team2_first_half_pts' || prop == 'team2_first_half_ml')
+  // {
+  //   var org_prop = prop.substr(0,prop.length-5);
+  //   var org_val = instance.getDataAtRowProp(row,org_prop);
+  //   if(org_val != null)
+  //     td.innerHTML = eval(org_val) * -1; 
+  // }
 
-  if (prop == 'game_rrl')
-  {
-    var org_prop = 'game_rl'
-    var org_val = instance.getDataAtRowProp(row,org_prop);
-    if(org_val != null)
-      td.innerHTML = eval(org_val) * -1; 
-  }
+  // if (prop == 'game_rrl')
+  // {
+  //   var org_prop = 'game_rl'
+  //   var org_val = instance.getDataAtRowProp(row,org_prop);
+  //   if(org_val != null)
+  //     td.innerHTML = eval(org_val) * -1; 
+  // }
 
-  if (prop == 'game_rrl_ml')
-  {
-    var org_prop = 'game_rl_ml'
-    var org_val = instance.getDataAtRowProp(row,org_prop);
-    if(org_val != null)
-      td.innerHTML = eval(org_val) * -1; 
-  }
+  // if (prop == 'game_rrl_ml')
+  // {
+  //   var org_prop = 'game_rl_ml'
+  //   var org_val = instance.getDataAtRowProp(row,org_prop);
+  //   if(org_val != null)
+  //     td.innerHTML = eval(org_val) * -1; 
+  // }
 
-  if (prop == 'home_game_rrl')
-  {
-    var org_prop = 'game_rl'
-    var org_val = instance.getDataAtRowProp(row,org_prop);
-    if(org_val != null)
-      td.innerHTML = eval(org_val); 
-  }
+  // if (prop == 'home_game_rrl')
+  // {
+  //   var org_prop = 'game_rl'
+  //   var org_val = instance.getDataAtRowProp(row,org_prop);
+  //   if(org_val != null)
+  //     td.innerHTML = eval(org_val); 
+  // }
 
-  if (prop == 'home_game_rrl_ml')
-  {
-    var org_prop = 'game_rl_ml'
-    var org_val = instance.getDataAtRowProp(row,org_prop);
-    if(org_val != null)
-      td.innerHTML = eval(org_val); 
-  }
+  // if (prop == 'home_game_rrl_ml')
+  // {
+  //   var org_prop = 'game_rl_ml'
+  //   var org_val = instance.getDataAtRowProp(row,org_prop);
+  //   if(org_val != null)
+  //     td.innerHTML = eval(org_val); 
+  // }
 
-  if (prop == 'home_game_rl' || prop == 'home_game_rl_ml' || prop == 'home_game_ml')
-  {
-    var org_prop = prop.substring(5);
-    var org_val = instance.getDataAtRowProp(row,org_prop);
-    if(org_val != null)
-      td.innerHTML = eval(org_val) * -1;
-  }
+  // if (prop == 'home_game_rl' || prop == 'home_game_rl_ml' || prop == 'team2_game_ml')
+  // {
+  //   var org_prop = prop.substring(5);
+  //   var org_val = instance.getDataAtRowProp(row,org_prop);
+  //   if(org_val != null)
+  //     td.innerHTML = eval(org_val) * -1;
+  // }
 
-  if (prop == 'home_first_half_ml'){
-    var org_val = instance.getDataAtRowProp(row,'first_half_ml');
-    if(org_val != null)
-      td.innerHTML = eval(org_val) * -1;
-  }
+  // if (prop == 'team2_first_half_ml'){
+  //   var org_val = instance.getDataAtRowProp(row,'team1_first_half_ml');
+  //   if(org_val != null)
+  //     td.innerHTML = eval(org_val) * -1;
+  // }
 
   td.style.fontSize = fontSize;
   return td;
