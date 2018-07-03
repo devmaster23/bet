@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Games extends CI_Controller {
 	private $pageTitles = array(
-	    'ncaa_m' =>'NCAA M(College Basketball)', 
+	    'ncaa_m' =>'NCAA M', 
 	    'nba' =>'NBA', 
 	    'football' =>'NFL',
 	    'ncaa_f' =>'NCAA F',
@@ -24,7 +24,7 @@ class Games extends CI_Controller {
 	public function index() // default ncaa_m
 	{
 		$date = new DateTime(date('Y-m-d'));
-		$pageType = isset($_GET['type'])? $_GET['type']: 'ncaa_m';
+		$pageType = isset($_GET['type'])? $_GET['type']: 'football';
 		$betweek = $date->format('W');
 		$data['betweek'] = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
 		$data['pageType'] = $pageType;

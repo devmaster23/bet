@@ -71,7 +71,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <a href="apps_crypto.html">NBA</a>
                                 </li>
                                 <li>
-                                    <a href="apps_support_dashboard.html">Football</a>
+                                    <a href="apps_support_dashboard.html">NFL</a>
                                 </li>
                                 <li>
                                     <a href="apps_projects.html">NCAA F</a>
@@ -265,17 +265,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             </div>
                             <div class="sub-menu-i">
                                 <ul class="sub-menu">
-                                    <li class="<?php echo ($page == 'games' && $pageType == 'ncaa_m')?'active':'';?>">
-                                        <a href="<?php echo site_url('games?type=ncaa_m'); ?>">NCAA M</a>
+                                    <li class="<?php echo ($page == 'games' && $pageType == 'football')?'active':'';?>">
+                                        <a href="<?php echo site_url('games?type=football'); ?>">NFL</a>
+                                    </li>
+                                    <li class="<?php echo ($page == 'games' && $pageType == 'ncaa_f')?'active':'';?>">
+                                        <a href="<?php echo site_url('games?type=ncaa_f'); ?>">NCAA F</a>
                                     </li>
                                     <li class="<?php echo ($page == 'games' && $pageType == 'nba')?'active':'';?>">
                                         <a href="<?php echo site_url('games?type=nba'); ?>">NBA</a>
                                     </li>
-                                    <li class="<?php echo ($page == 'games' && $pageType == 'football')?'active':'';?>">
-                                        <a href="<?php echo site_url('games?type=football'); ?>">Football</a>
-                                    </li>
-                                    <li class="<?php echo ($page == 'games' && $pageType == 'ncaa_f')?'active':'';?>">
-                                        <a href="<?php echo site_url('games?type=ncaa_f'); ?>">NCAA F</a>
+                                    <li class="<?php echo ($page == 'games' && $pageType == 'ncaa_m')?'active':'';?>">
+                                        <a href="<?php echo site_url('games?type=ncaa_m'); ?>">NCAA M</a>
                                     </li>
                                     <li class="<?php echo ($page == 'games' && $pageType == 'soccer')?'active':'';?>">
                                         <a href="<?php echo site_url('games?type=soccer'); ?>">Soccer</a>
@@ -308,17 +308,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <li class="<?php echo ($page == 'picks' && $pageType == 'all_picks')?'active':'';?>">
                                         <a href="<?php echo site_url('picks?type=all_picks'); ?>">All</a>
                                     </li>
-                                    <li class="<?php echo ($page == 'picks' && $pageType == 'ncaa_m')?'active':'';?>">
-                                        <a href="<?php echo site_url('picks?type=ncaa_m'); ?>">NCAA M</a>
+                                    <li class="<?php echo ($page == 'picks' && $pageType == 'football')?'active':'';?>">
+                                        <a href="<?php echo site_url('picks?type=football'); ?>">NFL</a>
+                                    </li>
+                                    <li class="<?php echo ($page == 'picks' && $pageType == 'ncaa_f')?'active':'';?>">
+                                        <a href="<?php echo site_url('picks?type=ncaa_f'); ?>">NCAA F</a>
                                     </li>
                                     <li class="<?php echo ($page == 'picks' && $pageType == 'nba')?'active':'';?>">
                                         <a href="<?php echo site_url('picks?type=nba'); ?>">NBA</a>
                                     </li>
-                                    <li class="<?php echo ($page == 'picks' && $pageType == 'football')?'active':'';?>">
-                                        <a href="<?php echo site_url('picks?type=football'); ?>">Football</a>
-                                    </li>
-                                    <li class="<?php echo ($page == 'picks' && $pageType == 'ncaa_f')?'active':'';?>">
-                                        <a href="<?php echo site_url('picks?type=ncaa_f'); ?>">NCAA F</a>
+                                    <li class="<?php echo ($page == 'picks' && $pageType == 'ncaa_m')?'active':'';?>">
+                                        <a href="<?php echo site_url('picks?type=ncaa_m'); ?>">NCAA M</a>
                                     </li>
                                     <li class="<?php echo ($page == 'picks' && $pageType == 'soccer')?'active':'';?>">
                                         <a href="<?php echo site_url('picks?type=soccer'); ?>">Soccer</a>

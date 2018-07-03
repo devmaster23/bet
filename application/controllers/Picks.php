@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Picks extends CI_Controller {
     private $pageTitles = array(
         'all_picks'  => 'All Picks',
-        'ncaa_m' =>'NCAA M(College Basketball)', 
+        'ncaa_m' =>'NCAA M', 
         'nba' =>'NBA', 
         'football' =>'NFL',
         'ncaa_f' =>'NCAA F',

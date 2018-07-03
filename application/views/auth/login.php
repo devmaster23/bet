@@ -21,7 +21,7 @@
         <h4 class="auth-header">
           Login Form
         </h4>
-        <form role="form" method="post" action="">
+        <form role="form" method="post" action="" class="login-form">
 
           <?php 
           $error_msg=$this->session->flashdata('error_msg');
@@ -36,17 +36,21 @@
             <div class="pre-icon os-icon os-icon-user-male-circle"></div>
           </div>
           <div class="form-group">
-            <label for="">Password</label><input class="form-control" placeholder="Enter your password" type="password" name="password">
+            <label for="">Password</label><input class="form-control" placeholder="Enter your password" type="password" name="password" id="password">
             <div class="pre-icon os-icon os-icon-fingerprint"></div>
           </div>
           <div class="buttons-w">
-            <button class="btn btn-primary" type="submit" name="login">Log me in</button>
-            <div class="form-check-inline">
-              <label class="form-check-label"><input class="form-check-input" type="checkbox">Remember Me</label>
+            <div class="form-check" style="margin-bottom: 10px;">
+              <label class="form-check-label"><input class="form-check-input" type="checkbox" id="show_password">Show Password</label>
             </div>
+            <button class="btn btn-primary" type="submit" name="login">Log in</button>
           </div>
         </form>
       </div>
     </div>
+  <script src='<?php echo base_url('assets/vendor/js/jquery.min.js') ?>'></script>
+  <script src='<?php echo base_url('assets/vendor/js/bootstrap.min.js') ?>'></script>
+  <script src='<?php echo base_url('bower_components/select2/dist/js/select2.min.js') ?>'></script>
+  <script src='<?php echo base_url('assets/js/common.js') ?>'></script>
   </body>
 </html>

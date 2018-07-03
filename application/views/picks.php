@@ -11,7 +11,7 @@
     var pageTitle = "<?php echo $pageTitle; ?>";
 </script>
 <div class="container page-title">
-    <h1 class="text-center" id="pageTitle"><?php echo $pageTitle?></h1>
+    <h1 class="text-center" id="pageTitle"></h1>
 </div>
 
 <div id="main">
@@ -25,7 +25,7 @@
             </select>
         </div>
         <div class="save-button-div">
-            <button type="button" class="btn btn-success enter-pick_save-button" onClick="updateTable()">Update</button>
+            <button type="button" class="btn btn-success btn-lg enter-pick_save-button" onClick="updateTable()">Update</button>
         </div>
     </div>
 

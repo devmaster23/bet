@@ -29,7 +29,7 @@
         </select>
       </div>
       <div class="save-button-div">
-        <button type="button" class="btn btn-success enter-game_save-button" onClick="updateData()">Update</button>
+        <button type="button" class="btn btn-success btn-lg enter-game_save-button" onClick="updateData()">Update</button>
       </div>
     </div>
 

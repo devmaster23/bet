@@ -26,7 +26,7 @@
             </select>
         </div>
         <div class="save-button-div">
-            <button type="button" class="btn btn-success enter-pick_save-button" onClick="updateTable()">Update</button>
+            <button type="button" class="btn btn-success btn-lg enter-pick_save-button" onClick="updateTable()">Update</button>
         </div>
     </div>
     <div class="control-header">

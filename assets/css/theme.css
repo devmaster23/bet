@@ -12477,10 +12477,15 @@ strong {
   flex: 1 0 auto;
 }
 .auth-wrapper{
-  background-image: url('/assets/img/login_background.jpg')
+  background-image: url('/assets/img/login_background.jpg');
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .auth-wrapper .all-wrapper {
-  padding: 100px;
+  width: 450px;
 }
 
 .section-heading {
@@ -17048,8 +17053,8 @@ a.el-tablo:hover .label {
 }
 
 .auth-box-w .buttons-w {
-  padding-top: 1rem;
-  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  /*margin-top: 0.5rem;*/
   border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
