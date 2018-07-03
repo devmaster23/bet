@@ -259,9 +259,9 @@ class Picks_model extends CI_Model {
                 if(isset($team2_game_ml->$type_item) && $team2_game_ml->$type_item)
                     $ret[$type_item][] = $this->getPickData($item, 2, 'ml', false, $pickSelectList);
                 if(isset($team2_game_rl->$type_item) && $team2_game_rl->$type_item)
-                    $ret[$type_item][] = $this->getPickData($item, 1, 'rl', false, $pickSelectList);
+                    $ret[$type_item][] = $this->getPickData($item, 2, 'rl', false, $pickSelectList);
                 if(isset($team2_game_rrl->$type_item) && $team2_game_rrl->$type_item)
-                    $ret[$type_item][] = $this->getPickData($item, 1, 'rrl', false, $pickSelectList);
+                    $ret[$type_item][] = $this->getPickData($item, 2, 'rrl', false, $pickSelectList);
                 if(isset($team2_game_total->$type_item) && $team2_game_total->$type_item)
                     $ret[$type_item][] = $this->getPickData($item, 2, 'total', false, $pickSelectList);
 
@@ -414,15 +414,16 @@ class Picks_model extends CI_Model {
             }
             else if($db_column == 'line')
             {
-                if($first_half == false)
+                if(!$first_half)
                     $value_db_column = 'game_';   
                 else
                     $value_db_column = 'first_half_';
-                $value_db_column = $value_db_column.$type;
 
-                if($type != 'total')
+                if($type == 'total')
                 {
-                    $value_db_column = 'team'.$team_id.'_game_'.$type;
+                    $value_db_column = $value_db_column.$type;
+                }else{
+                    $value_db_column = 'team'.$team_id.'_'.$value_db_column.$type;
                 }
 
                 if($type == 'rl' || $type == 'rrl')
