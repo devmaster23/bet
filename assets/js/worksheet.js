@@ -392,6 +392,7 @@ function selectRenderer (instance, td, row, col, prop, value, cellProperties) {
   var selected = instance.getDataAtRowProp(row, 'selected');
   $(td).html("<input type='checkbox' " + (selected?"checked":"") + " name='pick_select' data-key='"+value+"' />");
   td.style.textAlign = 'center';
+  td.style.verticalAlign = 'middle';
   return td;
 }
 

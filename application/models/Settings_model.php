@@ -317,6 +317,7 @@ class Settings_model extends CI_Model {
             'pick_allocation'    => 0,
             'pick_number1'    => 0,
             'description'   => '',
+            'title'         => ''
         );
 
         if(count($rows))
@@ -333,6 +334,7 @@ class Settings_model extends CI_Model {
             $result['pick_allocation'] = $data['pick_allocation'];
             $result['pick_number1'] = $data['pick_number1'];
             $result['description'] = $data['description'];
+            $result['title'] = $this->getSettingTitle($data['type'],$data['groupuser_id']);
         }
         return $result;
     }

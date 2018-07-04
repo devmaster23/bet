@@ -12,7 +12,7 @@
     var pageTitle = "<?php echo $pageTitle; ?>";
 </script>
 <div class="container page-title">
-    <h1 class="text-center" id="pageTitle"><?php echo $pageTitle?></h1>
+    <h1 class="text-center" id="pageTitle"></h1>
 </div>
 
 <div id="main" class="worksheets">
