@@ -266,22 +266,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <div class="sub-menu-i">
                                 <ul class="sub-menu">
                                     <li class="<?php echo ($page == 'games' && $pageType == 'football')?'active':'';?>">
-                                        <a href="<?php echo site_url('games?type=football'); ?>">NFL</a>
+                                        <a href="<?php echo site_url('games?type=football'); ?>"><img src="<?php echo base_url('assets/img/icon_NFL.png')?>">NFL</a>
                                     </li>
                                     <li class="<?php echo ($page == 'games' && $pageType == 'ncaa_f')?'active':'';?>">
-                                        <a href="<?php echo site_url('games?type=ncaa_f'); ?>">NCAA F</a>
+                                        <a href="<?php echo site_url('games?type=ncaa_f'); ?>"><img src="<?php echo base_url('assets/img/icon_NCAAF.png')?>">NCAA F</a>
                                     </li>
                                     <li class="<?php echo ($page == 'games' && $pageType == 'nba')?'active':'';?>">
-                                        <a href="<?php echo site_url('games?type=nba'); ?>">NBA</a>
+                                        <a href="<?php echo site_url('games?type=nba'); ?>"><img src="<?php echo base_url('assets/img/icon_NBA.png')?>">NBA</a>
                                     </li>
                                     <li class="<?php echo ($page == 'games' && $pageType == 'ncaa_m')?'active':'';?>">
-                                        <a href="<?php echo site_url('games?type=ncaa_m'); ?>">NCAA M</a>
+                                        <a href="<?php echo site_url('games?type=ncaa_m'); ?>"><img src="<?php echo base_url('assets/img/icon_NCAAM.png')?>">NCAA M</a>
                                     </li>
                                     <li class="<?php echo ($page == 'games' && $pageType == 'soccer')?'active':'';?>">
-                                        <a href="<?php echo site_url('games?type=soccer'); ?>">Soccer</a>
+                                        <a href="<?php echo site_url('games?type=soccer'); ?>"><img src="<?php echo base_url('assets/img/icon_soccer.png')?>">Soccer</a>
                                     </li>
                                     <li class="<?php echo ($page == 'games' && $pageType == 'mlb')?'active':'';?>">
-                                        <a href="<?php echo site_url('games?type=mlb'); ?>">MLB</a>
+                                        <a href="<?php echo site_url('games?type=mlb'); ?>"><img src="<?php echo base_url('assets/img/icon_MLB.png')?>">MLB</a>
                                     </li>
                                 </ul>
                             </div>
@@ -293,7 +293,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <li class=" has-sub-menu <?php echo ($page == 'picks')?'selected':'';?>">
                         <a href="<?php echo site_url('picks'); ?>">
                             <div class="icon-w">
-                                <div class="os-icon os-icon-layers"></div>
+                                <div class="os-icon os-icon-search"></div>
                             </div>
                             <span>Picks</span></a>
                         <div class="sub-menu-w">
@@ -301,7 +301,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 Picks
                             </div>
                             <div class="sub-menu-icon">
-                                <i class="os-icon os-icon-layers"></i>
+                                <i class="os-icon os-icon-search"></i>
                             </div>
                             <div class="sub-menu-i">
                                 <ul class="sub-menu">
@@ -309,22 +309,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         <a href="<?php echo site_url('picks?type=all_picks'); ?>">All</a>
                                     </li>
                                     <li class="<?php echo ($page == 'picks' && $pageType == 'football')?'active':'';?>">
-                                        <a href="<?php echo site_url('picks?type=football'); ?>">NFL</a>
+                                        <a href="<?php echo site_url('picks?type=football'); ?>"><img src="<?php echo base_url('assets/img/icon_NFL.png')?>">NFL</a>
                                     </li>
                                     <li class="<?php echo ($page == 'picks' && $pageType == 'ncaa_f')?'active':'';?>">
-                                        <a href="<?php echo site_url('picks?type=ncaa_f'); ?>">NCAA F</a>
+                                        <a href="<?php echo site_url('picks?type=ncaa_f'); ?>"><img src="<?php echo base_url('assets/img/icon_NCAAF.png')?>">NCAA F</a>
                                     </li>
                                     <li class="<?php echo ($page == 'picks' && $pageType == 'nba')?'active':'';?>">
-                                        <a href="<?php echo site_url('picks?type=nba'); ?>">NBA</a>
+                                        <a href="<?php echo site_url('picks?type=nba'); ?>"><img src="<?php echo base_url('assets/img/icon_NBA.png')?>">NBA</a>
                                     </li>
                                     <li class="<?php echo ($page == 'picks' && $pageType == 'ncaa_m')?'active':'';?>">
-                                        <a href="<?php echo site_url('picks?type=ncaa_m'); ?>">NCAA M</a>
+                                        <a href="<?php echo site_url('picks?type=ncaa_m'); ?>"><img src="<?php echo base_url('assets/img/icon_NCAAM.png')?>">NCAA M</a>
                                     </li>
                                     <li class="<?php echo ($page == 'picks' && $pageType == 'soccer')?'active':'';?>">
-                                        <a href="<?php echo site_url('picks?type=soccer'); ?>">Soccer</a>
+                                        <a href="<?php echo site_url('picks?type=soccer'); ?>"><img src="<?php echo base_url('assets/img/icon_soccer.png')?>">Soccer</a>
                                     </li>
                                     <li class="<?php echo ($page == 'picks' && $pageType == 'mlb')?'active':'';?>">
-                                        <a href="<?php echo site_url('picks?type=mlb'); ?>">MLB</a>
+                                        <a href="<?php echo site_url('picks?type=mlb'); ?>"><img src="<?php echo base_url('assets/img/icon_MLB.png')?>">MLB</a>
                                     </li>
                                 </ul>
                             </div>
@@ -369,14 +369,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <li class=" <?php echo ($page == 'settings')?'selected':'';?>">
                         <a href="<?php echo site_url('settings'); ?>">
                             <div class="icon-w">
-                                <div class="os-icon os-icon-layers"></div>
+                                <div class="os-icon os-icon-check-circle"></div>
                             </div>
                             <span>Control</span></a>
                     </li>
                     <li class=" has-sub-menu <?php echo ($page == 'investors')?'selected':'';?>">
                         <a href="<?php echo site_url('investors'); ?>">
                             <div class="icon-w">
-                                <div class="os-icon os-icon-layers"></div>
+                                <div class="os-icon os-icon-user"></div>
                             </div>
                             <span>Investors</span></a>
                         <div class="sub-menu-w">
@@ -384,7 +384,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 Investors
                             </div>
                             <div class="sub-menu-icon">
-                                <i class="os-icon os-icon-layers"></i>
+                                <i class="os-icon os-icon-user"></i>
                             </div>
                             <div class="sub-menu-i">
                                 <ul class="sub-menu">
@@ -402,7 +402,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <li class=" <?php echo ($page == 'sportbooks')?'selected':'';?>">
                         <a href="<?php echo site_url('sportbooks'); ?>">
                             <div class="icon-w">
-                                <div class="os-icon os-icon-layers"></div>
+                                <div class="os-icon os-icon-bookmark"></div>
                             </div>
                             <span>SportBooks</span></a>
                     </li>
@@ -412,7 +412,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <li class="<?php echo ($page == 'orders')?'selected':'';?>">
                         <a href="<?php echo site_url('orders'); ?>">
                             <div class="icon-w">
-                                <div class="os-icon os-icon-layers"></div>
+                                <div class="os-icon os-icon-files"></div>
                             </div>
                             <span>Orders</span></a>
                     </li>
@@ -421,7 +421,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <li class="<?php echo ($page == 'users')?'selected':'';?>">
                         <a href="<?php echo site_url('users'); ?>">
                             <div class="icon-w">
-                                <div class="os-icon os-icon-layers"></div>
+                                <div class="os-icon os-icon-users"></div>
                             </div>
                             <span>Users</span></a>
                     </li>

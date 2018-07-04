@@ -14940,6 +14940,9 @@ body.menu-side-right .layout-w {
   min-width: auto;
   border-right: 1px solid rgba(0, 0, 0, 0.05);
 }
+.menu-position-top.menu-w ul.main-menu > li.selected .sub-menu-w .sub-menu-i ul.sub-menu li a img{
+  margin-right: 7px;
+}
 
 .menu-position-top.menu-w ul.main-menu > li.selected .sub-menu-w .sub-menu-i ul.sub-menu li.active{
   background-color: #1d4cc3;
