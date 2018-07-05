@@ -2360,16 +2360,16 @@ pre code {
 }
 
 .table thead th {
-  vertical-align: bottom;
+  vertical-align: middle;
   border-bottom: 2px solid rgba(83, 101, 140, 0.33);
+  font-weight: bold;
 }
 
 .table tbody + tbody {
   border-top: 2px solid rgba(83, 101, 140, 0.33);
 }
 
-.table .table {
-  background-color: #fff;
+.table .table {7  background-color: #fff;
 }
 
 .table-sm th,
@@ -10219,7 +10219,7 @@ a.text-dark:hover, a.text-dark:focus {
 
 .table tfoot th,
 .table thead th {
-  font-size: 0.63rem;
+  font-size: 0.73rem;
   text-transform: uppercase;
   border-top: none;
 }
@@ -10653,6 +10653,8 @@ legend:before {
 .form-header {
   margin-bottom: 1rem;
   padding-top: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: .15em;
   display: block;
 }
 
@@ -11577,7 +11579,6 @@ body .daterangepicker {
   font-family: "Avenir Next W01", "Proxima Nova W01", "Rubik", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   border: none;
   padding: 15px;
-  min-width: 540px;
 }
 
 body .daterangepicker::after {

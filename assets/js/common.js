@@ -25,6 +25,7 @@ function initSelect()
 }
 
 $(document).ready(function(){
+  $('input.single-daterange').daterangepicker({ "singleDatePicker": true });
   if($("#bets_custom_inner-wrapper"))
   {
     $("#bets_custom_inner-wrapper").css('max-height', tableHeight+'px');
@@ -38,6 +39,24 @@ $(document).ready(function(){
     } else {
         passwordObj.attr('type', 'password');
     }
+  });
+
+  $('.bet-week-prev').on('click',function(){
+    var currentBetWeek  = $('select[name="game-week-select"]').val();
+    currentBetWeek = eval(currentBetWeek);
+    if(currentBetWeek > 0)
+      $('select[name="game-week-select"]').val(currentBetWeek - 1).select2({
+        width: '100px'
+      }).change();
+  });
+
+  $('.bet-week-next').on('click',function(){
+    var currentBetWeek  = $('select[name="game-week-select"]').val();
+    currentBetWeek = eval(currentBetWeek);
+    if(currentBetWeek < 60)
+      $('select[name="game-week-select"]').val(currentBetWeek + 1).select2({
+        width: '100px'
+      }).change();
   });
 })
 

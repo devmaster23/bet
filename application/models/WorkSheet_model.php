@@ -61,7 +61,9 @@ class WorkSheet_model extends CI_Model {
         for($i = 0;$i < 7; $i++){
             $new_item = array();
             for ($j = 0; $j <= 6; $j++){
-                array_push($new_item, @$settingData[$i][$j]);
+                $value = @$settingData[$i][$j];
+                $value = $value == null ? '': $value;
+                array_push($new_item, $value);
             }
             array_push($ret['sheet_data'], $new_item);
         }
@@ -73,11 +75,8 @@ class WorkSheet_model extends CI_Model {
             @$activeSetting['rr_number3'],
             @$activeSetting['rr_number4']
         ));
-        array_push($ret['date_info'], array(
-            date_format(date_create(@$row['date']),"M d, Y"),
-            date_format(date_create(@$row['date']),"Y"),
-            @$row['betday']
-        ));
+
+        array_push($ret['date_info'], date_format(date_create(@$row['date']),"m/d/y"));
 
         return $ret;
     }
@@ -501,18 +500,10 @@ class WorkSheet_model extends CI_Model {
         $sheet_data = array();
         foreach($settingList->data as $key => $item)
         {
-            if($key < 7)
-            {
-                array_push($sheet_data, $item);
-                continue;
-            }else if($key == 8){
-                $data['robin_1'] = $item[0];
-                $data['robin_2'] = $item[1];
-                $data['robin_3'] = $item[2];
-            }
-            
+            array_push($sheet_data, $item);
         }
-        $data['date'] = $value = date_format(date_create(@$settingList->data1[0][0]),"Y-m-d");
+
+        $data['date'] = $value = date_format(date_create(@$settingList->betday),"Y-m-d");
         $data['sheet_data'] = json_encode($sheet_data);
 
         $this->db->select('*')->from($this->tableName);

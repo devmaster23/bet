@@ -6,237 +6,6 @@ var settingTableObject = null;
 var settingTableObject1 = null;
 var betData = null;
 
-var all_custom_headers = [
-    [
-      {label: 'Wrappers', colspan: 8},
-      {label: 'Candy', colspan: 8},
-      {label: 'Picks', colspan: 8} 
-    ],
-    [
-      '#','Sport','VRN','SP / ML<br/>(Ov / Un)','Team','Line','Game Time','Count',
-      '#','Sport','VRN','SP / ML<br/>(Ov / Un)','Team','Line','Game Time','Count',
-      '#','Sport','VRN','SP / ML<br/>(Ov / Un)','Team','Line','Game Time','Count'
-    ]
-];
-
-var customHotSettings = {
-    columns: [
-        {
-          type: 'numeric',
-          readOnly: false
-        },
-        {
-          type: 'numeric',
-          readOnly: false
-        },
-        {
-          type: 'numeric',
-          readOnly: false
-        },
-        {
-          type: 'numeric',
-          readOnly: false
-        },
-        {
-          type: 'numeric',
-          readOnly: false
-        },
-        {
-          type: 'numeric',
-          readOnly: false
-        },
-        {
-          type: 'numeric',
-          readOnly: false
-        }
-    ],
-    minSpareRows: 0,
-    minSpareCols: 0,
-    colWidths: [50,50,50,50,50,50,50,50],
-    rowHeights: rowHeight,
-    className: "htCenter htMiddle",
-    rowHeaders: true,
-    colHeaders: true,
-    height: 297,
-    cells: function (row, col, prop) {
-      var cellProperties = {};
-      cellProperties.renderer = settingValueRendererRobin;
-      if(row == 7 || row == 8)
-        cellProperties.readOnly = true;
-      return cellProperties;
-    }
-};
-
-var customHotSettings1 = {
-    columns: [
-        {
-          type: 'date',
-          dateFormat: 'MMM DD, YYYY',
-          correctFormat: true,
-          readOnly: false
-        },
-        {
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          type: 'numeric',
-          readOnly: true
-        }
-    ],
-    minSpareRows: 0,
-    minSpareCols: 0,
-    colWidths: [150,100,100],
-    rowHeights: rowHeight,
-    className: "htCenter htMiddle",
-    rowHeaders: true,
-    colHeaders: true,
-    height: 200,
-    colHeaders: ['Date', 'Year', 'Bet Day'],
-    cells: function (row, col, prop) {
-      var cellProperties = {};
-      cellProperties.renderer = settingValueRenderer;
-      return cellProperties;
-    }
-};
-
-var allHotSettings = {
-    columns: [
-        {
-          data: 'id',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'wrapper_game_type',
-          readOnly: true
-        },
-        {
-          data: 'wrapper_vrn',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'wrapper_type',
-          readOnly: true
-        },
-        {
-          data: 'wrapper_team',
-          readOnly: true
-        },
-        {
-          data: 'wrapper_line',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'wrapper_time',
-          type: 'time',
-          timeFormat: 'h:mm A',
-          correctFormat: true,
-          readOnly: true
-        },
-        {
-          data: 'wrapper_count',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'id',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'candy_game_type',
-          readOnly: true
-        },
-        {
-          data: 'candy_vrn',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'candy_type',
-          readOnly: true
-        },
-        {
-          data: 'candy_team',
-          readOnly: true
-        },
-        {
-          data: 'candy_line',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'candy_time',
-          type: 'time',
-          timeFormat: 'h:mm A',
-          correctFormat: true,
-          readOnly: true
-        },
-        {
-          data: 'candy_count',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'id',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'pick_game_type',
-          readOnly: true
-        },
-        {
-          data: 'pick_vrn',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'pick_type',
-          readOnly: true
-        },
-        {
-          data: 'pick_team',
-          readOnly: true
-        },
-        {
-          data: 'pick_line',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'pick_time',
-          type: 'time',
-          timeFormat: 'h:mm A',
-          correctFormat: true,
-          readOnly: true
-        },
-        {
-          data: 'pick_count',
-          type: 'numeric',
-          readOnly: true
-        },
-
-    ],
-    minSpareRows: 0,
-    minSpareCols: 0,
-    colWidths: [40, 100, 50,90, 250, 100,80,60,40, 100, 50,90, 250, 100,80,60,40, 100, 50,90, 250, 100,80,60],
-    rowHeights: rowHeight,
-    className: "htCenter htMiddle",
-    height: tableHeight,
-    rowHeaders: false,
-    colHeaders: true,
-    nestedHeaders: all_custom_headers,
-    cells: function (row, col, prop) {
-      var cellProperties = {};
-      cellProperties.renderer = allDefaultValueRenderer;
-      return cellProperties;
-    }
-};
-
 var pickTableSettings = {
     columns: [
         {
@@ -419,13 +188,70 @@ function isEmptyRow(instance, row) {
 
 
 function createAllPickSheets(data){
-  var key = 'bets';
-  var container = $('div.sheet[data-type="'+key+'"]')[0];
-  allHotSettings['data'] = data;
-  if(allTableObject == null)
-    allTableObject = new Handsontable(container, allHotSettings);
-  else
-    allTableObject.loadData(data);
+
+  var wrapperList = [],
+      candyList   = [],
+      pickList = [];
+  $.each(data, function(index, item){
+
+    if(item['wrapper_vrn'] != null)
+    {
+      wrapperList.push(new Array(
+        item['wrapper_game_type'],
+        item['wrapper_vrn'],
+        item['wrapper_type'],
+        item['wrapper_team'],
+        item['wrapper_line'],
+        item['wrapper_time'],
+        item['wrapper_count']
+      ));
+    }
+
+    if(item['candy_vrn'] != null)
+    {
+      candyList.push(new Array(
+        item['candy_game_type'],
+        item['candy_vrn'],
+        item['candy_type'],
+        item['candy_team'],
+        item['candy_line'],
+        item['candy_time'],
+        item['candy_count']
+      ));
+    }
+
+    if(item['pick_vrn'] != null)
+    {
+      pickList.push(new Array(
+        item['pick_game_type'],
+        item['pick_vrn'],
+        item['pick_type'],
+        item['pick_team'],
+        item['pick_line'],
+        item['pick_time'],
+        item['pick_count']
+      ));
+    }
+
+  })
+  
+  $('.worksheets #wrapper-table tbody').empty().html(buildTableBody(wrapperList));
+  $('.worksheets #candy-table tbody').empty().html(buildTableBody(candyList));
+  $('.worksheets #pick-table tbody').empty().html(buildTableBody(pickList));
+}
+
+function buildTableBody(arr){
+  var tbodyHtml = '';
+  $.each(arr, function(index, item){
+    tbodyHtml += '<tr>';
+    tbodyHtml += '<td>'+index+'</td>';
+    $.each(item, function(index1, value){
+      tbodyHtml += '<td>'+value+'</td>';
+    })
+    tbodyHtml += '</tr>';
+  });
+
+  return tbodyHtml;
 }
 
 function createPickSheets(data){
@@ -438,20 +264,38 @@ function createPickSheets(data){
 }
 
 function createSettingSheet(data){
-  var container = $('div.sheet[data-type="setting_sheet"]')[0];
-  customHotSettings['data'] = data['sheet_data'];
-  if(settingTableObject == null)
-    settingTableObject = new Handsontable(container, customHotSettings);
-  else
-    settingTableObject.loadData(data['sheet_data']);
-  mergeFields();
 
-  var container1 = $('div.sheet[data-type="setting_sheet1"]')[0];
-  customHotSettings1['data'] = data['date_info'];
-  if(settingTableObject1 == null)
-    settingTableObject1 = new Handsontable(container1, customHotSettings1);
-  else
-    settingTableObject1.loadData(data['date_info']);  
+  var rr_number1 = data['active_setting']['rr_number1'],
+      rr_number2 = data['active_setting']['rr_number2'],
+      rr_number3 = data['active_setting']['rr_number3'],
+      rr_number4 = data['active_setting']['rr_number4'];
+  
+  $('.worksheets #rr1').html(rr_number1);
+  $('.worksheets #rr2').html(rr_number2);
+  $('.worksheets #rr3').html(rr_number3);
+  $('.worksheets #rr4').html(rr_number4);
+  $settingTable = $('.worksheets #setting-table');
+  $('tbody',$settingTable).empty();
+  $.each(data['sheet_data'], function(index, item){
+    if(index<7)
+    {
+      if(index+1 < rr_number1)
+        tr_html = '<tr>';
+      else
+        tr_html = '<tr class="tr-disabled">';
+      tr_html += '<td>'+(index+1)+'</td>';
+      $.each(item, function(index1, value){
+        tr_html += '<td>'+value+'</td>';
+      });
+      tr_html += '</tr>';
+      $('tbody',$settingTable).append(tr_html);
+    }
+    
+    $('#setting-table').editableTableWidget({ editor: $('<input>'), preventColumns: [ 1 ], preventRowsAfter: rr_number1 });
+  });
+
+  $('.worksheets #betday').val(data['date_info']);
+  $('.worksheets #betday').daterangepicker({ "singleDatePicker": true });
 }
 
 function createBetSheets(data){
@@ -746,18 +590,32 @@ function mergeFields(){
 }
 
 function updateTable(){
+
   $(".loading-div").show()
   var betweek = $('.game-week-select').val()
   if(pageType == 'bets')
   {
-    var tableData = settingTableObject.getData();
-    var tableData1 = settingTableObject1.getData()
+    var tableData = [];
+    var tableData1 = [];
+    $settingTable = $('.worksheets #setting-table');
+    $.each($('tbody tr',$settingTable), function(index, tr_item){
+      var arrItem = [];
+      $.each($('td', $(tr_item)), function(index1, td_item){
+        if(index1 == 0)
+          return true;
+        arrItem.push($(td_item).html().trim());
+      });
+      tableData.push(arrItem);
+    });
+
+    var betday = $('.worksheets #betday').val().trim();
+
     var url = api_url+'/saveData';
     var postData = {
       betweek: betweek,
       setting: JSON.stringify({
         data: tableData,
-        data1: tableData1
+        betday: betday
       })
     }
   }

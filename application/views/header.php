@@ -9,17 +9,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <title>BetGame -
         <?php echo $page; ?>
     </title>
-    <link href='<?php echo base_url('assets/vendor/css/bootstrap.min.css ') ?>' rel='stylesheet' />
-    <link href='<?php echo base_url('bower_components/select2/dist/css/select2.min.css ') ?>' rel='stylesheet' />
-    <link href='<?php echo base_url('assets/vendor/css/handsontable.full.min.css ') ?>' rel='stylesheet' />
-    <link href='<?php echo base_url('assets/DataTables/datatables.min.css ') ?>' rel='stylesheet' />
-    <link href='<?php echo base_url('assets/css/style.css ') ?>' rel='stylesheet' />
-    <link href='<?php echo base_url('assets/css/setting.css ') ?>' rel='stylesheet' />
-    <link href='<?php echo base_url('assets/css/sportbooks.css ') ?>' rel='stylesheet' />
-    <link href='<?php echo base_url('assets/css/investors.css ') ?>' rel='stylesheet' />
-    <link href='<?php echo base_url('assets/css/orders.css ') ?>' rel='stylesheet' />
-    <link href='<?php echo base_url('assets/css/users.css ') ?>' rel='stylesheet' />
-    <link href='<?php echo base_url('assets/css/theme.css ') ?>' rel='stylesheet' />
+    <link href='<?php echo base_url('assets/vendor/css/bootstrap.min.css') ?>' rel='stylesheet' />
+    <link href='<?php echo base_url('bower_components/select2/dist/css/select2.min.css') ?>' rel='stylesheet' />
+    <link href='<?php echo base_url('assets/vendor/css/handsontable.full.min.css') ?>' rel='stylesheet' />
+    <link href='<?php echo base_url('assets/DataTables/datatables.min.css') ?>' rel='stylesheet' />
+    <link href='<?php echo base_url('assets/css/style.css') ?>' rel='stylesheet' />
+    <link href='<?php echo base_url('assets/css/setting.css') ?>' rel='stylesheet' />
+    <link href='<?php echo base_url('assets/css/sportbooks.css') ?>' rel='stylesheet' />
+    <link href='<?php echo base_url('assets/css/investors.css') ?>' rel='stylesheet' />
+    <link href='<?php echo base_url('assets/css/orders.css') ?>' rel='stylesheet' />
+    <link href='<?php echo base_url('assets/css/users.css') ?>' rel='stylesheet' />
+    <link href='<?php echo base_url('assets/css/theme.css') ?>' rel='stylesheet' />
+    <link href='<?php echo base_url('assets/vendor/font-awesome/css/font-awesome.min.css') ?>' rel='stylesheet' />
+    <link href='<?php echo base_url('assets/vendor/bootstrap-daterangepicker/daterangepicker.css') ?>' rel='stylesheet' />
 </head>
 <?php
   $userInfo = $this->authlibrary->userInfo();
