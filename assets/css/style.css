@@ -674,3 +674,12 @@ tr.shown td.details-control {
     text-align: center;
     font-size: 13px;
 }
+
+.worksheets #wrapper-table td:nth-of-type(5),
+.worksheets #candy-table td:nth-of-type(5),
+.worksheets #pick-table td:nth-of-type(5),
+.picks #wrapper-table td:nth-of-type(5),
+.picks #candy-table td:nth-of-type(5),
+.picks #pick-table td:nth-of-type(5){
+    text-align: left;
+}
