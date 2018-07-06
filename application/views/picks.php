@@ -14,7 +14,7 @@
     <h1 class="text-center" id="pageTitle"></h1>
 </div>
 
-<div id="main">
+<div id="main" class="picks">
     <div class="header-div">
         <div class="game-week-select-div">
             <label>Bet Day</label>
@@ -31,10 +31,104 @@
 
     <div class="content-div">
         <div class="tab-content">
-            <div class="<?php echo $pageType == 'all_picks' ? 'all-picks' : 'pick-game'?>" id="<?php echo $pageType?>">
+        <?php if ($pageType == 'all_picks') {?>
+            <div class="row all-picks">
+                <div class="col-md-4">
+                    <div class="element-box no-border-radius green-top">
+                      <h5 class="form-header">
+                        Wrapper
+                      </h5>
+                      <table class="table table-striped" id="wrapper-table">
+                        <thead>
+                          <tr>
+                            <th>#</th>
+                            <th>Sport</th>
+                            <th>VRN</th>
+                            <th>SP/ML<br/>(Ov/Un)</th>
+                            <th>Team</th>
+                            <th>Line</th>
+                            <th>Game<br/>Time</th>
+                            <th>Co.</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                      </table>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="element-box no-border-radius red-top">
+                      <h5 class="form-header">
+                        Candy
+                      </h5>
+                        <table class="table table-striped" id="candy-table">
+                            <thead>
+                              <tr>
+                                <th>#</th>
+                                <th>Sport</th>
+                                <th>VRN</th>
+                                <th>SP/ML<br/>(Ov/Un)</th>
+                                <th>Team</th>
+                                <th>Line</th>
+                                <th>Game<br/>Time</th>
+                                <th>Co.</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                              </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="element-box no-border-radius blue-top">
+                      <h5 class="form-header">
+                        Pick
+                      </h5>
+                      <table class="table table-striped" id="pick-table">
+                            <thead>
+                              <tr>
+                                <th>#</th>
+                                <th>Sport</th>
+                                <th>VRN</th>
+                                <th>SP/ML<br/>(Ov/Un)</th>
+                                <th>Team</th>
+                                <th>Line</th>
+                                <th>Game<br/>Time</th>
+                                <th>Co.</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                              </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        <?php } else {?>
+            <div class="pick-game" id="<?php echo $pageType?>">
                 <div class="sheet">
                 </div>
             </div>
+        <?php }?>
         </div>
     </div>
 </div>

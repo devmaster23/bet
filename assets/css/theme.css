@@ -12397,6 +12397,7 @@ body {
   position: relative;
   padding: 50px;
   overflow-x: hidden;
+  background-color: #f2f4f8;
 }
 
 body:before {
@@ -12441,8 +12442,6 @@ strong {
 }
 
 .all-wrapper {
-  -webkit-box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.1);
-          box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.1);
   border-radius: 6px;
   max-width: 1600px;
   margin: 0px auto;
@@ -12549,7 +12548,6 @@ body.menu-side-right .layout-w {
 }
 
 .content-w {
-  background-color: #f2f4f8;
   background-image: url("../img/bg-pattern.png");
   background-repeat: no-repeat;
   background-position: 20px 50px;

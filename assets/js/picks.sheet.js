@@ -1,5 +1,4 @@
 var tableObject = null;
-var allTableObject = null;
 var allTabelTimeOut = null;
 var pageTitle = 'All Picks';
 
@@ -220,152 +219,6 @@ var hotSettings_mlb = {
     }
 };
 
-var allHotSettings = {
-    columns: [
-        {
-          data: 'id',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'wrapper_game_type',
-          readOnly: true
-        },
-        {
-          data: 'wrapper_vrn',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'wrapper_type',
-          readOnly: true
-        },
-        {
-          data: 'wrapper_team',
-          readOnly: true
-        },
-        {
-          data: 'wrapper_line',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'wrapper_time',
-          type: 'time',
-          timeFormat: 'h:mm A',
-          correctFormat: true,
-          readOnly: true
-        },
-        {
-          data: 'wrapper_count',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'id',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'candy_game_type',
-          readOnly: true
-        },
-        {
-          data: 'candy_vrn',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'candy_type',
-          readOnly: true
-        },
-        {
-          data: 'candy_team',
-          readOnly: true
-        },
-        {
-          data: 'candy_line',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'candy_time',
-          type: 'time',
-          timeFormat: 'h:mm A',
-          correctFormat: true,
-          readOnly: true
-        },
-        {
-          data: 'candy_count',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'id',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'pick_game_type',
-          readOnly: true
-        },
-        {
-          data: 'pick_vrn',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'pick_type',
-          readOnly: true
-        },
-        {
-          data: 'pick_team',
-          readOnly: true
-        },
-        {
-          data: 'pick_line',
-          type: 'numeric',
-          readOnly: true
-        },
-        {
-          data: 'pick_time',
-          type: 'time',
-          timeFormat: 'h:mm A',
-          correctFormat: true,
-          readOnly: true
-        },
-        {
-          data: 'pick_count',
-          type: 'numeric',
-          readOnly: true
-        }
-    ],
-    minSpareRows: 0,
-    minSpareCols: 0,
-    colWidths: [40, 100, 50,100, 250, 100,80,60,40, 100, 50,100, 250, 100,80,60,40, 100, 50,100, 250, 100,80,60],
-    rowHeights: rowHeight,
-    className: "htCenter htMiddle",
-    height: tableHeight,
-    rowHeaders: false,
-    colHeaders: true,
-    nestedHeaders: all_custom_headers,
-    cells: function (row, col, prop) {
-      var cellProperties = {};
-      cellProperties.renderer = allDefaultValueRenderer;
-      return cellProperties;
-    }
-};
-
-function allDefaultValueRenderer(instance, td, row, col, prop, value, cellProperties) {
-  var args = arguments;
-  td.style.fontSize = fontSize;
-  td.style.color = '#000';
-  if (prop == 'pick_team' || prop == 'wrapper_team' || prop == 'candy_team')
-  {
-    td.style.textAlign = "left";
-  }
-  Handsontable.renderers.TextRenderer.apply(this, args);
-}
 
 function defaultValueRenderer(instance, td, row, col, prop, value, cellProperties) {
   var args = arguments;
@@ -447,12 +300,70 @@ function createSheets(picks) {
 }
 
 function createAllPickSheets(data){
-  var container = $('div.sheet')[0];
-  allHotSettings['data'] = data;
-  if(allTableObject == null)
-    allTableObject = new Handsontable(container, allHotSettings);
-  else
-    allTableObject.loadData(data);  
+  
+  var wrapperList = [],
+      candyList   = [],
+      pickList = [];
+  $.each(data, function(index, item){
+
+    if(item['wrapper_vrn'] != null)
+    {
+      wrapperList.push(new Array(
+        item['wrapper_game_type'],
+        item['wrapper_vrn'],
+        item['wrapper_type'],
+        item['wrapper_team'],
+        item['wrapper_line'],
+        item['wrapper_time'],
+        item['wrapper_count']
+      ));
+    }
+
+    if(item['candy_vrn'] != null)
+    {
+      candyList.push(new Array(
+        item['candy_game_type'],
+        item['candy_vrn'],
+        item['candy_type'],
+        item['candy_team'],
+        item['candy_line'],
+        item['candy_time'],
+        item['candy_count']
+      ));
+    }
+
+    if(item['pick_vrn'] != null)
+    {
+      pickList.push(new Array(
+        item['pick_game_type'],
+        item['pick_vrn'],
+        item['pick_type'],
+        item['pick_team'],
+        item['pick_line'],
+        item['pick_time'],
+        item['pick_count']
+      ));
+    }
+
+  })
+  
+  $('.picks .all-picks #wrapper-table tbody').empty().html(buildTableBody(wrapperList));
+  $('.picks .all-picks #candy-table tbody').empty().html(buildTableBody(candyList));
+  $('.picks .all-picks #pick-table tbody').empty().html(buildTableBody(pickList));
+}
+
+function buildTableBody(arr){
+  var tbodyHtml = '';
+  $.each(arr, function(index, item){
+    tbodyHtml += '<tr>';
+    tbodyHtml += '<td>'+index+'</td>';
+    $.each(item, function(index1, value){
+      tbodyHtml += '<td>'+value+'</td>';
+    })
+    tbodyHtml += '</tr>';
+  });
+
+  return tbodyHtml;
 }
 
 function loadAllPickTable(){

@@ -668,7 +668,9 @@ tr.shown td.details-control {
     padding-bottom: .5em;
 }
 
-.worksheets .bets td{
+.worksheets .bets td,
+.picks .all-picks td{
     padding:7px 5px;
     text-align: center;
+    font-size: 13px;
 }

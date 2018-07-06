@@ -27,7 +27,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   $userInfo = $this->authlibrary->userInfo();
 ?>
 <body class="full-screen with-content-panel menu-position-top">
-    <div class="all-wrapper with-side-panel solid-bg-all">
+    <div class="all-wrapper with-side-panel">
         <div class="layout-w">
             <!--------------------
     START - Mobile Menu
