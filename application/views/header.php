@@ -271,7 +271,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         <a href="<?php echo site_url('games?type=football'); ?>"><img src="<?php echo base_url('assets/img/icon_NFL.png')?>">NFL</a>
                                     </li>
                                     <li class="<?php echo ($page == 'games' && $pageType == 'ncaa_f')?'active':'';?>">
-                                        <a href="<?php echo site_url('games?type=ncaa_f'); ?>"><img src="<?php echo base_url('assets/img/icon_NCAAF.png')?>">NCAA F</a>
+                                        <a href="<?php echo site_url('games?type=ncaa_f'); ?>"><img src="<?php echo base_url('assets/img/icon_NFL.png')?>">NCAA F</a>
                                     </li>
                                     <li class="<?php echo ($page == 'games' && $pageType == 'nba')?'active':'';?>">
                                         <a href="<?php echo site_url('games?type=nba'); ?>"><img src="<?php echo base_url('assets/img/icon_NBA.png')?>">NBA</a>
@@ -314,7 +314,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         <a href="<?php echo site_url('picks?type=football'); ?>"><img src="<?php echo base_url('assets/img/icon_NFL.png')?>">NFL</a>
                                     </li>
                                     <li class="<?php echo ($page == 'picks' && $pageType == 'ncaa_f')?'active':'';?>">
-                                        <a href="<?php echo site_url('picks?type=ncaa_f'); ?>"><img src="<?php echo base_url('assets/img/icon_NCAAF.png')?>">NCAA F</a>
+                                        <a href="<?php echo site_url('picks?type=ncaa_f'); ?>"><img src="<?php echo base_url('assets/img/icon_NFL.png')?>">NCAA F</a>
                                     </li>
                                     <li class="<?php echo ($page == 'picks' && $pageType == 'nba')?'active':'';?>">
                                         <a href="<?php echo site_url('picks?type=nba'); ?>"><img src="<?php echo base_url('assets/img/icon_NBA.png')?>">NBA</a>

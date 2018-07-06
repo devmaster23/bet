@@ -32,15 +32,6 @@ $(document).ready(function(){
   }
   initSelect();
 
-  $('.login-form #show_password').on('click', function(){
-    var passwordObj = $('.login-form #password');
-    if ($(this).is(':checked')) {
-        passwordObj.attr('type', 'text');
-    } else {
-        passwordObj.attr('type', 'password');
-    }
-  });
-
   $('.bet-week-prev').on('click',function(){
     var currentBetWeek  = $('select[name="game-week-select"]').val();
     currentBetWeek = eval(currentBetWeek);
