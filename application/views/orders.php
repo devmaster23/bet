@@ -9,12 +9,12 @@
     var api_url = "<?php echo site_url('orders'); ?>";
 </script>
 <div class="container page-title">
-    <h1 class="text-center">Orders</h1>
+    <h1 class="text-center"></h1>
 </div>
 
-<div id="main" class="order-page">
+<div id="main" class="order-page" style="max-width: 1000px; margin: auto">
 
-    <table id="investors_tbl" class="display" style="width:100%">
+    <table id="investors_tbl" class="display">
         <thead>
             <tr>
                 <th></th>

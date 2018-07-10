@@ -363,11 +363,23 @@ function createBetSummary(data){
   container.html("");
   var tblItem = "<table>"+
         "<thead><tr>"+
-          "<td colspan='2'></td>"+
-          "<td colspan='5'>Round Robbins</td>"+
+          "<td colspan='2' rowspan='2'></td>"+
+          "<td colspan='6'>Round Robbins</td>"+
           "<td colspan='2'>Parlays</td>"+
           "<td colspan='2'>Individual Picks</td>"+
-        "</tr></thead>";
+        "</tr><tr>"+
+          "<td>(%)</td>"+
+          "<td></td>"+
+          "<td></td>"+
+          "<td></td>"+
+          "<td></td>"+
+          "<td></td>"+
+          "<td>(%)</td>"+
+          "<td></td>"+
+          "<td>(%)</td>"+
+          "<td></td>"+
+        "</tr>"+
+        "</thead>";
 
   $.each(data.summary, function(key, row_item){
     var tilte = "All";
@@ -380,6 +392,7 @@ function createBetSummary(data){
           "<td>by</td>"+
           "<td>"+row_item.rr_number2+"</td>"+
           "<td>"+row_item.rr_number3+"</td>"+
+          "<td>"+row_item.rr_number4+"</td>"+
           "<td>"+(row_item.parlay_allocation ? row_item.parlay_allocation+"%":"")+"</td>"+
           "<td>"+row_item.parlay_number1+"</td>"+
           "<td>"+(row_item.pick_allocation ? row_item.pick_allocation+"%":"")+"</td>"+
@@ -769,9 +782,6 @@ $(document).ready(function() {
     tableData[row][prop] = JSON.stringify(jsonObj);
     refreshTable(hot,tableData);
   })
-
-  if($('#bet_sheet'))
-    $('#bet_sheet').css('max-height', tableHeight+'px');
 
   $(document).on('click','.new_game', function(){
     var betType = $(this).data('type');

@@ -13,46 +13,51 @@
         $next_url = './balance?id='.$investor['id'].'&sportbook_id=1';
     else    
         $next_url = './balance?id='.$investor['id'].'&sportbook_id='.($sportbook_id+1);
+
+    date_default_timezone_set('America/Los_Angeles');
+    $west_date = date('h:i A');
 ?>
 <script>
     var page_type = 'enter_order';
     var api_url = "<?php echo site_url('orders'); ?>";
 </script>
 <div class="container page-title">
-    <h1 class="text-center">Accouunt Balance</h1>
+    <h1 class="text-center"></h1>
 </div>
 
 <div id="main" class="order-page">
+    <div class="header-div">
+        <?php $this->load->view('partials/game-select-submit', array('betweek' => $betweek)); ?>
+    </div>
     <div class="inner-wrapper enter_order-page">
         <div class="bet-div">
             <div>
-                <label>Investor</label>
-                <span><?=$investor['full_name']?></span>
+                <span class="investor_name"><?=$investor['full_name']?></span>
             </div>
             <div>
-                <label>Last Updated</label>
-                <span>?</span>
+                <label>West Coast Time</label>
+                <span><?=$west_date?></span>
+            </div>
+            <div>
+                <label>IP Source</label>
+                <span><?=$ip_source?></span>
             </div>
             <div>
                 <label>IP Investor</label>
-                <span>?</span>
+                <span><?=$investor['ip']?></span>
             </div>
             <hr/>
             <div>
                 <label>Sportbook</label>
-                <span><?=$sportbook['title']?></span>
+                <span><a href="<?=$sportbook['siteurl']?>" target="_blank"><?=$sportbook['siteurl']?></a></span>
             </div>
             <div>
                 <label>Login</label>
                 <span><?=$sportbook['login_name']?></span>
             </div>
             <div>
-                <label>SiteUrl</label>
-                <span><?=$sportbook['siteurl']?></span>
-            </div>
-            <div>
                 <label>Password</label>
-                <span><?=$sportbook['password']?></span>
+                <span class="red"><?=$sportbook['password']?></span>
             </div>
             <hr/>
             <div>

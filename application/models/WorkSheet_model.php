@@ -414,7 +414,6 @@ class WorkSheet_model extends CI_Model {
                     if(is_null($candy_item['team']))
                         continue;
                     $candy_key = $this->getTeamKey($pick_data, $i, 'candy');
-                
                     $tmpArr = array();
                     $disableList = array();
                     for($k=0; $k<$robin_1-1; $k++){
@@ -430,6 +429,7 @@ class WorkSheet_model extends CI_Model {
                         continue;
                     array_push($tmpArr,$candy_item);
                     $tmpArr['title'] = chr(65+$j).($i+1);
+                    $tmpArr['game_type'] = $candy_item['game_type'];
                     $is_parlay = in_array($i."_".$j, $parlayIds) ? 1 : 0;
 
                     if($is_parlay)
@@ -438,6 +438,7 @@ class WorkSheet_model extends CI_Model {
                         $ret['parlay'][] = $tmpArr;
                     }
                     $tmpArr['bet_type'] = 'rr';
+                    
                     if(!isset($roundrobins[$j]))
                         $roundrobins[$j] = [];    
                     $roundrobins[$j][] = $tmpArr;                    
@@ -459,6 +460,13 @@ class WorkSheet_model extends CI_Model {
                 }
             }
 
+            foreach ($ret as &$ret_arr) {
+                foreach ($ret_arr as &$betItem) {
+                    $betItem['amount'] = 100;
+                    $betItem['total_amount'] = $this->getTotalAmount($betItem, $robin_1, $robin_2, $robin_3, $robin_4 );
+                }
+            }
+
             $result['rr1'] = $robin_1;
             $result['rr2'] = $robin_2;
             $result['rr3'] = $robin_3;
@@ -466,6 +474,17 @@ class WorkSheet_model extends CI_Model {
             $result['data'] = $ret;
         }
         return $result;
+    }
+
+    private function getTotalAmount($bet, $n, $r1, $r2, $r3){
+        $bet_type = $bet['bet_type'];
+        $total_amount = $bet['amount'];
+        if($bet_type == 'rr'){
+            $total_amount = $bet['amount'] * $this->CI->Settings_model->roundRobbinBetCounts($n, $r1, $r2, $r3);
+        }else if($bet_type == 'parlay'){
+            $total_amount = $bet['amount'] * $n;
+        }
+        return $total_amount;
     }
 
     public function getTeamKey($pickData, $id, $type='wrapper'){
@@ -484,7 +503,8 @@ class WorkSheet_model extends CI_Model {
                 'type' => $pickData[$id][$type.'_type'],
                 'team' => $pickData[$id][$type.'_team'],
                 'line' => $pickData[$id][$type.'_line'],
-                'time' => $pickData[$id][$type.'_time']
+                'time' => $pickData[$id][$type.'_time'],
+                'game_type' => $pickData[$id][$type.'_game_type'],
             );
         }
         return $result;

@@ -128,6 +128,17 @@ class Settings_model extends CI_Model {
         return $this->factorialize($n) / ( $this->factorialize($r) * $this->factorialize($n-$r));
     }
 
+    public function roundRobbinBetCounts($n, $r1, $r2, $r3){
+        $count = 0;
+        if($r1)
+            $count += $this->factorialize($n) / ( $this->factorialize($r1) * $this->factorialize($n-$r1));
+        if($r2)
+            $count += $this->factorialize($n) / ( $this->factorialize($r2) * $this->factorialize($n-$r2));
+        if($r3)
+            $count += $this->factorialize($n) / ( $this->factorialize($r3) * $this->factorialize($n-$r3));
+        return $count;
+    }
+
     public function getGroupUserList($categoryType){
         $result = array();
         switch ($categoryType) {

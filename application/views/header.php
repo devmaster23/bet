@@ -268,7 +268,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <div class="sub-menu-i">
                                 <ul class="sub-menu">
                                     <li class="<?php echo ($page == 'games' && $pageType == 'football')?'active':'';?>">
-                                        <a href="<?php echo site_url('games?type=football'); ?>"><img src="<?php echo base_url('assets/img/icon_NFL.png')?>">NFL</a>
+                                        <a href="<?php echo site_url('games?type=football'); ?>"><img src="<?php echo base_url('assets/img/football_icon.png')?>">NFL</a>
                                     </li>
                                     <li class="<?php echo ($page == 'games' && $pageType == 'ncaa_f')?'active':'';?>">
                                         <a href="<?php echo site_url('games?type=ncaa_f'); ?>"><img src="<?php echo base_url('assets/img/icon_NFL.png')?>">NCAA F</a>

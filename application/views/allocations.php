@@ -8,20 +8,13 @@
     var api_url = "<?php echo site_url('allocations'); ?>";
 </script>
 <div class="container page-title">
-    <h1 class="text-center"><?php echo $pageTitle;?></h1>
+    <h1 class="text-center"></h1>
 </div>
 
 <div id="main" class="sportbook-page">
     <div class="header-div">
         <div class="header-left-div">
-            <div class="game-week-select-div">
-                <label>Bet Day</label>
-                <select class="select2 game-week-select" name="game-week-select" onchange="initPage()">
-                    <?php for($i=1; $i<=60; $i++) {?>
-                    <option <?php if($i == $betweek) echo "selected";?> value="<?php echo $i?>"><?php echo $i?></option>
-                    <?php }?>
-                </select>
-            </div>
+            <?php $this->load->view('partials/game-select', array('betweek' => $betweek)); ?>
 
             <div class="investor-select-div">
                 <label>Bet Day</label>

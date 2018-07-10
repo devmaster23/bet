@@ -62,14 +62,15 @@ class Order_model extends CI_Model {
         return $result;
     }
 
-    public function addOrder($betweek, $investorId, $sportbookID, $betId)
+    public function addOrder($betweek, $investorId, $sportbookID, $bet)
     {
+        $betId = $bet['title'];
         $newData = array(
             'investor_id' => $investorId,
             'sportbook_id'  => $sportbookID,
             'betday'  => $betweek,
             'bet_id' => $betId,
-            'bet_amount' => 100
+            'bet_amount' => $bet['total_amount']
         );
 
         $rows = $this->db->select('id')
@@ -91,9 +92,9 @@ class Order_model extends CI_Model {
         return true;
     }
 
-    public function removeOrder($betweek, $investorId, $betId)
+    public function removeOrder($betweek, $investorId, $bet)
     {
-
+        $betId = $bet['title'];
         $rows = $this->db->where(array(
             'investor_id' => $investorId,
             'betday'  => $betweek,
@@ -127,11 +128,6 @@ class Order_model extends CI_Model {
     public function getSportbook($sportbooks, $betweek, $investorId, $bet)
     {
         $result = $sportbooks;
-        usort($result, function($a,$b){
-            if ($a['bet_count']==$b['bet_count']) return 0;
-            return ($a['bet_count']<$b['bet_count'])?1:-1;
-        });
-        
 
         $rows = $this->db->select('*')
         ->from($this->tableName)

@@ -54,10 +54,15 @@ class Orders extends CI_Controller {
         $betIndex = isset($_REQUEST['bet_id'])? $_REQUEST['bet_id'] : 1;
         $date = new DateTime(date('Y-m-d'));
         $betweek = $date->format('W');
-        $data['betweek'] = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
+        if(isset($_POST['game-week-select'])){
+            $betweek = $_POST['game-week-select'];
+            $_SESSION['betday'] = $betweek;
+        }else{
+            $betweek = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
+        }
+        $data['betweek'] = $betweek;
 
         $worksheet = $this->worksheet_model->getRROrders($data['betweek']);
-
         $bets = array();
 
         if(isset($worksheet['data']['rr']))
@@ -81,9 +86,9 @@ class Orders extends CI_Controller {
             $selectedBet = $bets[$betIndex-1];
             if($sportbookID != "" && isset($bets[$betIndex-1]))
             {
-                $this->model->addOrder($data['betweek'], $investorId, $sportbookID, $selectedBet['title']);
+                $this->model->addOrder($data['betweek'], $investorId, $sportbookID, $selectedBet);
             }else{
-                $this->model->removeOrder($data['betweek'], $investorId, $selectedBet['title']);
+                $this->model->removeOrder($data['betweek'], $investorId, $selectedBet);
             }
         }
         if(is_null($investorId))
@@ -99,12 +104,35 @@ class Orders extends CI_Controller {
         $bet = isset($bets[$betIndex-1])? $bets[$betIndex-1]: null;
         if($bet)
         {
-            $bet['amount'] = 100;
+            $filename = 'icon_NFL.png';
+            switch ($bet['game_type']) {
+                case 'NCAA M':
+                    $filename = 'icon_NCAAM.png';
+                    break;
+                case 'NBA':
+                    $filename = 'icon_NBA.png';
+                    break;
+                case 'NFL':
+                    $filename = 'icon_NFL.png';
+                    break;
+                case 'NCAA F':
+                    $filename = 'football_icon.png';
+                    break;
+                case 'SOC':
+                    $filename = 'icon_soccer.png';
+                    break;
+                case 'MLB':
+                default:
+                    $filename = 'icon_MLB.png';
+                    break;
+            }
+            $bet['logo'] = $filename;
         }
 
         $data['ip_source'] = $ip_source;
         $data['rr1'] = @$worksheet['rr1'];
         $data['investor'] = $investor;
+
         $data['bet'] = $bet;
         $data['sportbookList'] = $this->model->getSportbook($investor['sportbooks'], $data['betweek'], $investorId, $data['bet']);
 
@@ -119,11 +147,17 @@ class Orders extends CI_Controller {
     }
 
     public function balance(){
+        $ip_source = $this->get_client_ip();
         $investorId = isset($_REQUEST['id'])? $_REQUEST['id'] : null;
         $sportbookIndex = isset($_REQUEST['sportbook_id'])? $_REQUEST['sportbook_id'] : 1;
         $date = new DateTime(date('Y-m-d'));
         $betweek = $date->format('W');
-        $data['betweek'] = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
+        if(isset($_POST['game-week-select'])){
+            $betweek = $_POST['game-week-select'];
+        }else{
+            $betweek = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
+        }
+        $data['betweek'] = $betweek;
         $setting = $this->setting_model->getActiveSetting($data['betweek']);
 
         if(is_null($investorId))
@@ -135,6 +169,7 @@ class Orders extends CI_Controller {
         $investor = $this->investor_model->getItem($investorId, $data['betweek']);
 
 
+        $data['ip_source'] = $ip_source;
         $data['investor'] = $investor;
         $sportbookList = $investor['sportbooks'];
         $total_bet = 0;

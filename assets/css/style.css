@@ -303,6 +303,10 @@
     align-items: center;
 }
 
+.header-div .save-button-div{
+    text-align: right;
+}
+
 
 .game-week-select-div,
 .investor-select-div{
@@ -311,7 +315,7 @@
 }
 
 .game-week-select-div{
-    margin-bottom: 20px;
+
 }
 
 .game-week-select-div i{
@@ -550,6 +554,7 @@
     text-align: center;
 }
 #bets_custom .action-div{
+    margin-bottom: 20px;
     text-align: center;
 }
 .custom-bet-item
@@ -657,6 +662,38 @@ tr.shown td.details-control {
     background-color: #cfcfcf;
 }
 
+.worksheets .bets-wrapper{
+    display: flex;
+    justify-content: flex-start;
+}
+
+.worksheets .bets-wrapper .bets-wrapper_setting{
+    flex: 0 0 400px;
+    margin-right: 20px;
+}
+.worksheets .bets-wrapper .bets
+{
+    flex: 1 0;
+    overflow: auto;
+}
+
+.worksheets .bets-wrapper .bets .bets_inner-wrapper{
+    width: 1650px;
+}
+
+.worksheets .bets-wrapper .bets .bets_inner-wrapper> div{
+    width: 550px;
+    float: left;
+}
+
+.worksheets .bets-wrapper .bets .bets_inner-wrapper .element-box{
+    padding: 1.5rem 0px;
+}
+
+.worksheets .bets-wrapper .bets .bets_inner-wrapper .form-header{
+    padding-left: 20px;
+}
+
 .worksheets .roundrobbin-div .element-box{
     padding: 10px;
     text-align: center;
@@ -664,7 +701,6 @@ tr.shown td.details-control {
 }
 .worksheets .bets .form-header
 {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     padding-bottom: .5em;
 }
 

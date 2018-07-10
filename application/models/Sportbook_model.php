@@ -7,7 +7,7 @@ class Sportbook_model extends CI_Model {
     private $dbColumns = array(
         'title',
         'siteurl',
-        'adress1',
+        'address1',
         'address2',
         'city',
         'state',

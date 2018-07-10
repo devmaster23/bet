@@ -346,11 +346,15 @@ class Investor_model extends CI_Model {
             {
                 $item['valid_percent'] = $totalValidBalance == 0 ? 0 : $item['current_balance'] / $totalValidBalance * 100;
                 $item['valid_percent'] = number_format((float)$item['valid_percent'], 2, '.', '');
-                $item['valid_bet_count'] = ceil($totalBetCount * $item['valid_percent'] / 100);
-                $tmpBetCount += $item['valid_bet_count'];
-                if($tmpBetCount > $totalBetCount)
+                if($tmpBetCount < $totalBetCount)
                 {
-                    $item['valid_bet_count'] = $totalBetCount - $tmpBetCount + $item['valid_bet_count'];
+                    $item['valid_bet_count'] = ceil($totalBetCount * $item['valid_percent'] / 100);
+                    $tmpBetCount += $item['valid_bet_count'];
+                    if($tmpBetCount > $totalBetCount)
+                    {
+                        $item['valid_bet_count'] = $totalBetCount - $tmpBetCount + $item['valid_bet_count'];
+
+                    }
                 }
             }
 
