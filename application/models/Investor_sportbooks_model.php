@@ -82,6 +82,8 @@ class Investor_sportbooks_model extends CI_Model {
         $date_opened = $date->format('Y-m-d');
 
         $newBalance = $current_balance - $betAmount > 0 ? $current_balance - $betAmount: 0;
+        $removeBalance = $current_balance > $betAmount ? $betAmount : $current_balance;
+        
         $newData = array(
             'current_balance_'.$betweek => $newBalance,
             'date_opened' => $date_opened
@@ -91,7 +93,7 @@ class Investor_sportbooks_model extends CI_Model {
             'investor_id' => $investorId,
             'sportbook_id' => $sportbookId,
         ))->update($this->tableName, $newData);
-        return true;
+        return $removeBalance;
     }
 
     public function q($sql) {

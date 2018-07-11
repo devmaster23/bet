@@ -69,8 +69,7 @@ class Order_model extends CI_Model {
             'investor_id' => $investorId,
             'sportbook_id'  => $sportbookID,
             'betday'  => $betweek,
-            'bet_id' => $betId,
-            'bet_total_amount' => $bet['total_amount']
+            'bet_id' => $betId
         );
 
         if($submit_type == 'reassign')
@@ -98,33 +97,37 @@ class Order_model extends CI_Model {
             $betTotalAmount = $rows[0]['bet_total_amount'];
         }
 
+        $newBetTotalAmount = $bet['total_amount'];
+
         if(!is_null($prevSportbookId))
         {
             if($prevSportbookId != $sportbookID)
             {
                 if($prevStatus == 'placed')
                 {
-                    $this->CI->Investor_sportbooks_model->addBalance($investorId, $prevSportbookId, $betweek, $bet['total_amount']);
+                    $this->CI->Investor_sportbooks_model->addBalance($investorId, $prevSportbookId, $betweek, $betTotalAmount);
                 }
 
                 if($submit_type == 'placed')
                 {
-                    $this->CI->Investor_sportbooks_model->removeBalance($investorId, $sportbookID, $betweek, $betTotalAmount);
+                    $newBetTotalAmount = $this->CI->Investor_sportbooks_model->removeBalance($investorId, $sportbookID, $betweek, $bet['total_amount']);
                 }
             }else{
                 if($prevStatus != 'placed' && $submit_type == 'placed')
                 {
-                    $this->CI->Investor_sportbooks_model->removeBalance($investorId, $sportbookID, $betweek, $betTotalAmount);
+                    $newBetTotalAmount = $this->CI->Investor_sportbooks_model->removeBalance($investorId, $sportbookID, $betweek, $bet['total_amount']);
                 }else if($prevStatus == 'placed' && $submit_type != 'placed'){
-                    $this->CI->Investor_sportbooks_model->addBalance($investorId, $sportbookID, $betweek, $bet['total_amount']);
+                    $this->CI->Investor_sportbooks_model->addBalance($investorId, $sportbookID, $betweek, $betTotalAmount);
                 }                
             }
         }else{
             if($submit_type == 'placed')
             {
-                $this->CI->Investor_sportbooks_model->removeBalance($investorId, $sportbookID, $betweek, $bet['total_amount']);
+                $newBetTotalAmount = $this->CI->Investor_sportbooks_model->removeBalance($investorId, $sportbookID, $betweek, $bet['total_amount']);
             }
         }
+
+        $newData['bet_total_amount'] = $newBetTotalAmount;
 
         if(!is_null($prevRowID)){
             $this->db->where(array(
