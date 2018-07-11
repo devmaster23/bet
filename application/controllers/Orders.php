@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+use Screen\Capture;
+
 class Orders extends CI_Controller {
 
     public function __construct() {
@@ -79,14 +81,14 @@ class Orders extends CI_Controller {
         {
             $bets = array_merge($bets, $worksheet['data']['single']);
         }
-
         if(isset($_POST['sportbookID']))
         {
             $sportbookID = $_POST['sportbookID'];
+            $submit_type = $_POST['submit_type'];
             $selectedBet = $bets[$betIndex-1];
             if($sportbookID != "" && isset($bets[$betIndex-1]))
             {
-                $this->model->addOrder($data['betweek'], $investorId, $sportbookID, $selectedBet);
+                $this->model->addOrder($data['betweek'], $investorId, $sportbookID, $selectedBet, $submit_type);
             }else{
                 $this->model->removeOrder($data['betweek'], $investorId, $selectedBet);
             }
@@ -98,8 +100,6 @@ class Orders extends CI_Controller {
         }
 
         $investor = $this->investor_model->getItem($investorId, $data['betweek']);
-
-        $orders = $this->model->getOrders($data['betweek'], $investor['id']);
 
         $bet = isset($bets[$betIndex-1])? $bets[$betIndex-1]: null;
         if($bet)
@@ -134,8 +134,9 @@ class Orders extends CI_Controller {
         $data['investor'] = $investor;
 
         $data['bet'] = $bet;
+        // var_dump($investor['sportbooks']);die;
         $data['sportbookList'] = $this->model->getSportbook($investor['sportbooks'], $data['betweek'], $investorId, $data['bet']);
-
+        // var_dump($data['sportbookList'][0]);die;
         $data['sportbook'] = $this->model->getSelectedSportbook($data['sportbookList']);
 
         $data['setting'] = $this->setting_model->getActiveSetting($data['betweek']);

@@ -27,6 +27,73 @@ class Investor_sportbooks_model extends CI_Model {
         return $result;
     }   
 
+    public function addBalance($investorId, $sportbookId, $betweek, $betAmount)
+    {
+
+        $rows = $this->db->from($this->tableName)
+        ->where(array(
+            'investor_id' => $investorId,
+            'sportbook_id' => $sportbookId,
+        ))->get()->result_array();
+
+        $current_balance = 0;
+
+        if(count($rows))
+        {
+            $current_balance = $rows[0]['current_balance_'.$betweek];
+        }else{
+            return false;
+        }
+
+        $date = new DateTime();
+        $date_opened = $date->format('Y-m-d');
+
+        $newBalance =  $current_balance + $betAmount;
+        $newData = array(
+            'current_balance_'.$betweek => $newBalance,
+            'date_opened' => $date_opened
+        );
+
+        $this->db->where(array(
+            'investor_id' => $investorId,
+            'sportbook_id' => $sportbookId,
+        ))->update($this->tableName, $newData);
+        return true;
+    }
+
+    public function removeBalance($investorId, $sportbookId, $betweek, $betAmount)
+    {
+        $rows = $this->db->from($this->tableName)
+        ->where(array(
+            'investor_id' => $investorId,
+            'sportbook_id' => $sportbookId,
+        ))->get()->result_array();
+
+        $current_balance = 0;
+
+        if(count($rows))
+        {
+            $current_balance = $rows[0]['current_balance_'.$betweek];
+        }else{
+            return false;
+        }
+
+        $date = new DateTime();
+        $date_opened = $date->format('Y-m-d');
+
+        $newBalance = $current_balance - $betAmount > 0 ? $current_balance - $betAmount: 0;
+        $newData = array(
+            'current_balance_'.$betweek => $newBalance,
+            'date_opened' => $date_opened
+        );
+
+        $this->db->where(array(
+            'investor_id' => $investorId,
+            'sportbook_id' => $sportbookId,
+        ))->update($this->tableName, $newData);
+        return true;
+    }
+
     public function q($sql) {
         $result = $this->db->query($sql);
     }

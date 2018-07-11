@@ -73,18 +73,20 @@ $(document).ready(function() {
     } );
 
     $('.sportbookList.selectable .sportbook-tr').on('click', function(){
-        var isSelected = $(this).hasClass('selected');
         $('.sportbook-tr').removeClass('selected');
-        if(!isSelected)
-            $(this).addClass('selected');
+        $(this).addClass('selected');
     })
 
-    $('#save-btn').on('click',function(){
+    $('#submit-form .save-button').on('click',function(){
         var $objSelected = $('.sportbook-tr.selected');
         var sportbookID = null;
+        
         if($objSelected.length)
             sportbookID = $($objSelected[0]).data('id');
-        $('#submit-form input[name=sportbookID]').val(sportbookID)
+
+        var submit_type = $(this).data('type');
+        $('#submit-form input[name=sportbookID]').val(sportbookID);
+        $('#submit-form input[name=submit_type]').val(submit_type);
         $('#submit-form').submit();
     })
 } );

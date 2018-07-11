@@ -117,7 +117,7 @@
                                     <td class="bold"><?=$bet[$i]['vrn']?></td>
                                     <td class="bold"><?=$bet[$i]['type']?></td>
                                     <td class="text-left"><?=$bet[$i]['team']?></td>
-                                    <td><?=$bet[$i]['time']?></td>
+                                    <td class="<?php ?>"><?=$bet[$i]['time']?></td>
                                 </tr>
                                 <?php 
                                     } 
@@ -151,15 +151,15 @@
                     </div>
                     <?php if(!is_null($bet)){ ?>
                     <form  method="post"  id="submit-form" class="action-div">
-                        <i class="far fa-arrow-alt-circle-left"></i>
                         <a href="<?=$prev_url?>"><img class="prev-img" src="/assets/img/prev.png" /></a>
                         <div>
-                            <button type="button" id="save-btn" class="btn btn-success">Bet Placed</button>
-                            <button type="button" id="save-btn" class="btn btn-success">No Bet</button>
-                            <button type="button" id="save-btn" class="btn btn-success">Re-Assign</button>
+                            <button type="button" data-type="no_bet" class="btn btn-danger no-bet save-button"><img class="camera-img" src="/assets/img/camera_icon.png" /></button>
+                            <button type="button" data-type="reassign" class="btn btn-warning reassign save-button"><img class="camera-img" src="/assets/img/camera_icon.png" /></button>
+                            <button type="button" data-type="placed" class="btn btn-success bet-placed save-button"><img class="camera-img" src="/assets/img/camera_icon.png" /></button>
                         </div>
                         <a href="<?=$next_url?>"><img class="next-img" src="/assets/img/prev.png" /></a>
                         <input type="hidden" name="sportbookID" value="">
+                        <input type="hidden" name="submit_type" value="reassign">
                     </form>
                     <?php } ?>
                     <div class="sportbookList_inner-wrapper">
@@ -177,11 +177,11 @@
                                     foreach ($sportbookList as $item) {
                                         $clsSelected = $item['selected'] ? 'selected' : '';
                                 ?>
-                                <tr class="sportbook-tr <?=$clsSelected?>" data-id="<?=$item['sportbook_id']?>">
+                                <tr class="sportbook-tr <?=$clsSelected?> <?=$item['status']?>" data-id="<?=$item['sportbook_id']?>">
                                     <td><?=$item['title']?></td>
                                     <td>$<?=$item['current_balance']?></td>
-                                    <td><?=$item['bet_count']?></td>
-                                    <td></td>
+                                    <td><?=$item['bet_left']?></td>
+                                    <td><?=$item['bet_placed']?></td>
                                 </tr>
                                 <?php
                                     }
@@ -191,9 +191,10 @@
                     </div>
                 </div>
             </div>
+            <div class="clearfix"></div>
         </div>
         <div class="iframe-div">
-            <?php if($ip_source != $investor['ip']){ ?>
+            <?php if($ip_source == $investor['ip']){ ?>
             <iframe src="<?=$iframe_src?>">    
             </iframe>
             <?php } else { ?>

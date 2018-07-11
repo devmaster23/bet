@@ -169,6 +169,15 @@
     background-color: #f3de3a;
 }
 
+.order-page .enter_order-page .sportbookList .sportbook-tr.placed{
+    background-color: #24b314;
+    color: #fff;
+}
+.order-page .enter_order-page .sportbookList .sportbook-tr.no_bet{
+    background-color: #e65252;
+    color: #fff;
+}
+
 .order-page .enter_order-page .action-div{
     display: flex;
     align-items: center;
@@ -182,14 +191,19 @@
 }
 .order-page .enter_order-page .action-div .prev-img,
 .order-page .enter_order-page .action-div .next-img{
-    width: 80px;
+    width: 50px;
 }
 
 .order-page .enter_order-page .action-div .next-img{
-    width: 80px;
     transform: rotate(180deg); 
 }
 
-.order-page .enter_order-page .action-div #save-btn{
+.order-page .enter_order-page .action-div .btn{
     height: 50px;
+    margin: 0px 5px;
+}
+
+.order-page .enter_order-page .action-div .btn.reassign{
+    background-color: #ffc252;
+    border-color: #ffc252;
 }
