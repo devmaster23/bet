@@ -20,6 +20,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <link href='<?php echo base_url('assets/css/orders.css') ?>' rel='stylesheet' />
     <link href='<?php echo base_url('assets/css/users.css') ?>' rel='stylesheet' />
     <link href='<?php echo base_url('assets/css/theme.css') ?>' rel='stylesheet' />
+    <link href='<?php echo base_url('assets/css/common.css') ?>' rel='stylesheet' />
     <link href='<?php echo base_url('assets/vendor/font-awesome/css/font-awesome.min.css') ?>' rel='stylesheet' />
     <link href='<?php echo base_url('assets/vendor/bootstrap-daterangepicker/daterangepicker.css') ?>' rel='stylesheet' />
 </head>

@@ -729,7 +729,7 @@ tr.shown td.details-control {
     justify-content: flex-start;
 }
 .picks .all-picks .all-picks_inner-div{
-    min-width: 550px;
+    min-width: 600px;
     flex: 0 0 33%;
 }
 .picks .all-picks .all-picks_inner-div .element-box{
@@ -758,4 +758,8 @@ tr.shown td.details-control {
 
 .game-title-wrapper .game-title img{
     margin-right: 10px;
+}
+
+.no-sub-menu{
+    margin-top: -45px;
 }

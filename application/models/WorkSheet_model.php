@@ -421,12 +421,14 @@ class WorkSheet_model extends CI_Model {
                         $team_info = $this->getTeamFromPick($pick_data, $team_row_id-1);
                         $team_key = $this->getTeamKey($pick_data, $team_row_id-1);
 
+                        $team_info['rush'] = $this->getRushValue($team_info);
                         array_push($tmpArr,$team_info);    
                         if($candy_item['team'] != null && $team_info['team'] != null && ($candy_item['team'] == $team_info['team'] || $candy_key == $team_key))
                             $disableList[] = $k;
                     }
                     if(count($disableList))
                         continue;
+                    $candy_item['rush'] = $this->getRushValue($candy_item);
                     array_push($tmpArr,$candy_item);
                     $tmpArr['title'] = chr(65+$j).($i+1);
                     $tmpArr['game_type'] = $candy_item['game_type'];
@@ -479,6 +481,17 @@ class WorkSheet_model extends CI_Model {
         return $result;
     }
 
+    private function getRushValue($game){
+        date_default_timezone_set('America/Los_Angeles');
+        $west_time = date('Y-m-d h:i:s', strtotime('-30 minutes'));
+        $gameTime = date('Y-m-d H:i:s', strtotime("{$game['date']} {$game['time']}"));
+        if($gameTime > $west_time){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
     private function getTotalAmount($bet, $n, $r1, $r2, $r3){
         $bet_type = $bet['bet_type'];
         $total_amount = $bet['amount'];
@@ -507,6 +520,7 @@ class WorkSheet_model extends CI_Model {
                 'team' => $pickData[$id][$type.'_team'],
                 'line' => $pickData[$id][$type.'_line'],
                 'time' => $pickData[$id][$type.'_time'],
+                'date' => $pickData[$id][$type.'_date'],
                 'game_type' => $pickData[$id][$type.'_game_type'],
             );
         }

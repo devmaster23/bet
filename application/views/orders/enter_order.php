@@ -25,7 +25,7 @@
     <h1 class="text-center"></h1>
 </div>
  -->
-<div id="main" class="order-page">
+<div id="main" class="order-page no-sub-menu">
     <div class="inner-wrapper enter_order-page">
         <div class="bet-div">
             <div class="bet-div_inner-wrapper">
@@ -40,6 +40,9 @@
                 <div>
                     <label>IP Source:</label>
                     <span><?=$ip_source?></span>
+                    <?php if($ip_source != $investor['ip']){?>
+                        <span class="warn warning"></span>
+                    <?php }?>
                 </div>
                 <div>
                     <label>IP Investor:</label>
@@ -96,7 +99,7 @@
                             </thead>
                             <tbody>
                                 <?php if($betType == 'single') { ?>
-                                <tr>
+                                <tr class="<?=$bet['rush']? 'red': ''?>" >
                                     <td class="bold"><?=$bet['vrn']?></td>
                                     <td class="bold"><?=$bet['type']?></td>
                                     <td><?=$bet['team']?></td>
@@ -107,7 +110,7 @@
                                         if(!isset($bet[$i]['vrn']) || empty($bet[$i]['vrn']))
                                             continue;
                                 ?>
-                                <tr>
+                                <tr class="<?=$bet[$i]['rush']? 'red': ''?>">
                                     <td class="bold"><?=$bet[$i]['vrn']?></td>
                                     <td class="bold"><?=$bet[$i]['type']?></td>
                                     <td class="text-left"><?=$bet[$i]['team']?></td>

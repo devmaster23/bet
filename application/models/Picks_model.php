@@ -31,6 +31,7 @@ class Picks_model extends CI_Model {
         'team'      => 'team',
         'line'      => 'line',
         'time'      => 'time',
+        'date'      => 'date',
         'count'     => 'count'
     );
 

@@ -172,13 +172,28 @@ class Settings_model extends CI_Model {
         return $result;
     }
 
-    private function getGroupSetting($group_id)
+    private function getInvestorSetting($betweek, $investor_id)
+    {
+        $rows = $this->db->select('*')
+            ->from('settings')
+            ->where(array(
+                'betday' => $betweek,
+                'type'  => 2,
+                'groupuser_id'  => $investor_id
+            ))
+            ->get()->result_array();
+        if(count($rows))
+            return $rows[0];
+        return false;
+    }
+
+    private function getGroupSetting($betweek, $group_id)
     {
         $result = null;
         $query = $this->db->select('*')
             ->from('settings')
             ->where(array(
-                'betday' => $betday,
+                'betday' => $betweek,
                 'type'  => 1,
                 'groupuser_id' => $group_id
             ));
@@ -225,6 +240,29 @@ class Settings_model extends CI_Model {
                 break;
         }
         return $result;
+    }
+
+    public function setActiveSetting($betweek, $investor_id)
+    {
+        $investor = $this->CI->Investor_model->getByID($investor_id);
+        $group_id = isset($investor['group_id']) ? $investor['group_id'] : null;
+        $investor_setting = $this->getInvestorSetting($betweek, $investor_id);
+        if(!$this->isEmptySetting($investor_setting))
+        {
+            $_SESSION['settingType'] = 2;
+            $_SESSION['settingGroupuserId'] = $investor_id;
+        }else{
+            $group_setting = $this->getGroupSetting($betweek, $group_id);
+            if(!$this->isEmptySetting($group_setting))
+            {
+                $_SESSION['settingType'] = 1;
+                $_SESSION['settingGroupuserId'] = $group_id;
+            }else{
+                $_SESSION['settingType'] = 0;
+                $_SESSION['settingGroupuserId'] = 0;
+            }
+        }
+        return true;
     }
 
     public function getAppliedSetting($betday)

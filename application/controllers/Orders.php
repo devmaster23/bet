@@ -57,6 +57,7 @@ class Orders extends CI_Controller {
     public function enter_order(){
         $ip_source = $this->get_client_ip();
         $investorId = isset($_REQUEST['id'])? $_REQUEST['id'] : null;
+
         $betIndex = isset($_REQUEST['bet_id'])? $_REQUEST['bet_id'] : 1;
         $date = new DateTime(date('Y-m-d'));
         $betweek = $date->format('W');
@@ -67,6 +68,8 @@ class Orders extends CI_Controller {
             $betweek = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
         }
         $data['betweek'] = $betweek;
+
+        $this->setting_model->setActiveSetting($betweek,$investorId);
 
         $worksheet = $this->worksheet_model->getRROrders($data['betweek']);
         $bets = array();
