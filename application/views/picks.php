@@ -16,15 +16,23 @@
 
 <div id="main" class="picks">
     <div class="header-div">
-        <div class="game-week-select-div">
-            <label>Bet Day</label>
-            <i class="fa fa-chevron-left bet-week-prev"></i>
-            <select class="select2 game-week-select" name="game-week-select" onchange="initPage()">
-                <?php for($i=1; $i<=60; $i++) {?>
-                <option <?php if($i == $betweek) echo "selected";?> value="<?php echo $i?>"><?php echo $i?></option>
+        <div class="game-title-wrapper">
+            <span class="game-title">
+                <?php if(!is_null($pageTitleIcon)) { ?>
+                <img src="<?php echo base_url('assets/img/'.$pageTitleIcon)?>">
                 <?php }?>
-            </select>
-            <i class="fa fa-chevron-right bet-week-next"></i>
+                <?=$pageTitle?>
+            </span>
+            <div class="game-week-select-div">
+                <label>Bet Day</label>
+                <i class="fa fa-chevron-left bet-week-prev"></i>
+                <select class="select2 game-week-select" name="game-week-select" onchange="initPage()">
+                    <?php for($i=1; $i<=60; $i++) {?>
+                    <option <?php if($i == $betweek) echo "selected";?> value="<?php echo $i?>"><?php echo $i?></option>
+                    <?php }?>
+                </select>
+                <i class="fa fa-chevron-right bet-week-next"></i>
+            </div>
         </div>
         <div class="save-button-div">
             <button type="button" class="btn btn-success btn-lg enter-pick_save-button" onClick="updateTable()">Update</button>
@@ -34,8 +42,8 @@
     <div class="content-div">
         <div class="tab-content">
         <?php if ($pageType == 'all_picks') {?>
-            <div class="row all-picks">
-                <div class="col-md-4">
+            <div class="all-picks">
+                <div class="all-picks_inner-div">
                     <div class="element-box no-border-radius green-top">
                       <h5 class="form-header">
                         Wrapper
@@ -58,7 +66,7 @@
                       </table>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="all-picks_inner-div">
                     <div class="element-box no-border-radius red-top">
                       <h5 class="form-header">
                         Candy
@@ -81,7 +89,7 @@
                         </table>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="all-picks_inner-div">
                     <div class="element-box no-border-radius blue-top">
                       <h5 class="form-header">
                         Pick

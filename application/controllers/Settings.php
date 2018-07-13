@@ -5,6 +5,10 @@ class Settings extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
+        $this->load->library('authlibrary');    
+        if (!$this->authlibrary->loggedin()) {
+            redirect('login');
+        }
         $this->load->model('Settings_model', 'model');
         $this->load->model('Picks_model', 'pick_model');
         $this->load->library('session');

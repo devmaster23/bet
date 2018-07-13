@@ -5,6 +5,12 @@ class Allocations extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
+        
+        $this->load->library('authlibrary');    
+        if (!$this->authlibrary->loggedin()) {
+            redirect('login');
+        }
+
         $this->load->model('Investor_sportbooks_model', 'model');
         $this->load->model('Investor_model', 'investor_model');
         $this->load->library('session');

@@ -3,7 +3,7 @@ var currentTableYear = undefined;
 var pageType='week';
 var custom_headers = [
     [
-    '','Date <br/>Opened', 'Opening <br/>Balance', 'Last Week <br/>Balance', 'Current <br/>Balance', 'Chagne <br/>Since Start (%)','Chagne Since <br/>Last Start (%)'
+    '','Date <br/>Opened', 'Last <br/>Updated', 'Opening <br/>Balance', 'Last Week <br/>Balance', 'Current <br/>Balance', 'Chagne <br/>Since Start (%)','Chagne Since <br/>Last Start (%)'
     ]
 ];
 
@@ -25,7 +25,14 @@ var sportbooksSettings = {
           dateFormat: 'MMM DD, YYYY',
           correctFormat: true,
           readOnly: true
-        },  
+        },
+        {
+          data: 'updated_at',
+          type: 'date',
+          dateFormat: 'MMM DD, YYYY',
+          correctFormat: true,
+          readOnly: true
+        },
         {
             data: 'opening_balance',
             type: 'numeric',
@@ -53,7 +60,7 @@ var sportbooksSettings = {
     ],
     minSpareRows: 0,
     columnSorting: true,
-    colWidths: [200,150, 150, 150, 200, 200, 200, 90],
+    colWidths: [200,150,150, 150, 150, 200, 200, 200, 90],
     rowHeights: rowHeight,
     height: 300,
     className: "htCenter htMiddle",
@@ -65,13 +72,6 @@ var sportbooksSettings = {
       {
         destinationRow: 0,
         reversedRowCoords: true,
-        destinationColumn: 2,
-        type: 'sum',
-        forceNumeric: true
-      },
-      {
-        destinationRow: 0,
-        reversedRowCoords: true,
         destinationColumn: 3,
         type: 'sum',
         forceNumeric: true
@@ -80,6 +80,13 @@ var sportbooksSettings = {
         destinationRow: 0,
         reversedRowCoords: true,
         destinationColumn: 4,
+        type: 'sum',
+        forceNumeric: true
+      },
+      {
+        destinationRow: 0,
+        reversedRowCoords: true,
+        destinationColumn: 5,
         type: 'sum',
         forceNumeric: true
       }

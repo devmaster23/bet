@@ -6,7 +6,7 @@ class Investor_sportbooks_model extends CI_Model {
     public function getListByInvestorId($investor_id,$betweek)
     {
         $result = [];
-        $rows = $this->db->select("A.id as relation_id, A.*,  DATE_FORMAT(A.date_opened, '%M %d, %Y') as date_opened, B.*, count(C.id) as bet_count")
+        $rows = $this->db->select("A.id as relation_id, A.*,  DATE_FORMAT(A.date_opened, '%M %d, %Y') as date_opened, DATE_FORMAT(A.updated_at, '%M %d, %Y %H:%i') as updated_at, B.*, count(C.id) as bet_count")
             ->from($this->tableName.' as A')
             ->join($this->relationTableName.' as B', 'A.sportbook_id = B.id', 'left')
             ->join('orders as C', 'C.sportbook_id = A.sportbook_id AND C.investor_id = '.$investor_id.' AND betday = '.$betweek, 'left')

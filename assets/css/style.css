@@ -120,7 +120,10 @@
 {
     font-size: 22px !important;
 }
-.enter-game .handsontable table.htCore thead tr:first-of-type th:nth-of-type(3),
+.enter-game .handsontable table.htCore thead tr:first-of-type th:nth-of-type(1),
+.enter-game .handsontable table.htCore thead tr:first-of-type th:nth-of-type(3){
+    border: none;
+}
 .pick-game .handsontable table.htCore thead tr:first-of-type th:nth-of-type(3){
     font-weight: bold !important;
     text-align: left;
@@ -128,22 +131,26 @@
 .enter-game .handsontable table.htCore thead tr:first-of-type th:nth-of-type(9),
 .pick-game .handsontable table.htCore thead tr:first-of-type th:nth-of-type(6)
 {
-    background-color: rgb(142, 169, 219) !important;
+    background-color: #1e4dc3 !important;
+    color: #fff;
     font-size: 22px !important;
 }
 
 .pick-game .handsontable table.htCore thead tr:first-of-type th:nth-of-type(9)
 {
-    background-color: rgb(245, 202, 75) !important;
+    background-color: #b6a704 !important;
+    color: #fff;
 }
 
 .pick-game#mlb .handsontable table.htCore thead tr:first-of-type th:nth-of-type(10)
 {
-    background-color: rgb(245, 202, 75) !important;
+    background-color: #b6a704 !important;
+    color: #fff;
 }
 
 .enter-game .handsontable table.htCore thead tr:first-of-type th:nth-of-type(14){
-    background-color: rgb(245, 202, 75) !important;     
+    background-color: #b6a704 !important;     
+    color: #fff;
 }
 
 .pick-game .handsontable table.htCore tbody tr:nth-child(even) td,
@@ -166,7 +173,7 @@
 }
 .all-picks .handsontable table.htCore thead tr:first-of-type th:nth-of-type(9)
 {
-    background-color: rgb(255, 0, 0) !important;
+    background-color: #de2626 !important;
 }
 .all-picks .handsontable table.htCore thead tr:first-of-type th:nth-of-type(17)
 {
@@ -179,7 +186,7 @@
 }
 .worksheets .all-picks .handsontable table.htCore thead tr:first-of-type th:nth-of-type(9)
 {
-    background-color: rgb(255, 0, 0) !important;
+    background-color: #de2626 !important;
 }
 .worksheets .all-picks .handsontable table.htCore thead tr:first-of-type th:nth-of-type(17)
 {
@@ -191,17 +198,19 @@
 {
     color: white !important;
     font-size: 18px !important;
-    background-color: rgb(58, 56, 56) !important;
+    background-color: #3a3839 !important;
 }
 
 .enter-game #mlb .handsontable table.htCore thead tr:first-of-type th:nth-of-type(10),
 .enter-game #mlb .handsontable table.htCore thead tr:first-of-type th:nth-of-type(21){
-    background-color: rgb(142, 169, 219) !important;
+    background-color: #1e4dc3 !important;
+    color: #fff;
     font-size: 22px !important;
 }
 
 .enter-game #mlb .handsontable table.htCore thead tr:first-of-type th:nth-of-type(21){
-    background-color: rgb(245, 202, 75) !important;
+    background-color: #b6a704 !important;
+    color: #fff;
 }
 
 .enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(5),
@@ -217,7 +226,7 @@
 .enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(21),
 .enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(22)
 {   
-    background-color: rgb(255, 94, 94) !important;
+    background-color: #de2626 !important;
 }
 
 .enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(8),
@@ -231,12 +240,12 @@
 .enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(22){
     color: white !important;
     font-size: 18px !important;
-    background-color: rgb(146, 208, 80) !important;
+    background-color: #1f9000 !important;
 }
 
 .enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(20),
 .enter-game #mlb .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(23){
-    background-color: rgb(58, 56, 56) !important;
+    background-color: #3a3839 !important;
 }
 
 .all-picks .handsontable table.htCore thead tr:nth-of-type(2) th{
@@ -267,7 +276,7 @@
 {
     color: white !important;
     font-size: 18px !important;
-    background-color: rgb(255, 0, 0) !important;
+    background-color: #de2626 !important;
 }
 
 .enter-game .handsontable table.htCore thead tr:nth-of-type(2) th:nth-of-type(8),
@@ -278,7 +287,7 @@
 {
     color: white !important;
     font-size: 18px !important;
-    background-color: rgb(146, 208, 80) !important;
+    background-color: #1f9000 !important;
 }
 
 .enter-game .handsontable table.htCore tbody tr td:nth-of-type(3)
@@ -311,7 +320,9 @@
 .game-week-select-div,
 .investor-select-div{
     margin-right: 20px;
-    display: flex;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 .game-week-select-div{
@@ -334,6 +345,7 @@
     padding-right: 20px;
     font-size: 20px;
     font-weight: bold;
+    margin: 0px;
 }
 .content-div{
     margin: 20px 0px 40px;
@@ -711,6 +723,19 @@ tr.shown td.details-control {
     font-size: 13px;
 }
 
+.picks .all-picks{
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+.picks .all-picks .all-picks_inner-div{
+    min-width: 550px;
+    flex: 0 0 33%;
+}
+.picks .all-picks .all-picks_inner-div .element-box{
+    margin:0px 10px;
+}
+
 .worksheets #wrapper-table td:nth-of-type(5),
 .worksheets #candy-table td:nth-of-type(5),
 .worksheets #pick-table td:nth-of-type(5),
@@ -718,4 +743,19 @@ tr.shown td.details-control {
 .picks #candy-table td:nth-of-type(5),
 .picks #pick-table td:nth-of-type(5){
     text-align: left;
+}
+.game-title-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.game-title-wrapper .game-title{
+    font-size: 28px;
+    display: inline-flex;
+    align-items: center;
+    margin-right: 30px;
+}
+
+.game-title-wrapper .game-title img{
+    margin-right: 10px;
 }

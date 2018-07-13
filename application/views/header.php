@@ -311,7 +311,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         <a href="<?php echo site_url('picks?type=all_picks'); ?>">All</a>
                                     </li>
                                     <li class="<?php echo ($page == 'picks' && $pageType == 'football')?'active':'';?>">
-                                        <a href="<?php echo site_url('picks?type=football'); ?>"><img src="<?php echo base_url('assets/img/icon_NFL.png')?>">NFL</a>
+                                        <a href="<?php echo site_url('picks?type=football'); ?>"><img src="<?php echo base_url('assets/img/football_icon.png')?>">NFL</a>
                                     </li>
                                     <li class="<?php echo ($page == 'picks' && $pageType == 'ncaa_f')?'active':'';?>">
                                         <a href="<?php echo site_url('picks?type=ncaa_f'); ?>"><img src="<?php echo base_url('assets/img/icon_NFL.png')?>">NCAA F</a>

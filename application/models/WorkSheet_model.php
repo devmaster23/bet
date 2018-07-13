@@ -460,6 +460,9 @@ class WorkSheet_model extends CI_Model {
                 }
             }
 
+            date_default_timezone_set('America/Los_Angeles');
+            $west_date = date('Y-m-d h:i:s');
+
             foreach ($ret as &$ret_arr) {
                 foreach ($ret_arr as &$betItem) {
                     $betItem['amount'] = 100;

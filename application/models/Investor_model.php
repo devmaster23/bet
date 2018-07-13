@@ -457,10 +457,23 @@ class Investor_model extends CI_Model {
     public function saveSportbook($betweek,$data){
         $data = json_decode($data);
         $sportbookData = $data->data;
+        $updated_at = date("Y-m-d H:i:s");
         foreach ($sportbookData as $sportbook_item) {
+            if(!isset($sportbook_item->id))
+                continue;
             $updateSportbookData = array(
                 'current_balance_'.$betweek => $sportbook_item->current_balance
             );
+            $rows = $this->db->select('current_balance_'.$betweek.' as current_balance')
+                ->from($this->relationTableName)
+                ->where(array(
+                    'id' => $sportbook_item->id
+                ))->get()->result_array();
+            $current_balance = @$rows[0]['current_balance'];
+            if($current_balance != $sportbook_item->current_balance)
+            {
+                $updateSportbookData['updated_at'] = $updated_at;
+            }
             $this->db->where(array(
                 'id' => $sportbook_item->id
             ))->update($this->relationTableName,$updateSportbookData);

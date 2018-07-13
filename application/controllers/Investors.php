@@ -5,6 +5,10 @@ class Investors extends CI_Controller {
     private $pageType = 'investors';
     public function __construct() {
         parent::__construct();
+        $this->load->library('authlibrary');    
+        if (!$this->authlibrary->loggedin()) {
+            redirect('login');
+        }
         $this->load->model('Investor_model', 'model');
         $this->load->model('Sportbook_model', 'sportbook_model');
         $this->load->model('WorkSheet_model', 'workSheet_model');

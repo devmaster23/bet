@@ -38,11 +38,6 @@
                     <span><?=$west_date?></span>
                 </div>
                 <div>
-                    <label>Last Updated:</label>
-                    <span><?=$west_date?></span>
-                </div>
-                <hr/>
-                <div>
                     <label>IP Source:</label>
                     <span><?=$ip_source?></span>
                 </div>
@@ -50,7 +45,6 @@
                     <label>IP Investor:</label>
                     <span><?=$investor['ip']?></span>
                 </div>
-                <hr/>
                 <div>
                     <label>Sportbook:</label>
                     <span><a href="<?=$sportbook['siteurl']?>" target="_blank"><?=$sportbook['siteurl']?></a></span>

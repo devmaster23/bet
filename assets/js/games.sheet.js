@@ -7,9 +7,9 @@ var defaultRowTpl ={
 var custom_headers = [
     [
         '',
-        {label: 'NCAA M', colspan: 6}, 
-        {label: 'Game', colspan: 5},
-        {label: '1st Half', colspan: 5}
+        {label: '', colspan: 6}, 
+        {label: '<img src="./assets/img/icon_game.png"> Game', colspan: 5},
+        {label: '<img src="./assets/img/icon_firsthalf.png"> 1st Half', colspan: 5}
     ],
     [
         '','Date','Time','VRN','Away Team','@','Home Team','PTS','ML','Total','PTS','ML','PTS','ML','Total','PTS','ML'
@@ -19,9 +19,9 @@ var custom_headers = [
 var custom_headers_mlb = [
     [
         '',
-        {label: 'MLB', colspan: 7}, 
-        {label: 'Game', colspan: 11},
-        {label: '1st Half', colspan: 3}
+        {label: '', colspan: 7}, 
+        {label: '<img src="./assets/img/icon_game.png"> Game', colspan: 11},
+        {label: '<img src="./assets/img/icon_firsthalf.png"> 1st Half' , colspan: 3}
     ],
     [
         '','Date','Time','VRN','Away Team','@','VRN','Home Team','ML','RL', 'RL ML','RRL','RRL ML','ML','RL', 'RL ML','RRL','RRL ML','Total','ML','ML','Total'
@@ -264,7 +264,7 @@ var hotSettings_mlb = {
         },
     ],
     minSpareRows: 1,
-    colWidths: [110, 80, 60, 150, 50, 60, 150, 80, 80, 80, 80, 80, 80,80, 80, 80, 80,80, 80, 80, 80],
+    colWidths: [110, 80, 60, 150, 50, 60, 150, 75, 75, 75, 75, 75, 75,75, 75, 75, 75,75, 75, 75, 75],
     rowHeights: rowHeight,
     className: "htCenter htMiddle",
     rowHeaders: true,
@@ -333,59 +333,6 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
     if(vrn1 != null)
       td.innerHTML = eval(vrn1) + 1;
   }
-  // if (prop == 'team2_game_pts' || prop == 'team2_game_ml' || prop == 'team2_first_half_pts' || prop == 'team2_first_half_ml')
-  // {
-  //   var org_prop = prop.substr(0,prop.length-5);
-  //   var org_val = instance.getDataAtRowProp(row,org_prop);
-  //   if(org_val != null)
-  //     td.innerHTML = eval(org_val) * -1; 
-  // }
-
-  // if (prop == 'game_rrl')
-  // {
-  //   var org_prop = 'game_rl'
-  //   var org_val = instance.getDataAtRowProp(row,org_prop);
-  //   if(org_val != null)
-  //     td.innerHTML = eval(org_val) * -1; 
-  // }
-
-  // if (prop == 'game_rrl_ml')
-  // {
-  //   var org_prop = 'game_rl_ml'
-  //   var org_val = instance.getDataAtRowProp(row,org_prop);
-  //   if(org_val != null)
-  //     td.innerHTML = eval(org_val) * -1; 
-  // }
-
-  // if (prop == 'home_game_rrl')
-  // {
-  //   var org_prop = 'game_rl'
-  //   var org_val = instance.getDataAtRowProp(row,org_prop);
-  //   if(org_val != null)
-  //     td.innerHTML = eval(org_val); 
-  // }
-
-  // if (prop == 'home_game_rrl_ml')
-  // {
-  //   var org_prop = 'game_rl_ml'
-  //   var org_val = instance.getDataAtRowProp(row,org_prop);
-  //   if(org_val != null)
-  //     td.innerHTML = eval(org_val); 
-  // }
-
-  // if (prop == 'home_game_rl' || prop == 'home_game_rl_ml' || prop == 'team2_game_ml')
-  // {
-  //   var org_prop = prop.substring(5);
-  //   var org_val = instance.getDataAtRowProp(row,org_prop);
-  //   if(org_val != null)
-  //     td.innerHTML = eval(org_val) * -1;
-  // }
-
-  // if (prop == 'team2_first_half_ml'){
-  //   var org_val = instance.getDataAtRowProp(row,'team1_first_half_ml');
-  //   if(org_val != null)
-  //     td.innerHTML = eval(org_val) * -1;
-  // }
 
   td.style.fontSize = fontSize;
   return td;
@@ -401,8 +348,6 @@ function createSheets(games) {
     tmpSetting = Object.assign({},hotSettings_mlb);
   else
     tmpSetting = Object.assign({},hotSettings);
-
-  tmpSetting['nestedHeaders'][0][1].label = '<label class="enter-game__header-item" data-class-name="enter-game__header1-title">'+pageTitle+'</label>';
 
   currentTable = new Handsontable(container, tmpSetting);
   currentTable.loadData(data);
