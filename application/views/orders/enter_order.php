@@ -130,10 +130,8 @@
                             <label style="text-transform: uppercase;">Total:</label>
                             <span>$ <?=$bet['total_amount']?></span>
                         </div>
+                        <?php } ?>
                     </div>
-                    <?php
-                        }
-                    ?>
                 </div>
 
                 <div class="element-box no-border-radius gray-top sportbookList selectable clearfix">
