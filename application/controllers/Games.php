@@ -13,17 +13,26 @@ class Games extends CI_Controller {
 
 	private $pageTitleIcon = array(
 		'ncaa_m' =>'icon_title_basketball.png', 
-    'nba' =>'icon_title_basketball.png', 
-    'football' =>'icon_title_basketball.png',
-    'ncaa_f' =>'icon_title_basketball.png',
-    'soccer' =>'icon_title_basketball.png',
-    'mlb' =>'icon_title_basketball.png'
+    'nba' =>'icon_title_nba.png', 
+    'football' =>'icon_title_football.png',
+    'ncaa_f' =>'icon_title_football.png',
+    'soccer' =>'icon_title_soccer.png',
+    'mlb' =>'icon_title_baseball.png'
 	);
 
 	public function __construct() {
 		parent::__construct();
 		
 		$this->load->library('authlibrary');    
+    if (!$this->authlibrary->loggedin()) {
+      redirect('login');
+    }
+
+    $userInfo = $this->authlibrary->userInfo();
+    if(!in_array($userInfo['user_type'], [0,2])){
+      redirect('login');
+    }
+
     if (!$this->authlibrary->loggedin()) {
         redirect('login');
     }

@@ -1,5 +1,6 @@
 <?php
     $page = 'settings';
+    $pageTitle = 'Control Panel';
     $scripts = [
         base_url('assets/js/setting.js'),
     ];
@@ -18,15 +19,13 @@
   <h1 class="text-center"></h1>
 </div>
 
-<div id="main">
+<div id="main" class="no-sub-menu">
     <div class="header-div">
-      <div class="game-week-select-div">
-        <label>Bet Day</label>
-        <select class="select2 game-week-select" name="game-week-select" onchange="loadData()">
-          <?php for($i=1; $i<=60; $i++) {?>
-            <option <?php if($i == $betweek) echo "selected";?> value="<?php echo $i?>"><?php echo $i?></option>
-            <?php }?>
-        </select>
+      <div class="game-title-wrapper">
+        <span class="game-title">
+          <?=$pageTitle?>
+        </span>
+        <?php $this->load->view('partials/game-select', array('betweek' => $betweek)); ?>
       </div>
       <div class="save-button-div">
         <button type="button" class="btn btn-success btn-lg enter-game_save-button" onClick="updateData()">Update</button>
@@ -45,7 +44,8 @@
           </ul>
           <div class="clearfix"></div>
         </div>
-        <div>
+        <div class="element-box no-border-radius gray-top clearfix">
+          <h5 class="form-header">Allocation & Structure</h5>
           <div class="metrics-div">
             <div class="metrics-inner-table">
               <div class="sheet" id="bet_allocation">
@@ -62,28 +62,31 @@
           </div>
         </div>
         <div class="number-pick-table">
-          <p>Number of Picks Chosen</p>
-          <p class="vertical-text">Number of Teams Selected</p>
-          <table id="fomularTable">
-            <thead>
-              <tr>
-                <td></td>
-                <?php for($i = $numberOfPicks['min']; $i <= $numberOfPicks['max']; $i++): ?>
-                <td><?php echo $i?></td>
-                <?php endfor;?>
-              </tr>
-            </thead>
-            <tbody>
-              <?php for($i = $numberOfTeams['min']; $i <= $numberOfTeams['max']; $i++): ?> 
-              <tr>
-                <td><?php echo $i?></td>
-                  <?php for($j = $numberOfPicks['min']; $j <= $numberOfPicks['max']; $j++): ?> 
-                  <td><?php echo $fomularData[$i][$j]?></td>
+          <div class="element-box no-border-radius gray-top clearfix">
+            <h5 class="form-header">TEAMS & PICKS</h5>
+            <p>Number of Picks Chosen</p>
+            <p class="vertical-text">Number of Teams Selected</p>
+            <table id="fomularTable">
+              <thead>
+                <tr>
+                  <td></td>
+                  <?php for($i = $numberOfPicks['min']; $i <= $numberOfPicks['max']; $i++): ?>
+                  <td><?php echo $i?></td>
                   <?php endfor;?>
-              </tr>
-              <?php endfor;?>
-            </tbody>
-          </table>
+                </tr>
+              </thead>
+              <tbody>
+                <?php for($i = $numberOfTeams['min']; $i <= $numberOfTeams['max']; $i++): ?> 
+                <tr>
+                  <td><?php echo $i?></td>
+                    <?php for($j = $numberOfPicks['min']; $j <= $numberOfPicks['max']; $j++): ?> 
+                    <td><?php echo $fomularData[$i][$j]?></td>
+                    <?php endfor;?>
+                </tr>
+                <?php endfor;?>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

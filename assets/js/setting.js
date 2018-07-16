@@ -156,13 +156,13 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
   }
   if(col == 0)
   {
-    td.style.backgroundColor = '#ffe69d'; 
+    td.style.backgroundColor = '#efefef'; 
     td.style.color = '#000';
   }
   if(row == 0)
   {
-    td.style.backgroundColor = '#f5ca4b'; 
-    td.style.color = '#000';
+    td.style.backgroundColor = '#1d4cc3'; 
+    td.style.color = '#fff';
   }
   Handsontable.renderers.TextRenderer.apply(this, args);
   if(col == 1)
@@ -179,13 +179,13 @@ function defaultValueRenderer1(instance, td, row, col, prop, value, cellProperti
   td.style.backgroundColor = '#d4d4d4';
   if(col == 0)
   {
-    td.style.backgroundColor = '#ffe69d'; 
+    td.style.backgroundColor = '#efefef'; 
     td.style.color = '#000';
   }
   if(row == 0)
   {
-    td.style.backgroundColor = '#f5ca4b'; 
-    td.style.color = '#000';
+    td.style.backgroundColor = '#3d80db'; 
+    td.style.color = '#fff';
   }
   Handsontable.renderers.TextRenderer.apply(this, args);
 }
@@ -280,7 +280,7 @@ function loadGroupUser(){
     dataType: 'json',
     success: function(data) {
       updateGroupUserList(data,categoryType);
-      loadData();
+      initPage();
     }
   });
 }
@@ -310,7 +310,7 @@ function updateGroupUserList(data,categoryType){
   $('#category-group-user').html(html);
 }
 
-function loadData(){
+function initPage(){
   $(".loading-div").show()
   var betweek = $('.game-week-select').val()
   $.ajax({
@@ -349,7 +349,7 @@ $(document).on('click','#category-group-user li', function(){
   if(value != categoryGroupUser)
   {
     categoryGroupUser = value;
-    loadData();
+    initPage();
   }
 });
 
@@ -371,7 +371,7 @@ function updateData(){
           })
         },
         success: function(data) {
-          loadData();
+          initPage();
           $(".loading-div").hide()
         }
     });

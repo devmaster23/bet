@@ -63,7 +63,6 @@
     display: inline-block;
     position: absolute;
     margin-top: 50px;
-    left: 0px;
 }
 
 .category-select{
@@ -105,7 +104,8 @@
     padding: 8px 10px;
     font-size: 20px;
     border: 2px solid #333;
-    background-color: #f5ca4a;
+    background-color: #3d80db;
+    color: #fff;
 }
 
 .description-div textarea{
@@ -121,7 +121,7 @@
     color: #fff;
 }
 #fomularTable td.selected{
-    background-color: #f5ca4b;
+    background-color: #b6a704;
     color: #212529;
 }
 #bet_analysis .handsontable thead tr th{

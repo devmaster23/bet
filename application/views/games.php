@@ -23,14 +23,7 @@
         <?php }?>
 				<?=$pageTitle?>
 			</span>
-			<div class="game-week-select-div">
-				<label>Bet Day</label>
-				<select class="select2 game-week-select" name="game-week-select" onchange="loadTable()">
-					<?php for($i=1; $i<=60; $i++) {?>
-				  	<option <?php if($i == $betweek) echo "selected";?> value="<?php echo $i?>"><?php echo $i?></option>
-				  	<?php }?>
-				</select>
-			</div>
+			<?php $this->load->view('partials/game-select', array('betweek' => $betweek)); ?>
 		</div>
 		<div class="save-button-div">
 			<button type="button" class="btn btn-success btn-lg enter-game_save-button" onClick="updateTable()">Update</button>

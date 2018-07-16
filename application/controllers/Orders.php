@@ -11,6 +11,12 @@ class Orders extends CI_Controller {
         if (!$this->authlibrary->loggedin()) {
             redirect('login');
         }
+        
+        $userInfo = $this->authlibrary->userInfo();
+        if(!in_array($userInfo['user_type'], [0,1])){
+            redirect('login');
+        }
+
         $this->load->model('Order_model', 'model');
         $this->load->model('Investor_model', 'investor_model');
         $this->load->model('Sportbook_model', 'sportbook_model');
@@ -141,7 +147,6 @@ class Orders extends CI_Controller {
         $data['investor'] = $investor;
 
         $data['bet'] = $bet;
-        // var_dump($investor['sportbooks']);die;
         $data['sportbookList'] = $this->model->getSportbook($investor['sportbooks'], $data['betweek'], $investorId, $data['bet']);
         // var_dump($data['sportbookList'][0]);die;
         $data['sportbook'] = $this->model->getSelectedSportbook($data['sportbookList']);

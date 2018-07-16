@@ -385,7 +385,11 @@ class WorkSheet_model extends CI_Model {
             'single' => array()
         );
 
-        $ret['single'] = $this->CI->Picks_model->getIndividual($betday, 'pick');
+        $singleBets = $this->CI->Picks_model->getIndividual($betday, 'pick');
+        foreach ($singleBets as &$item) {
+            $item['rush'] = $this->getRushValue($item);
+        }
+        $ret['single']  = $singleBets;
         
         if(count($rows))
         {
@@ -419,10 +423,12 @@ class WorkSheet_model extends CI_Model {
                     for($k=0; $k<$robin_1-1; $k++){
                         $team_row_id = $settingData[$k][$j];
                         $team_info = $this->getTeamFromPick($pick_data, $team_row_id-1);
+                        if(is_null($team_info['team']))
+                            continue;
                         $team_key = $this->getTeamKey($pick_data, $team_row_id-1);
 
                         $team_info['rush'] = $this->getRushValue($team_info);
-                        array_push($tmpArr,$team_info);    
+                        array_push($tmpArr,$team_info);
                         if($candy_item['team'] != null && $team_info['team'] != null && ($candy_item['team'] == $team_info['team'] || $candy_key == $team_key))
                             $disableList[] = $k;
                     }

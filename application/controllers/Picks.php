@@ -15,11 +15,11 @@ class Picks extends CI_Controller {
     private $pageTitleIcon = array(
         'all_picks'  => null,
         'ncaa_m' =>'icon_title_basketball.png', 
-        'nba' =>'icon_title_basketball.png', 
-        'football' =>'icon_title_basketball.png',
-        'ncaa_f' =>'icon_title_basketball.png',
-        'soccer' =>'icon_title_basketball.png',
-        'mlb' =>'icon_title_basketball.png'
+        'nba' =>'icon_title_nba.png', 
+        'football' =>'icon_title_football.png',
+        'ncaa_f' =>'icon_title_football.png',
+        'soccer' =>'icon_title_soccer.png',
+        'mlb' =>'icon_title_baseball.png'
     );
 
 

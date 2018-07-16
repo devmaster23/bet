@@ -353,7 +353,7 @@ function createSheets(games) {
   currentTable.loadData(data);
 }
 
-function loadTable(){
+function initPage(){
   $(".loading-div").show()
   var betweek = $('.game-week-select').val()
   $.ajax({
@@ -391,7 +391,7 @@ function updateTable(){
           games: JSON.stringify({data: cleanedGridData})
         },
         success: function(data) {
-            loadTable()
+            initPage()
             $(".loading-div").hide()
         }
     });
@@ -399,5 +399,5 @@ function updateTable(){
 
 
 $(document).ready(function() {
-  loadTable();
+  initPage();
 });
