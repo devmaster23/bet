@@ -457,6 +457,7 @@ class Investor_model extends CI_Model {
     public function saveSportbook($betweek,$data){
         $data = json_decode($data);
         $sportbookData = $data->data;
+        date_default_timezone_set('America/Los_Angeles');
         $updated_at = date("Y-m-d H:i:s");
         foreach ($sportbookData as $sportbook_item) {
             if(!isset($sportbook_item->id))

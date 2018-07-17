@@ -25,9 +25,7 @@
                 </select>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12 text-right mb-3">
+        <div class="pull-right">
             <button type="button" class="btn btn-success" onClick="assignBets()">Assign</button>
         </div>
     </div>
