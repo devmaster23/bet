@@ -763,3 +763,16 @@ tr.shown td.details-control {
 .no-sub-menu{
     margin-top: -45px;
 }
+
+.worksheets .roundrobbin-div .el-tablo.red{
+    background-color: #df2626;
+    color: #fff;
+}
+
+.worksheets .roundrobbin-div .el-tablo{
+    color: #666;
+}
+
+.worksheets .roundrobbin-div a.el-tablo:hover .value{
+    color: inherit !important;
+}

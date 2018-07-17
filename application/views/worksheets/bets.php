@@ -66,7 +66,7 @@
                     </table>
                     <div class="row roundrobbin-div">
                         <div class="col-sm-3">
-                            <a class="element-box el-tablo" href="javascript:;">
+                            <a class="element-box el-tablo red" href="javascript:;">
                                 <div id="rr1" class="value"></div>
                             </a>
                         </div>

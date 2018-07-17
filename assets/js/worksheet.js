@@ -244,7 +244,7 @@ function buildTableBody(arr){
   var tbodyHtml = '';
   $.each(arr, function(index, item){
     tbodyHtml += '<tr>';
-    tbodyHtml += '<td>'+index+'</td>';
+    tbodyHtml += '<td>'+(index+1)+'</td>';
     $.each(item, function(index1, value){
       tbodyHtml += '<td>'+value+'</td>';
     })
