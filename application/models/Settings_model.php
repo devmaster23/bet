@@ -554,7 +554,7 @@ class Settings_model extends CI_Model {
                     'bet_percent' => floatval($rr_allocation),
                     'bet_text'    => 'by',
                     'bet_number1' => $custom_bet_item['rr_number1'],
-                    'bet_number2' => $custom_bet_item['rr_number2'],
+                    'bet_number2' => $custom_bet_item['rr_number2'] ? $custom_bet_item['rr_number2'] : "",
                     'bet_number3' => "",
                     'bet_number4' => ""
                 );
