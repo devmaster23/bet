@@ -45,12 +45,13 @@
           <div class="clearfix"></div>
         </div>
         <div class="element-box no-border-radius gray-top clearfix">
-          <h5 class="form-header">Allocation & Structure</h5>
           <div class="metrics-div">
+            <h5 class="form-header">Allocation & Structure</h5>
             <div class="metrics-inner-table">
               <div class="sheet" id="bet_allocation">
               </div>
             </div>
+            <h5 class="form-header">Bets & Orders</h5>
             <div class="metrics-inner-table">
               <div class="sheet" id="bet_analysis">
               </div>

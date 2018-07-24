@@ -489,9 +489,9 @@ class Settings_model extends CI_Model {
             $bet_analysis[$bet_analysis_index]['title'] = 'Round Robbin 1';
             $bet_analysis[$bet_analysis_index]['rr1'] = $data['rr_number1'];
             $bet_analysis[$bet_analysis_index]['rr2'] = $data['rr_number2'];
-            $bet_analysis[$bet_analysis_index]['sheet'] = $rr_validColumnCnt * count($candy_data) - $rr_disableCnt;;
-            $bet_analysis[$bet_analysis_index]['order'] = 1;
-            $bet_analysis[$bet_analysis_index]['bets'] = @$fomularData[$data['rr_number1']][$data['rr_number2']];
+            $bet_analysis[$bet_analysis_index]['sheet'] = $rr_validColumnCnt * count($candy_data);
+            $bet_analysis[$bet_analysis_index]['order'] = $rr_validColumnCnt * count($candy_data) - $rr_disableCnt;
+            $bet_analysis[$bet_analysis_index]['bets'] = ($rr_validColumnCnt * count($candy_data) - $rr_disableCnt)*@$fomularData[$data['rr_number1']][$data['rr_number2']];
 
             if(!is_null($data['rr_number3']) && $data['rr_number3'] != 0)
             {
@@ -499,9 +499,9 @@ class Settings_model extends CI_Model {
                 $bet_analysis[$bet_analysis_index]['title'] = 'Round Robbin 2';
                 $bet_analysis[$bet_analysis_index]['rr1'] = $data['rr_number1'];
                 $bet_analysis[$bet_analysis_index]['rr2'] = $data['rr_number3'];
-                $bet_analysis[$bet_analysis_index]['sheet'] = $rr_validColumnCnt * count($candy_data) - $rr_disableCnt;;
-                $bet_analysis[$bet_analysis_index]['order'] = 1;
-                $bet_analysis[$bet_analysis_index]['bets'] = @$fomularData[$data['rr_number1']][$data['rr_number3']];                
+                $bet_analysis[$bet_analysis_index]['sheet'] = $rr_validColumnCnt * count($candy_data);
+                $bet_analysis[$bet_analysis_index]['order'] = $rr_validColumnCnt * count($candy_data) - $rr_disableCnt;
+                $bet_analysis[$bet_analysis_index]['bets'] = ($rr_validColumnCnt * count($candy_data) - $rr_disableCnt)*@$fomularData[$data['rr_number1']][$data['rr_number3']];
             }
 
             if(!is_null($data['rr_number4']) && $data['rr_number4'] != 0)
@@ -553,8 +553,8 @@ class Settings_model extends CI_Model {
                     'bet_text'    => 'by',
                     'bet_number1' => $custom_bet_item['rr_number1'],
                     'bet_number2' => $custom_bet_item['rr_number2'],
-                    'bet_number3' => "0",
-                    'bet_number4' => "0"
+                    'bet_number3' => "",
+                    'bet_number4' => ""
                 );
 
                 $settings[] = array(
@@ -563,9 +563,9 @@ class Settings_model extends CI_Model {
                     'title' => "Custom Parlay ".($key+1),
                     'bet_percent' => floatval($parlay_allocation),
                     'bet_number1' => $custom_bet_item['parlay_number'],
-                    'bet_number2' => "0",
-                    'bet_number3' => "0",
-                    'bet_number4' => "0"
+                    'bet_number2' => "",
+                    'bet_number3' => "",
+                    'bet_number4' => ""
                 );
 
                 $custom_bet_allocation += @$fomularData[$custom_bet_item['rr_number1']][$custom_bet_item['rr_number2']];
@@ -574,18 +574,18 @@ class Settings_model extends CI_Model {
                     'title'     => "Custom RR ".($key+1),
                     'rr1'       => $custom_bet_item['rr_number1'],
                     'rr2'       => $custom_bet_item['rr_number2'],
-                    'sheet'     => '',
+                    'sheet'     => 1,
                     'order'     => 1,
                     'bets'      => $custom_bet_allocation
                 );
 
                 $bet_analysis[] = array(
-                    'title'     => "Custom RR ".($key+1),
+                    'title'     => "Custom Custom Parlay ".($key+1),
                     'rr1'       => '',
                     'rr2'       => '',
                     'sheet'     => '',
                     'order'     => 1,
-                    'bets'      => $custom_bet_item['parlay_number']
+                    'bets'      => 1
                 );
             }   
 
