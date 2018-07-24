@@ -68,7 +68,7 @@ class WorkSheet_model extends CI_Model {
             array_push($ret['sheet_data'], $new_item);
         }
         
-        array_push($ret['sheet_data'], array("Round Robbin Structure"));
+        array_push($ret['sheet_data'], array("Round Robin Structure"));
         array_push($ret['sheet_data'], array(
             @$activeSetting['rr_number1'],
             @$activeSetting['rr_number2'],

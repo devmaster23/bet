@@ -3,7 +3,7 @@ class Settings_model extends CI_Model {
     private $tableName = 'settings';
     private $headerName = array(
         'Bet Allocation %',
-        'Round Robbin Structure',
+        'Round Robin Structure',
         'Parlays',
         'Individual Bets(Picks)',
     );
@@ -488,7 +488,7 @@ class Settings_model extends CI_Model {
             $order_number = $rr_validColumnCnt * count($candy_data) - $rr_disableCnt - $parlayCnt;
 
             $bet_analysis_index = 1;
-            $bet_analysis[$bet_analysis_index]['title'] = 'Round Robbin 1';
+            $bet_analysis[$bet_analysis_index]['title'] = 'Round Robin 1';
             $bet_analysis[$bet_analysis_index]['rr1'] = $data['rr_number1'];
             $bet_analysis[$bet_analysis_index]['rr2'] = $data['rr_number2'];
             $bet_analysis[$bet_analysis_index]['sheet'] = $rr_validColumnCnt * count($candy_data);
@@ -498,7 +498,7 @@ class Settings_model extends CI_Model {
             if(!is_null($data['rr_number3']) && $data['rr_number3'] != 0)
             {
                 $bet_analysis_index ++;
-                $bet_analysis[$bet_analysis_index]['title'] = 'Round Robbin 2';
+                $bet_analysis[$bet_analysis_index]['title'] = 'Round Robin 2';
                 $bet_analysis[$bet_analysis_index]['rr1'] = $data['rr_number1'];
                 $bet_analysis[$bet_analysis_index]['rr2'] = $data['rr_number3'];
                 $bet_analysis[$bet_analysis_index]['sheet'] = $rr_validColumnCnt * count($candy_data);
@@ -509,7 +509,7 @@ class Settings_model extends CI_Model {
             if(!is_null($data['rr_number4']) && $data['rr_number4'] != 0)
             {
                 $bet_analysis_index ++;
-                $bet_analysis[$bet_analysis_index]['title'] = 'Round Robbin 3';
+                $bet_analysis[$bet_analysis_index]['title'] = 'Round Robin 3';
                 $bet_analysis[$bet_analysis_index]['rr1'] = $data['rr_number1'];
                 $bet_analysis[$bet_analysis_index]['rr2'] = $data['rr_number4'];
                 $bet_analysis[$bet_analysis_index]['sheet'] = $order_number;

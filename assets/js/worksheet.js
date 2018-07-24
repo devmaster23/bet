@@ -364,7 +364,7 @@ function createBetSummary(data){
   var tblItem = "<table>"+
         "<thead><tr>"+
           "<td colspan='2' rowspan='2'></td>"+
-          "<td colspan='6'>Round Robbins</td>"+
+          "<td colspan='6'>Round Robins</td>"+
           "<td colspan='2'>Parlays</td>"+
           "<td colspan='2'>Individual Picks</td>"+
         "</tr><tr>"+
@@ -451,7 +451,7 @@ function getCustomBetContent(settingItem){
   html += '<div class="custom-bet-item" data-setting-id="'+setting_id+'">'+
       '<span class="remove-betsetting-icon"><button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></span>'+
       '<div class="bet-item-header rr-header">'+
-      '<span>Round Robbin</span><input type="number" disabled rr-number1 value="'+rr_number1+'" min="1"/><input type="number" rr-number2 value="'+rr_number2+'" min="0"/>'+
+      '<span>Round Robin</span><input type="number" disabled rr-number1 value="'+rr_number1+'" min="1"/><input type="number" rr-number2 value="'+rr_number2+'" min="0"/>'+
       '<button type="button" data-type="rr" class="btn btn-success new_game">+</button>'+
       '</div>'+
       '<div class="rr-content">';

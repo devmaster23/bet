@@ -582,7 +582,7 @@ class Investor_model extends CI_Model {
             }
 
             $result[] = array(
-                'team' => 'A '.$rr1.'-'.$rr2.' Round Robbin is',
+                'team' => 'A '.$rr1.'-'.$rr2.' Round Robin is',
                 'line' => count($data).' Parlays',
                 'bet'  => $overall_bet,
                 'outcome' => number_format((float)$overall_outcome, 2, '.', '')
