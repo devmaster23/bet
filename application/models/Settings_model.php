@@ -485,13 +485,15 @@ class Settings_model extends CI_Model {
                 'bet_number1' => $individualCnt
             );
 
+            $order_number = $rr_validColumnCnt * count($candy_data) - $rr_disableCnt - $parlayCnt;
+
             $bet_analysis_index = 1;
             $bet_analysis[$bet_analysis_index]['title'] = 'Round Robbin 1';
             $bet_analysis[$bet_analysis_index]['rr1'] = $data['rr_number1'];
             $bet_analysis[$bet_analysis_index]['rr2'] = $data['rr_number2'];
             $bet_analysis[$bet_analysis_index]['sheet'] = $rr_validColumnCnt * count($candy_data);
-            $bet_analysis[$bet_analysis_index]['order'] = $rr_validColumnCnt * count($candy_data) - $rr_disableCnt;
-            $bet_analysis[$bet_analysis_index]['bets'] = ($rr_validColumnCnt * count($candy_data) - $rr_disableCnt)*@$fomularData[$data['rr_number1']][$data['rr_number2']];
+            $bet_analysis[$bet_analysis_index]['order'] = $order_number;
+            $bet_analysis[$bet_analysis_index]['bets'] = $order_number*@$fomularData[$data['rr_number1']][$data['rr_number2']];
 
             if(!is_null($data['rr_number3']) && $data['rr_number3'] != 0)
             {
@@ -500,8 +502,8 @@ class Settings_model extends CI_Model {
                 $bet_analysis[$bet_analysis_index]['rr1'] = $data['rr_number1'];
                 $bet_analysis[$bet_analysis_index]['rr2'] = $data['rr_number3'];
                 $bet_analysis[$bet_analysis_index]['sheet'] = $rr_validColumnCnt * count($candy_data);
-                $bet_analysis[$bet_analysis_index]['order'] = $rr_validColumnCnt * count($candy_data) - $rr_disableCnt;
-                $bet_analysis[$bet_analysis_index]['bets'] = ($rr_validColumnCnt * count($candy_data) - $rr_disableCnt)*@$fomularData[$data['rr_number1']][$data['rr_number3']];
+                $bet_analysis[$bet_analysis_index]['order'] = $order_number;
+                $bet_analysis[$bet_analysis_index]['bets'] = ($order_number)*@$fomularData[$data['rr_number1']][$data['rr_number3']];
             }
 
             if(!is_null($data['rr_number4']) && $data['rr_number4'] != 0)
@@ -510,9 +512,9 @@ class Settings_model extends CI_Model {
                 $bet_analysis[$bet_analysis_index]['title'] = 'Round Robbin 3';
                 $bet_analysis[$bet_analysis_index]['rr1'] = $data['rr_number1'];
                 $bet_analysis[$bet_analysis_index]['rr2'] = $data['rr_number4'];
-                $bet_analysis[$bet_analysis_index]['sheet'] = $rr_validColumnCnt * count($candy_data) - $rr_disableCnt;;
+                $bet_analysis[$bet_analysis_index]['sheet'] = $order_number;
                 $bet_analysis[$bet_analysis_index]['order'] = 1;
-                $bet_analysis[$bet_analysis_index]['bets'] = @$fomularData[$data['rr_number1']][$data['rr_number4']];                
+                $bet_analysis[$bet_analysis_index]['bets'] = ($order_number)*@$fomularData[$data['rr_number1']][$data['rr_number4']];
             }
 
             $bet_analysis_index ++;
