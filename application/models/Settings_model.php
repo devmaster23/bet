@@ -468,10 +468,10 @@ class Settings_model extends CI_Model {
             $settings[0]['bet_percent'] = floatval($data['bet_allocation']);
 
             $settings[1]['bet_percent'] = floatval($data['rr_allocation']);
-            $settings[1]['bet_number1'] = $data['rr_number1'];
-            $settings[1]['bet_number2'] = $data['rr_number2'];
-            $settings[1]['bet_number3'] = $data['rr_number3'];
-            $settings[1]['bet_number4'] = $data['rr_number4'];
+            $settings[1]['bet_number1'] = $data['rr_number1'] != 0 ? $data['rr_number1'] : '';
+            $settings[1]['bet_number2'] = $data['rr_number2'] != 0 ? $data['rr_number2'] : '';
+            $settings[1]['bet_number3'] = $data['rr_number3'] != 0 ? $data['rr_number3'] : '';
+            $settings[1]['bet_number4'] = $data['rr_number4'] != 0 ? $data['rr_number4'] : '';
 
             $settings[2] = array(
                 'title' => $this->headerName[2],
@@ -485,15 +485,15 @@ class Settings_model extends CI_Model {
                 'bet_number1' => $individualCnt
             );
 
-            $order_number = $rr_validColumnCnt * count($candy_data) - $rr_disableCnt;
+            $sheet_number = $rr_validColumnCnt * count($candy_data) - $rr_disableCnt;
 
             $bet_analysis_index = 1;
             $bet_analysis[$bet_analysis_index]['title'] = 'Round Robin 1';
             $bet_analysis[$bet_analysis_index]['rr1'] = $data['rr_number1'];
             $bet_analysis[$bet_analysis_index]['rr2'] = $data['rr_number2'];
-            $bet_analysis[$bet_analysis_index]['sheet'] = $order_number;
-            $bet_analysis[$bet_analysis_index]['order'] = $order_number;
-            $bet_analysis[$bet_analysis_index]['bets'] = $order_number*@$fomularData[$data['rr_number1']][$data['rr_number2']];
+            $bet_analysis[$bet_analysis_index]['sheet'] = $sheet_number;
+            $bet_analysis[$bet_analysis_index]['order'] = $sheet_number;
+            $bet_analysis[$bet_analysis_index]['bets'] = $sheet_number*@$fomularData[$data['rr_number1']][$data['rr_number2']];
 
             if(!is_null($data['rr_number3']) && $data['rr_number3'] != 0)
             {
@@ -501,9 +501,9 @@ class Settings_model extends CI_Model {
                 $bet_analysis[$bet_analysis_index]['title'] = 'Round Robin 2';
                 $bet_analysis[$bet_analysis_index]['rr1'] = $data['rr_number1'];
                 $bet_analysis[$bet_analysis_index]['rr2'] = $data['rr_number3'];
-                $bet_analysis[$bet_analysis_index]['sheet'] = $order_number;
-                $bet_analysis[$bet_analysis_index]['order'] = $order_number;
-                $bet_analysis[$bet_analysis_index]['bets'] = ($order_number)*@$fomularData[$data['rr_number1']][$data['rr_number3']];
+                $bet_analysis[$bet_analysis_index]['sheet'] = $sheet_number;
+                $bet_analysis[$bet_analysis_index]['order'] = $sheet_number;
+                $bet_analysis[$bet_analysis_index]['bets'] = ($sheet_number)*@$fomularData[$data['rr_number1']][$data['rr_number3']];
             }
 
             if(!is_null($data['rr_number4']) && $data['rr_number4'] != 0)
@@ -512,18 +512,19 @@ class Settings_model extends CI_Model {
                 $bet_analysis[$bet_analysis_index]['title'] = 'Round Robin 3';
                 $bet_analysis[$bet_analysis_index]['rr1'] = $data['rr_number1'];
                 $bet_analysis[$bet_analysis_index]['rr2'] = $data['rr_number4'];
-                $bet_analysis[$bet_analysis_index]['sheet'] = $order_number;
-                $bet_analysis[$bet_analysis_index]['order'] = $order_number;
-                $bet_analysis[$bet_analysis_index]['bets'] = ($order_number)*@$fomularData[$data['rr_number1']][$data['rr_number4']];
+                $bet_analysis[$bet_analysis_index]['sheet'] = $sheet_number;
+                $bet_analysis[$bet_analysis_index]['order'] = $sheet_number;
+                $bet_analysis[$bet_analysis_index]['bets'] = ($sheet_number)*@$fomularData[$data['rr_number1']][$data['rr_number4']];
             }
 
             $bet_analysis_index ++;
             $bet_analysis[$bet_analysis_index]['title'] = 'Parlay';
             $bet_analysis[$bet_analysis_index]['rr1'] = '';
             $bet_analysis[$bet_analysis_index]['rr2'] = '';
-            $bet_analysis[$bet_analysis_index]['sheet'] = $parlayCnt;
-            $bet_analysis[$bet_analysis_index]['order'] = 1;
-            $bet_analysis[$bet_analysis_index]['bets'] = 1;
+            $bet_analysis[$bet_analysis_index]['sheet'] = (int)$parlayCnt > 0 ? $parlayCnt : '' ;
+            $parlay_ordernumber = (int)$parlayCnt > 0 ? 1 : '';
+            $bet_analysis[$bet_analysis_index]['order'] = $parlay_ordernumber;
+            $bet_analysis[$bet_analysis_index]['bets'] = $parlay_ordernumber;
 
             $bet_analysis_index ++;
             $bet_analysis[$bet_analysis_index]['title'] = 'Individual Bets(Picks)';

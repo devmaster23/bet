@@ -2,7 +2,7 @@ var tableObject = null;
 var tableObject1 = null;
 var categoryType = 0;
 var categoryGroupUser = 0;
-var custom_fontSize = '20px';
+var custom_fontSize = '22px';
 var custom_rowHeight = 35;
 
 var hotSettings = {
@@ -175,7 +175,7 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
 function defaultValueRenderer1(instance, td, row, col, prop, value, cellProperties) {
   var args = arguments;
   td.style.fontSize = custom_fontSize;
-  td.style.color = '#000';
+  t2.style.color = '#000';
   td.style.backgroundColor = '#d4d4d4';
   if(col == 0)
   {
