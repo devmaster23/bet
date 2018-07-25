@@ -491,7 +491,7 @@ class Settings_model extends CI_Model {
             $bet_analysis[$bet_analysis_index]['title'] = 'Round Robin 1';
             $bet_analysis[$bet_analysis_index]['rr1'] = $data['rr_number1'];
             $bet_analysis[$bet_analysis_index]['rr2'] = $data['rr_number2'];
-            $bet_analysis[$bet_analysis_index]['sheet'] = $rr_validColumnCnt * count($candy_data);
+            $bet_analysis[$bet_analysis_index]['sheet'] = $order_number;
             $bet_analysis[$bet_analysis_index]['order'] = $order_number;
             $bet_analysis[$bet_analysis_index]['bets'] = $order_number*@$fomularData[$data['rr_number1']][$data['rr_number2']];
 
@@ -501,7 +501,7 @@ class Settings_model extends CI_Model {
                 $bet_analysis[$bet_analysis_index]['title'] = 'Round Robin 2';
                 $bet_analysis[$bet_analysis_index]['rr1'] = $data['rr_number1'];
                 $bet_analysis[$bet_analysis_index]['rr2'] = $data['rr_number3'];
-                $bet_analysis[$bet_analysis_index]['sheet'] = $rr_validColumnCnt * count($candy_data);
+                $bet_analysis[$bet_analysis_index]['sheet'] = $order_number;
                 $bet_analysis[$bet_analysis_index]['order'] = $order_number;
                 $bet_analysis[$bet_analysis_index]['bets'] = ($order_number)*@$fomularData[$data['rr_number1']][$data['rr_number3']];
             }
@@ -513,7 +513,7 @@ class Settings_model extends CI_Model {
                 $bet_analysis[$bet_analysis_index]['rr1'] = $data['rr_number1'];
                 $bet_analysis[$bet_analysis_index]['rr2'] = $data['rr_number4'];
                 $bet_analysis[$bet_analysis_index]['sheet'] = $order_number;
-                $bet_analysis[$bet_analysis_index]['order'] = 1;
+                $bet_analysis[$bet_analysis_index]['order'] = $order_number;
                 $bet_analysis[$bet_analysis_index]['bets'] = ($order_number)*@$fomularData[$data['rr_number1']][$data['rr_number4']];
             }
 
