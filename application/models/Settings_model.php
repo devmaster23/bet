@@ -485,7 +485,7 @@ class Settings_model extends CI_Model {
                 'bet_number1' => $individualCnt
             );
 
-            $order_number = $rr_validColumnCnt * count($candy_data) - $rr_disableCnt - $parlayCnt;
+            $order_number = $rr_validColumnCnt * count($candy_data) - $rr_disableCnt;
 
             $bet_analysis_index = 1;
             $bet_analysis[$bet_analysis_index]['title'] = 'Round Robin 1';
