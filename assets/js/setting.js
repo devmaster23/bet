@@ -175,7 +175,7 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
 function defaultValueRenderer1(instance, td, row, col, prop, value, cellProperties) {
   var args = arguments;
   td.style.fontSize = custom_fontSize;
-  t2.style.color = '#000';
+  td.style.color = '#000';
   td.style.backgroundColor = '#d4d4d4';
   if(col == 0)
   {
