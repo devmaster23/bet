@@ -307,7 +307,6 @@ function createBetSheets(data){
       var cls = item.disabled.length ? "disabled" : "";
       var is_parlay = item.is_parlay ? "selected" : "";
       tblItem += "<div class='sheet_block "+cls + " " +is_parlay+"'  id='"+item.title+"'>"+
-                "<span class='remove-icon'></span>"+
                 "<span class='parlay-icon "+is_parlay+"' data-id='"+key+"_"+key2+"'></span>"+
                 "<table><tbody>";
         $.each(item, function(key3, team_item){
@@ -703,13 +702,11 @@ function initPage(){
     
   if(pageType == 'bet_summary')
   {
-    $(".save-button-div").hide();
     loadSummary();
   }
   else if(pageType == 'bets')
   {
     loadSettingTable();
-    $(".save-button-div").show();
     loadAllPickTable();
     // allTabelTimeOut = setInterval(function(){
     //   loadAllPickTable();
@@ -720,18 +717,15 @@ function initPage(){
   }
   if(pageType == 'bet_sheet')
   {
-    $(".save-button-div").hide();
     loadBetSheet();
   }
   if(pageType == 'bets_pick')
   {
-    $(".save-button-div").show();
     loadPickData();
   }
 
   if(pageType == 'bets_custom')
   {
-    $(".save-button-div").show();
     loadBetCustomData();
   }
 }

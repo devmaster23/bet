@@ -12,7 +12,8 @@
 	},
 	"require": {
 		"php": ">=5.4.8",
-		"microweber/screen": "^1.0"
+		"microweber/screen": "^1.0",
+		"mpdf/mpdf": "^7.1"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"

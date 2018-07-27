@@ -342,7 +342,13 @@ class WorkSheet_model extends CI_Model {
                     $ret[$i][$j]['disabled'] = $disableList;
                 }
             }
-            $result['type'] = $robin_1.'-'.$robin_2.'-'.$robin_3.'-'.$robin_4;
+
+            $rrType = $robin_1 != '' && $robin_1 != '0' ? $robin_1: '';
+            $rrType .= $robin_2 != '' && $robin_2 != '0'  ? '-'.$robin_2: '';
+            $rrType .= $robin_3 != '' && $robin_3 != '0' ? '-'.$robin_3: '';
+            $rrType .= $robin_4 != '' && $robin_4 != '0' ? '-'.$robin_4: '';
+
+            $result['type'] = $rrType;
             $result['date'] = $row['date'];
             $result['data'] = $ret;
         }

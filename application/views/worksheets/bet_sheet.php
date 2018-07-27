@@ -29,6 +29,11 @@
                 <i class="fa fa-chevron-right bet-week-next"></i>
             </div>
         </div>
+        <div class="col-md-4">
+        </div>
+        <div class="save-button-div col-md-4">
+            <a class="btn btn-success btn-lg " href="<?=site_url('worksheets')?>/downloadPDF" target="_blank">Download PDF</a>
+        </div>
     </div>
     <div class="content-div">
         <div id="bet_sheet">

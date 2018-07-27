@@ -1,0 +1,60 @@
+.sheet_block{
+    padding: 100px 20px 20px 20px;
+}
+.sheet_block.selected{
+    background-color: #f6fffa;
+}
+
+.sheet_block.parlay{
+    background-color: #ddd;
+}
+.sheet_block .parlay-icon.selected{
+    background-image: url(../img/check_icon.png);
+    background-color: #fff;
+    background-size: contain;
+}
+.sheet_block table{
+    width: 100%;
+    text-align: center;
+}
+.sheet_block table.main-table tr:nth-last-child(3){
+    font-weight: bold;
+}
+.sheet_block table.main-table tr:last-of-type td{
+    font-size: 12px;
+}
+.sheet_block table.main-table td{
+  border:1px solid #ccc;
+  text-align: center;
+  font-size: 16px;
+  padding: 2px 5px;
+  height: 30px;
+}
+.sheet_block table.main-table td.team{
+  text-align: left;
+}
+
+.sheet_block .mark-div{
+  right: 0;
+  float: right;
+  text-align: center;
+  width: 100px;
+  border: 3px solid #000;
+  color: #4072c4;
+  margin: 100px 0px 10px;
+  padding: 0px 20px;
+  font-size: 40px;
+  font-weight: bold;
+}
+.sheet_block .bottom-div{
+  clear: both;
+  margin-top: 20px;
+}
+.sheet_block .bottom-div td{
+  font-size: 20px;
+}
+
+.sheet_block table.main-table tr.disabled td{
+    color: red;
+    font-weight: bold;
+}
