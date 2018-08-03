@@ -32,6 +32,7 @@ class Order_model extends CI_Model {
     {
         $this->CI =& get_instance();
         $this->CI->load->model('Investor_sportbooks_model');
+        $this->CI->load->model('OrderLog_model');
         $this->CI->load->model('Order_model');
     }
 
@@ -52,15 +53,39 @@ class Order_model extends CI_Model {
             $tmpArr['accounts'] = count($tmpArr['sportbooks']);
             $tmpArr['full_name'] = $tmpArr['first_name'] . ' ' . $tmpArr['last_name'];
             $tmpArr['current_balance'] = 0;
+
+            $tmpArr['total_bets'] = $this->getTotalBetCount($betweek, $investorId);
+
             foreach ($tmpArr['sportbooks'] as $sportbook_item) {
                 $tmpArr['current_balance'] += $sportbook_item['current_balance_'.$betweek];
             }
-            // $tmpArr['custom_action'] = "<div class='action-div' data-id='".$item['id']."'><a class='' href='/".$this->pageURL."/enter_order?id=".$item['id']."'>Enter Order</a><a class='' href='/".$this->pageURL."/balance?id=".$item['id']."'>Balance</i></a></div>";
-            $tmpArr['custom_action'] = "<div class='action-div' data-id='".$item['id']."'><a class='' href='/".$this->pageURL."/enter_order?id=".$item['id']."'>Enter Order</a></div>";
+            $tmpArr['custom_action'] = "<div class='action-div' data-id='".$item['id']."'><a class='' href='/".$this->pageURL."/enter_order?id=".$item['id']."'>Enter Order</a><a class='' href='/".$this->pageURL."/balance?id=".$item['id']."'>Balance</i></a></div>";
 
             $result[] = $tmpArr;
         }
         return $result;
+    }
+
+    public function getTotalBetCount($betweek, $investorId = null)
+    {
+        $worksheet = $this->worksheet_model->getRROrders($betweek,$investorId);
+        $total_bets = 0;
+        if(isset($worksheet['data']['rr']))
+        {
+            $total_bets += count($worksheet['data']['rr']);
+        }
+
+        if(isset($worksheet['data']['parlay']))
+        {
+            $total_bets += count($worksheet['data']['parlay']);
+        }
+
+        if(isset($worksheet['data']['single']))
+        {
+            $total_bets += count($worksheet['data']['single']);
+        }
+
+        return $total_bets;
     }
 
     public function addOrder($betweek, $investorId, $sportbookID, $bet, $submit_type = null)
@@ -97,7 +122,8 @@ class Order_model extends CI_Model {
             $prevStatus = $rows[0]['bet_status'];
             $betTotalAmount = $rows[0]['bet_total_amount'];
         }
-
+        if($prevSportbookId == $sportbookID && $prevStatus == $submit_type)
+            return;
         $newBetTotalAmount = $bet['total_amount'];
 
         if(!is_null($prevSportbookId))
@@ -139,6 +165,7 @@ class Order_model extends CI_Model {
             $this->db->insert($this->tableName, $newData);
         }
 
+        $this->OrderLog_model->addLog($betweek, $investorId, $sportbookID, $submit_type, $submit_type, $betId);
         return true;
     }
 

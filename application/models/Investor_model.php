@@ -19,7 +19,7 @@ class Investor_model extends CI_Model {
         'ip',
         'phone_number',
         'starting_bankroll',
-        'notes'
+        'note'
     );
 
     private $relationDbColumns = array(
@@ -30,11 +30,16 @@ class Investor_model extends CI_Model {
         'password'
     );
 
+    private $groups;
+
     function __construct()
     {
         $this->CI =& get_instance();
         $this->CI->load->model('Investor_sportbooks_model');
         $this->CI->load->model('WorkSheet_model');
+        $this->CI->load->model('Groups_model');
+
+        $this->groups = $this->CI->Groups_model->getAll();
     }
 
     public function getAll(){
@@ -42,6 +47,19 @@ class Investor_model extends CI_Model {
             ->from($this->tableName)
             ->order_by('name','asc');
         $result = $this->db->get()->result_array();;
+        return $result;
+    }
+
+    public function getKeyValueList()
+    {
+        $result = [];
+        $this->db->select('*')
+            ->from($this->tableName)
+            ->order_by('id','asc');
+        $rows = $this->db->get()->result_array();
+        foreach ($rows as $item) {
+            $result[$item['id']] = $item;
+        }
         return $result;
     }
 
@@ -113,6 +131,16 @@ class Investor_model extends CI_Model {
         return $result;
     }
 
+    private function groupName($id)
+    {
+        $result = '';
+        foreach ($this->groups as $group) {
+            if($group['id'] == $id)
+                $result = $group['name'];
+        }
+        return $result;
+    }
+
     public function getList($betweek){
 
         $result = [];
@@ -131,6 +159,8 @@ class Investor_model extends CI_Model {
             $tmpArr['full_name'] = $tmpArr['first_name'] . ' ' . $tmpArr['last_name'];
             $tmpArr['phone_number'] = $this->formatPhoneNumber($tmpArr['phone_number']);
             $tmpArr['current_balance'] = 0;
+            $tmpArr['number_sportbooks'] = count($tmpArr['sportbooks']);
+            $tmpArr['group_label'] = $this->groupName($item['group_id']);
             foreach ($tmpArr['sportbooks'] as $sportbook_item) {
                 $tmpArr['current_balance'] += $sportbook_item['current_balance_'.$betweek];
             }
@@ -187,7 +217,7 @@ class Investor_model extends CI_Model {
 
         $rrStructureCnt = 0;
 
-        $worksheet = $this->WorkSheet_model->getRROrders($betweek);
+        $worksheet = $this->WorkSheet_model->getRROrders($betweek, $investorId);
         
         if($worksheet['rr2'])
             $rrStructureCnt ++;
@@ -296,7 +326,7 @@ class Investor_model extends CI_Model {
 
         $rrStructureCnt = 0;
 
-        $worksheet = $this->WorkSheet_model->getRROrders($betweek);
+        $worksheet = $this->WorkSheet_model->getRROrders($betweek,$investorId);
         if($worksheet['rr2'])
             $rrStructureCnt ++;
         if($worksheet['rr3'])
@@ -403,19 +433,23 @@ class Investor_model extends CI_Model {
 
     public function updateItem($id, $data)
     {
-        $updateDate = [];
+        $updateData = [];
         foreach ($this->dbColumns as $dbColumn) {
-            if(isset($data[$dbColumn]))
-                $updateDate[$dbColumn] = $data[$dbColumn];
+            $value = '';
+            if($dbColumn == 'starting_bankroll'){
+                $value = '';
+            }else{
+                if(isset($data[$dbColumn]))
+                    $value = $data[$dbColumn];
+            }
+            $updateData[$dbColumn] = $value;
         }
-        $this->db->where(array(
-            'id' => $id
-        ))->update($this->tableName,$updateDate);
 
         $addSportbookDate = array();
         $sportbook_data = json_decode($data['sportbook_data']);
 
         $validIds = [];
+        $starting_bankroll = 0;
         foreach ($sportbook_data as $sportbook_item) {
             $rowData = $this->formatRelationItem($id, $sportbook_item);
             if($sportbook_item->relation_id == -1)
@@ -428,7 +462,13 @@ class Investor_model extends CI_Model {
                     'id' => $sportbook_item->relation_id
                 ))->update($this->relationTableName,$updateSportbookData);
             }
+            $starting_bankroll += $sportbook_item->opening_balance;
         }
+        $updateData['starting_bankroll'] = $starting_bankroll;
+        $this->db->where(array(
+            'id' => $id
+        ))->update($this->tableName,$updateData);
+
         if(count($validIds))
         {
             $this->db->where('investor_id',$id)

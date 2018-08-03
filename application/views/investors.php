@@ -26,9 +26,11 @@
                 <th>Full Name</th>
                 <th>Email</th>
                 <th>Phone Number</th>
-                <th>Starting BankRoll</th>
-                <th>Current Balance</th>
-                <th>Country</th>
+                <th width="150px"># Sportbook Accounts</th>
+                <th width="150px">Opening Balance</th>
+                <th width="150px">Current Balance</th>
+                <th>Group</th>
+                <th>IP Address</th>
                 <th></th>
             </tr>
         </thead>

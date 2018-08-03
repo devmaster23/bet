@@ -84,7 +84,8 @@
 
             <div class="form-group col-md-6 col-sm-12">
                 <label for="starting_bankroll">Starting BankRoll</label>
-                <input required type="text" name="starting_bankroll" class="form-control" id="starting_bankroll" placeholder="Enter Starting BankRoll" value="<?=$investor['starting_bankroll']?>">
+                <span class="info" id="starting_bankroll">$ <?=$investor['starting_bankroll']?></span>
+                <small id="openingBalanceHelp" class="form-text text-muted">Sum of all sportsbooks Opening balance.</small>
             </div>
 
             <div class="form-group col-md-6 col-sm-12">

@@ -22,7 +22,7 @@ function format ( d ) {
 
 var custom_headers = [
     [
-    'id','sportbook_id','Title', 'SiteURL', 'Date Opened', 'Opening Balance ($)', 'Login Name', 'Password',
+    'id','sportbook_id','Title', 'SiteURL', 'Date Opened', 'Opening <br/>Balance ($)', 'Login Name', 'Password',
     ]
 ];
 
@@ -70,7 +70,7 @@ var sportbookAddSettings = {
     ],
     minSpareRows: 0,
     columnSorting: true,
-    colWidths: [0,0,150, 150, 150, 200, 200, 90, 50],
+    colWidths: [0,0,250, 250, 200, 100, 200, 200, 100],
     rowHeights: rowHeight,
     height: tableHeight,
     className: "htCenter htMiddle",
@@ -97,15 +97,15 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
   Handsontable.renderers.TextRenderer.apply(this, args);
   if (prop == 'login_name' || prop == 'password')
   {
+    td.style.textAlign = "left";
+  }
+  if (prop == 'action')
+  {
     td.style.textAlign = "center";
   }
-  if (prop == 'opening_balance' || prop == 'current_balance')
+  if (prop == 'opening_balance' || prop == 'current_balance' || prop == 'date_opened')
   {
-    if(value != null)
-    {
-        td.style.textAlign = "right";
-        td.innerHTML = value + " $";
-    }
+    td.style.textAlign = "right";
   }
   if (prop == 'action')
   {
@@ -168,9 +168,11 @@ $(document).ready(function() {
             { "data": "full_name" },
             { "data": "email" },
             { "data": "phone_number" },
+            { "data": "number_sportbooks"},
             { "data": "starting_bankroll" },
             { "data": "current_balance" },
-            { "data": "country" },
+            { "data": "group_label" },
+            { "data": "ip" },
             { "data": "custom_action" }
         ],
         "columnDefs": [
@@ -178,14 +180,10 @@ $(document).ready(function() {
                 "render": function ( data, type, row ) {
                     return '$ '+ data;
                 },
-                "targets": 5
+                "targets": [5,6]
             },
-            {
-                "render": function ( data, type, row ) {
-                    return '$ '+ data;
-                },
-                "targets": 6
-            }
+            {"className": "dt-center", "targets": [4,7]},
+            {"className": "dt-right", "targets": [5,6]}
         ],
         "order": [[0, 'asc']]
     } );

@@ -47,7 +47,6 @@ class Investors extends CI_Controller {
         {
             $id = $_POST['id'];
             $this->model->updateItem($id, $_POST);
-            redirect('investors', 'refresh');
         }
         $id = isset($_REQUEST['id'])? $_REQUEST['id'] : null;
         if(is_null($id))

@@ -20,6 +20,7 @@
                 <th></th>
                 <th>Full Name</th>
                 <th># Bets</th>
+                <th>Bet Placed</th>
                 <th># Accounts</th>
                 <th></th>
             </tr>

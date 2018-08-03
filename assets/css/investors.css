@@ -4,6 +4,9 @@
     -webkit-appearance: textfield;
 }
 
+.investor-page #investors_tbl th{
+    text-align: center;
+}
 .investor-page #investors_tbl .action-div a{
     color: #187bd6;
     cursor: pointer;

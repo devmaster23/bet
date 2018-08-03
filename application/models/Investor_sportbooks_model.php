@@ -27,6 +27,24 @@ class Investor_sportbooks_model extends CI_Model {
         return $result;
     }   
 
+    public function setCurrentBalance($investorId, $sportbookId, $betweek, $balance)
+    {
+        $date = new DateTime();
+        $date_updated = $date->format('Y-m-d');
+
+        $newData = array(
+            'current_balance_'.$betweek => $balance,
+            'updated_at' => $date_updated
+        );
+
+        $this->db->where(array(
+            'investor_id' => $investorId,
+            'sportbook_id' => $sportbookId,
+        ))->update($this->tableName, $newData);
+        
+        return true;
+    }
+
     public function addBalance($investorId, $sportbookId, $betweek, $betAmount)
     {
 
@@ -51,7 +69,7 @@ class Investor_sportbooks_model extends CI_Model {
         $newBalance =  $current_balance + $betAmount;
         $newData = array(
             'current_balance_'.$betweek => $newBalance,
-            'date_opened' => $date_opened
+            'updated_at' => $date_opened
         );
 
         $this->db->where(array(
@@ -86,7 +104,7 @@ class Investor_sportbooks_model extends CI_Model {
         
         $newData = array(
             'current_balance_'.$betweek => $newBalance,
-            'date_opened' => $date_opened
+            'updated_at' => $date_opened
         );
 
         $this->db->where(array(

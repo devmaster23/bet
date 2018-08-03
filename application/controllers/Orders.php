@@ -19,10 +19,12 @@ class Orders extends CI_Controller {
 
         $this->load->model('Order_model', 'model');
         $this->load->model('Investor_model', 'investor_model');
+        $this->load->model('Investor_sportbooks_model', 'investor_sportbooks_model');
         $this->load->model('Sportbook_model', 'sportbook_model');
         $this->load->model('Picks_model', 'pick_model');
         $this->load->model('Settings_model', 'setting_model');
         $this->load->model('WorkSheet_model', 'worksheet_model');
+        $this->load->model('OrderLog_model', 'orderlog_model');
         $this->load->library('session');
     }
     public function index()
@@ -77,7 +79,7 @@ class Orders extends CI_Controller {
 
         $this->setting_model->setActiveSetting($betweek,$investorId);
 
-        $worksheet = $this->worksheet_model->getRROrders($data['betweek']);
+        $worksheet = $this->worksheet_model->getRROrders($data['betweek'],$investorId);
         $bets = array();
 
         if(isset($worksheet['data']['rr']))
@@ -165,10 +167,12 @@ class Orders extends CI_Controller {
         $sportbookIndex = isset($_REQUEST['sportbook_id'])? $_REQUEST['sportbook_id'] : 1;
         $date = new DateTime(date('Y-m-d'));
         $betweek = $date->format('W');
-        if(isset($_POST['game-week-select'])){
-            $betweek = $_POST['game-week-select'];
-        }else{
-            $betweek = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
+        $betweek = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
+        if(isset($_POST['save_balance'])){
+            $current_balance = $_POST['balance'];
+            $investorSportbookId = $_POST['sportbookID'];
+            $this->investor_sportbooks_model->setCurrentBalance($investorId, $investorSportbookId, $betweek, $current_balance);
+            $this->orderlog_model->addLog($betweek, $investorId, $investorSportbookId, 'balance', $current_balance);
         }
         $data['betweek'] = $betweek;
         $setting = $this->setting_model->getActiveSetting($data['betweek']);
@@ -185,10 +189,10 @@ class Orders extends CI_Controller {
         $data['ip_source'] = $ip_source;
         $data['investor'] = $investor;
         $sportbookList = $investor['sportbooks'];
+
         $total_bet = 0;
         foreach ($sportbookList as &$item) {
-            $item['current_balance_bet'] = $item['current_balance'] * $setting['pick_allocation'] / 100;
-            $total_bet += $item['current_balance_bet'];
+            $total_bet += $item['current_balance'];
         }
         $data['sportbookList'] = $sportbookList;
         $data['total_bet'] = $total_bet;

@@ -19,6 +19,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <link href='<?php echo base_url('assets/css/investors.css') ?>' rel='stylesheet' />
     <link href='<?php echo base_url('assets/css/orders.css') ?>' rel='stylesheet' />
     <link href='<?php echo base_url('assets/css/users.css') ?>' rel='stylesheet' />
+    <link href='<?php echo base_url('assets/css/logs.css') ?>' rel='stylesheet' />
     <link href='<?php echo base_url('assets/css/theme.css') ?>' rel='stylesheet' />
     <link href='<?php echo base_url('assets/css/common.css') ?>' rel='stylesheet' />
     <link href='<?php echo base_url('assets/vendor/font-awesome/css/font-awesome.min.css') ?>' rel='stylesheet' />
@@ -418,6 +419,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <div class="os-icon os-icon-files"></div>
                             </div>
                             <span>Orders</span></a>
+                    </li>
+                    <?php } ?>
+                    <?php if(in_array($userInfo['user_type'], [0])) { ?>
+                    <li class="<?php echo ($page == 'logs')?'selected':'';?>">
+                        <a href="<?php echo site_url('logs'); ?>">
+                            <div class="icon-w">
+                                <div class="os-icon os-icon-files"></div>
+                            </div>
+                            <span>Logs</span></a>
                     </li>
                     <?php } ?>
                     <?php if(in_array($userInfo['user_type'], [0])) { ?>

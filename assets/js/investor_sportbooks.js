@@ -3,7 +3,7 @@ var currentTableYear = undefined;
 var pageType='week';
 var custom_headers = [
     [
-    '','Date <br/>Opened', 'Last <br/>Updated', 'Opening <br/>Balance', 'Last Week <br/>Balance', 'Current <br/>Balance', 'Chagne <br/>Since Start (%)','Chagne Since <br/>Last Start (%)'
+    '','Date <br/>Opened', 'Last <br/>Updated', 'Opening <br/>Balance',  'Current <br/>Balance', 'Change <br/>Since Start (%)'
     ]
 ];
 
@@ -39,24 +39,15 @@ var sportbooksSettings = {
             readOnly: true
         },
         {
-            data: 'lastweek_balance',
-            type: 'numeric',
-            readOnly: true
-        },
-        {
             data: 'current_balance',
             type: 'numeric',
+            readOnly: true,
         },
         {
             data: 'current_change',
             type: 'numeric',
             readOnly: true
         },
-        {
-            data: 'lastweek_change',
-            type: 'numeric',
-            readOnly: true
-        }
     ],
     minSpareRows: 0,
     columnSorting: true,
@@ -138,14 +129,16 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
   td.style.textAlign = "left";
   td.style.fontSize = fontSize;
   Handsontable.renderers.TextRenderer.apply(this, args);
-  if (prop == 'opening_balance' || prop == 'lastweek_balance' || prop == 'current_balance')
+  if (prop == 'opening_balance' || prop == 'current_balance')
   {
     td.style.textAlign = "right";
-    if(value != null)
-      td.innerHTML = value + " $";
+  }
+  if (prop == 'date_opened' || prop == 'updated_at'){
+    td.style.textAlign = "center";
   }
   if (prop == 'current_change')
   { 
+    td.style.textAlign = "right";
     var current_balance = eval(instance.getDataAtRowProp(row,'current_balance')),
         opening_balance = eval(instance.getDataAtRowProp(row,'opening_balance'));
     var percent = opening_balance == 0 ? '0' : (current_balance - opening_balance ) / opening_balance * 100;
@@ -171,6 +164,13 @@ function defaultValueRendererYear(instance, td, row, col, prop, value, cellPrope
   
   Handsontable.renderers.TextRenderer.apply(this, args);
   td.style.textAlign = "right";
+  if (prop == 'title'){
+    td.style.textAlign = "left";
+  }
+  if (prop == 'date_opened')
+  {
+    td.style.textAlign = "center";
+  }
   return td;
 }
 function defaultValueRendererRule(instance, td, row, col, prop, value, cellProperties) {
@@ -325,16 +325,18 @@ function createSheets(data) {
     var container1 = $('div#user_sportbook_year_table')[0];
     var dataYear = data.slice()
     sportbooksSettingsYear.data = dataYear;
-    for(var i=1; i<=53; i++)
-    {
-      custom_headers_year[0].push('Week ' + i);
-      sportbooksSettingsYear.columns.push({
-        data: 'current_balance_'+i,
-        type: 'numeric',
-        readOnly: true
-      })
-      sportbooksSettingsYear.colWidths.push(80);
-      sportbooksSettingsYear.nestedHeaders = custom_headers_year;
+    if(currentTableYear == undefined){
+      for(var i=1; i<=53; i++)
+      {
+        custom_headers_year[0].push('Week ' + i);
+        sportbooksSettingsYear.columns.push({
+          data: 'current_balance_'+i,
+          type: 'numeric',
+          readOnly: true
+        })
+        sportbooksSettingsYear.colWidths.push(80);
+        sportbooksSettingsYear.nestedHeaders = custom_headers_year;
+      }
     }
     currentTableYear = new Handsontable(container1, sportbooksSettingsYear);
 }

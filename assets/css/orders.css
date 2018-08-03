@@ -99,6 +99,23 @@
     font-size: 22px;
     font-weight: bold;
 }
+
+.order-page .enter_order-page .bet-div .bet-info .total-div{
+  float: right;
+}
+.order-page .enter_order-page .bet-div .bet-info .total-div label{
+    width: 200px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.order-page .enter_order-page .bet-div .bet-info .total-div span{
+  display: inline-block;
+  width: 100px;
+  text-align: right;
+}
+
+
 .order-page .enter_order-page .bet-div .title{
     margin-left: 30px;
     font-weight: bold;
@@ -150,6 +167,13 @@
     overflow-y: scroll;
     margin-top: 20px;
 }
+
+.order-page .enter_order-page .sportbookList .sportbookList_inner-wrapper .gray{
+    background-color: #bfbfbf;
+    color: #000;
+    font-weight: bold;
+}
+
 .order-page .enter_order-page .sportbookList thead th{
     padding:5px;
     font-size: 14px;
@@ -206,4 +230,15 @@
 .order-page .enter_order-page .action-div .btn.reassign{
     background-color: #ffc252;
     border-color: #ffc252;
+}
+
+.order-page .sportbook-balance .input-balance{
+    width: 100%;
+    height: 80px;
+    padding: 20px;
+    border: 2px solid #333;
+    border-radius: 10px;
+    outline: none;
+    text-align: center;
+    font-size: 38px;
 }

@@ -188,10 +188,10 @@ class Picks_model extends CI_Model {
         return $result;
     }
 
-    public function getAll($betday)
+    public function getAll($betday, $type = null, $groupuser_id = null)
     {
-        $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
-        $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+        $type = !is_null($type)? $type : (isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0);
+        $groupuser_id = !is_null($groupuser_id)? $groupuser_id : (isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0);
 
         $this->db->select('*')->from('games');
         $this->db->where(array(

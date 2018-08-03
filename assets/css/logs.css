@@ -1,0 +1,54 @@
+.log-page [type=search]{
+    outline: 0 none;
+    outline-offset: 0px;
+    -webkit-appearance: textfield;
+}
+.log-page .logs_tbl-wrapper{
+  margin-top: 50px;
+}
+.log-page #logs_tbl{
+  text-align: center;
+}
+
+.log-page .bet-info{
+  width: 450px;
+}
+
+.log-page .bet-info .setting-span:first-of-type{
+    padding-right: 15px;
+}
+.log-page .bet-info .setting-span.number{
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.log-page .bet-info .description-div{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+.log-page .bet-info .description-div .description-div_type{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.log-page .bet-info .description-div .description-div_type img{
+    margin-right: 7px;
+}
+
+.log-page .bet-info .total-div{
+  float: right;
+}
+.log-page .bet-info .total-div label{
+    width: 150px;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: left;
+}
+
+.log-page .bet-info .total-div span{
+  display: inline-block;
+  width: 100px;
+  text-align: right;
+}

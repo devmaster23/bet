@@ -28,6 +28,20 @@ class Sportbook_model extends CI_Model {
         'rr_min_bet',
         'rr_max_bet'
     );
+
+    public function getKeyValueList()
+    {
+        $result = [];
+        $this->db->select('*')
+            ->from($this->tableName)
+            ->order_by('id','asc');
+        $rows = $this->db->get()->result_array();
+        foreach ($rows as $item) {
+            $result[$item['id']] = $item;
+        }
+        return $result;
+    }
+
     public function getList(){
         $result = [];
         $rows = $this->db->select('*')

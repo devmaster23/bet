@@ -19,7 +19,20 @@ class Users_model extends CI_Model {
         return $result;
     }
 
-    public function getList($value='')
+    public function getKeyValueList()
+    {
+        $result = [];
+        $this->db->select('*')
+            ->from($this->tableName)
+            ->order_by('id','asc');
+        $rows = $this->db->get()->result_array();
+        foreach ($rows as $item) {
+            $result[$item['id']] = $item;
+        }
+        return $result;
+    }
+
+    public function getList()
     {
         $result = [];
         $this->db->select('*')

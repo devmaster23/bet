@@ -28,7 +28,13 @@ $(document).ready(function() {
                 "defaultContent": ""
             },
             { "data": "full_name" },
-            { "data": "bets" },
+            { "data": "total_bets" },
+            { 
+                "data": "bets" ,
+                "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                    $(nTd).html("<a href='#'>"+oData.bets+"</a>");
+                }
+            },
             { "data": "accounts" },
             { "data": "custom_action" }
         ],

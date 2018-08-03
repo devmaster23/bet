@@ -122,14 +122,15 @@
                             </tbody>
                         </table>
 
-                        <div class="float-right">
+                        <div class="total-div">
                             <label style="text-transform: uppercase;">Bet Amount:</label>
                             <span>$ <?=$bet['amount']?></span>
                         </div>
-                        <div class="float-right">
+                        <div class="total-div">
                             <label style="text-transform: uppercase;">Total:</label>
                             <span>$ <?=$bet['total_amount']?></span>
                         </div>
+                        <div class="clearfix"></div>
                         <?php } ?>
                     </div>
                 </div>
