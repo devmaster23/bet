@@ -13,7 +13,7 @@ class OrderLog_model extends CI_Model {
         $this->CI->load->model('WorkSheet_model');
     }
 
-    public function addLog($betweek, $investorId, $investorSportbookId, $action , $current_balance, $bet_item)
+    public function addLog($betweek, $investorId, $investorSportbookId, $action , $current_balance, $bet_item = null)
     {
         $userInfo = $this->authlibrary->userInfo();
         $user_id = $userInfo['id'];
