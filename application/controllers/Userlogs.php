@@ -3,11 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 use Screen\Capture;
 
-class Logs extends CI_Controller {
+class Userlogs extends CI_Controller {
 
     public function __construct() {
       parent::__construct();
-      $this->load->library('authlibrary');    
+      $this->load->library('authlibrary');
       if (!$this->authlibrary->loggedin()) {
           redirect('login');
       }
@@ -30,6 +30,7 @@ class Logs extends CI_Controller {
     {
       if(isset($_POST['betweek'])){
         $betweek = $_POST['betweek'];
+        $_SESSION['betday'] = $betweek; 
       }else{
         $date = new DateTime(date('Y-m-d'));
         $betweek = $date->format('W');

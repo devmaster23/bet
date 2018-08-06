@@ -422,8 +422,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </li>
                     <?php } ?>
                     <?php if(in_array($userInfo['user_type'], [0])) { ?>
-                    <li class="<?php echo ($page == 'logs')?'selected':'';?>">
-                        <a href="<?php echo site_url('logs'); ?>">
+                    <li class="<?php echo ($page == 'userlogs')?'selected':'';?>">
+                        <a href="<?php echo site_url('userlogs'); ?>">
                             <div class="icon-w">
                                 <div class="os-icon os-icon-files"></div>
                             </div>

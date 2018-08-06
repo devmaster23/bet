@@ -6,7 +6,7 @@
     $this->load->view('header', array('page' => $page)) ?>
 <script>
     var page_type = 'index';
-    var api_url = "<?php echo site_url('logs'); ?>";
+    var api_url = "<?php echo site_url('userlogs'); ?>";
 </script>
 <div class="container page-title">
     <h1 class="text-center"></h1>
@@ -35,7 +35,7 @@
                     <th>Investor</th>
                     <th>Sportsbook</th>
                     <th>Action</th>
-                    <th>Amount</th>
+                    <th>Amount ($)</th>
                 </tr>
             </thead>
         </table>

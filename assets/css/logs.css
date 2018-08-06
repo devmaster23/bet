@@ -52,3 +52,8 @@
   width: 100px;
   text-align: right;
 }
+
+.log-page .bet-info table td.bold{
+    font-weight: bold;
+    font-size: 15px;
+}

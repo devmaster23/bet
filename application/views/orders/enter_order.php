@@ -80,7 +80,7 @@
                                 <span class="setting-span"><?=$title?></span>
                             </div>
                             <div>
-                                <?php if($betType == 'rr') { ?>
+                                <?php if($betType == 'rr' || $betType == 'parlay') { ?>
                                 <span class="setting-span number red"><?=$setting['rr_number1']?></span>
                                 <span class="setting-span number"><?=$setting['rr_number2']?></span>
                                 <span class="setting-span number"><?=$setting['rr_number3']?></span>

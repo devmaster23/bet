@@ -469,3 +469,5 @@ $config['time_reference'] = 'America/Los_Angeles';
 | Array:		array('10.0.1.200', '192.168.5.0/24')
 */
 $config['proxy_ips'] = '';
+
+date_default_timezone_set('America/Los_Angeles');

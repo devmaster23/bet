@@ -165,7 +165,7 @@ class Order_model extends CI_Model {
             $this->db->insert($this->tableName, $newData);
         }
 
-        $this->OrderLog_model->addLog($betweek, $investorId, $sportbookID, $submit_type, $submit_type, $betId);
+        $this->OrderLog_model->addLog($betweek, $investorId, $sportbookID, $submit_type, $submit_type, $bet);
         return true;
     }
 
@@ -281,6 +281,26 @@ class Order_model extends CI_Model {
             $result = $rows;
         }
         return $result;
+    }
+
+    public function getBetArr($worksheet)
+    {
+        $bets = [];
+        if(isset($worksheet['data']['rr']))
+        {
+            $bets = array_merge($bets, $worksheet['data']['rr']);
+        }
+
+        if(isset($worksheet['data']['parlay']))
+        {
+            $bets = array_merge($bets, $worksheet['data']['parlay']);
+        }
+
+        if(isset($worksheet['data']['single']))
+        {
+            $bets = array_merge($bets, $worksheet['data']['single']);
+        }
+        return $bets;
     }
 
     public function q($sql) {

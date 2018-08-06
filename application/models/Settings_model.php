@@ -276,8 +276,20 @@ class Settings_model extends CI_Model {
             ));
         $rows = $query->get()->result_array();
         if(count($rows))
-            $result = $rows[0];
+            $result = $this->formatSetting($rows[0]);
         return $result;   
+    }
+
+    public function formatSetting($item){
+        if(!$item['rr_number1'])
+            $item['rr_number1'] = '';
+        if(!$item['rr_number2'])
+            $item['rr_number2'] = '';
+        if(!$item['rr_number3'])
+            $item['rr_number3'] = '';
+        if(!$item['rr_number4'])
+            $item['rr_number4'] = '';
+        return $item;
     }
 
     public function getActiveSettingByInvestor($betweek, $investor_id)

@@ -80,22 +80,19 @@ class Orders extends CI_Controller {
         $this->setting_model->setActiveSetting($betweek,$investorId);
 
         $worksheet = $this->worksheet_model->getRROrders($data['betweek'],$investorId);
-        $bets = array();
+        $bets = $this->model->getBetArr($worksheet);
 
-        if(isset($worksheet['data']['rr']))
+        if(isset($_REQUEST['bet_key']))
         {
-            $bets = array_merge($bets, $worksheet['data']['rr']);
+            $bet_key = $_REQUEST['bet_key'];
+            $tmpBetItem = arra_filter($bets,function($item) use($bet_key){
+                return $item['title'] = $bet_key;
+            }); 
+            var_dump($tmpBetItem);die;
+            $betIndex = isset($_REQUEST['bet_id'])? $_REQUEST['bet_id'] : 1;
         }
 
-        if(isset($worksheet['data']['parlay']))
-        {
-            $bets = array_merge($bets, $worksheet['data']['parlay']);
-        }
 
-        if(isset($worksheet['data']['single']))
-        {
-            $bets = array_merge($bets, $worksheet['data']['single']);
-        }
         if(isset($_POST['sportbookID']))
         {
             $sportbookID = $_POST['sportbookID'];
