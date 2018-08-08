@@ -166,6 +166,7 @@ class Orders extends CI_Controller {
         $ip_source = $this->get_client_ip();
         $investorId = isset($_REQUEST['id'])? $_REQUEST['id'] : null;
         $sportbookIndex = isset($_REQUEST['sportbook_id'])? $_REQUEST['sportbook_id'] : 1;
+
         $date = new DateTime(date('Y-m-d'));
         $betweek = $date->format('W');
         $betweek = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
@@ -190,6 +191,20 @@ class Orders extends CI_Controller {
         $data['ip_source'] = $ip_source;
         $data['investor'] = $investor;
         $sportbookList = $investor['sportbooks'];
+
+        if(isset($_REQUEST['sportbook_key']))
+        {
+            $sportbook_key = $_REQUEST['sportbook_key'];
+            $tmpBetItem = array_filter($sportbookList,function($item) use($sportbook_key){
+                return $item['id'] == $sportbook_key;
+            }); 
+            $key_arr = array_keys($tmpBetItem);
+            if(count($key_arr)){
+                $sportbookIndex = $key_arr[0]+1;
+            }else{
+                $sportbookIndex = 1;
+            }
+        }
 
         $total_bet = 0;
         foreach ($sportbookList as &$item) {

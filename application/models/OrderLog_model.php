@@ -124,7 +124,7 @@ class OrderLog_model extends CI_Model {
                 }
                 $order_url = site_url('orders').'/enter_order?id='.$investor_id.'&betday='.$betweek.'&bet_key='.$item['bet_id'];
             }else{
-                $order_url = site_url('orders').'/balance?id='.$investor_id.'&sportbook_id='.$item['sportbook_id'];
+                $order_url = site_url('orders').'/balance?id='.$investor_id.'&sportbook_key='.$item['sportbook_id'];
             }
             $tmpArr['logo'] = $filename;
             $tmpArr['order_url'] = $order_url;
