@@ -114,7 +114,7 @@ function loadData(){
             { 
                 "data": "id" ,
                 "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                    $(nTd).html("<a href='#'>"+oData.id+"</a>");
+                    $(nTd).html("<a href='"+oData.order_url+"' target='_blank'>"+oData.id+"</a>");
                 }
             },
             { "data": "date" },
@@ -133,16 +133,16 @@ function loadData(){
         var tr = $(this).closest('tr');
         var row = mainTable.row( tr );
  
-        // if ( row.child.isShown() ) {
-        //     // This row is already open - close it
-        //     row.child.hide();
-        //     tr.removeClass('shown');
-        // }
-        // else {
-        //     // Open this row
-        //     row.child( format(row.data()) ).show();
-        //     tr.addClass('shown');
-        // }
+        if ( row.child.isShown() ) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            // Open this row
+            row.child( format(row.data()) ).show();
+            tr.addClass('shown');
+        }
     } );
 }
 

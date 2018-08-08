@@ -69,8 +69,8 @@ class Orders extends CI_Controller {
         $betIndex = isset($_REQUEST['bet_id'])? $_REQUEST['bet_id'] : 1;
         $date = new DateTime(date('Y-m-d'));
         $betweek = $date->format('W');
-        if(isset($_POST['game-week-select'])){
-            $betweek = $_POST['game-week-select'];
+        if(isset($_REQUEST['betday'])){
+            $betweek = $_REQUEST['betday'];
             $_SESSION['betday'] = $betweek;
         }else{
             $betweek = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
@@ -85,11 +85,15 @@ class Orders extends CI_Controller {
         if(isset($_REQUEST['bet_key']))
         {
             $bet_key = $_REQUEST['bet_key'];
-            $tmpBetItem = arra_filter($bets,function($item) use($bet_key){
-                return $item['title'] = $bet_key;
+            $tmpBetItem = array_filter($bets,function($item) use($bet_key){
+                return $item['title'] == $bet_key;
             }); 
-            var_dump($tmpBetItem);die;
-            $betIndex = isset($_REQUEST['bet_id'])? $_REQUEST['bet_id'] : 1;
+            $key_arr = array_keys($tmpBetItem);
+            if(count($key_arr)){
+                $betIndex = $key_arr[0]+1;
+            }else{
+                $betIndex = 1;
+            }
         }
 
 

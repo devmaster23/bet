@@ -97,35 +97,40 @@ class OrderLog_model extends CI_Model {
 
             $bet_data = json_decode($item['data']);
             $filename = 'icon_NFL.png';
-            if($bet_data->game_type)
-            {
-                switch ($bet_data->game_type) {
-                    case 'NCAA M':
-                        $filename = 'icon_NCAAM.png';
-                        break;
-                    case 'NBA':
-                        $filename = 'icon_NBA.png';
-                        break;
-                    case 'NFL':
-                        $filename = 'icon_NFL.png';
-                        break;
-                    case 'NCAA F':
-                        $filename = 'football_icon.png';
-                        break;
-                    case 'SOC':
-                        $filename = 'icon_soccer.png';
-                        break;
-                    case 'MLB':
-                    default:
-                        $filename = 'icon_MLB.png';
-                        break;
+            $order_url = '';
+            if($item['action'] != 'balance'){
+                if($bet_data->game_type){
+                    switch ($bet_data->game_type) {
+                        case 'NCAA M':
+                            $filename = 'icon_NCAAM.png';
+                            break;
+                        case 'NBA':
+                            $filename = 'icon_NBA.png';
+                            break;
+                        case 'NFL':
+                            $filename = 'icon_NFL.png';
+                            break;
+                        case 'NCAA F':
+                            $filename = 'football_icon.png';
+                            break;
+                        case 'SOC':
+                            $filename = 'icon_soccer.png';
+                            break;
+                        case 'MLB':
+                        default:
+                            $filename = 'icon_MLB.png';
+                            break;
+                    }
                 }
+                $order_url = site_url('orders').'/enter_order?id='.$investor_id.'&betday='.$betweek.'&bet_key='.$item['bet_id'];
+            }else{
+                $order_url = site_url('orders').'/balance?id='.$investor_id.'&sportbook_id='.$item['sportbook_id'];
             }
             $tmpArr['logo'] = $filename;
+            $tmpArr['order_url'] = $order_url;
 
             if($item['action'] != 'balance')
                $tmpArr['amount'] = '';
-            $tmpArr['custom_action'] = "<div class='action-div' data-id='".$item['id']."'><a class='edit' href='/".$this->pageURL."/edit?id=".$item['id']."'>Edit</i></a><a class='delete'>Delete</a></div>";
             $result[] = $tmpArr;
         }
 
