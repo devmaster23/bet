@@ -30,7 +30,7 @@ class Investor_sportbooks_model extends CI_Model {
     public function setCurrentBalance($investorId, $sportbookId, $betweek, $balance)
     {
         $date = new DateTime();
-        $date_updated = $date->format('Y-m-d');
+        $date_updated = $date->format('Y-m-d H:i:s');
 
         $newData = array(
             'current_balance_'.$betweek => $balance,

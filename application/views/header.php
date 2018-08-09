@@ -253,7 +253,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <span>Layouts</span>
                     </li>
 
-                    <?php if(in_array($userInfo['user_type'], [0,2])) { ?>
+                    <?php if(in_array($userInfo['user_type'], [0,1])) { ?>
                     <li class="has-sub-menu <?php echo ($page == 'games')?'selected':'';?>">
                         <a href="<?php echo site_url('games'); ?>">
                             <div class="icon-w">
@@ -293,7 +293,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </li>
                     <?php } ?>
 
-                    <?php if(in_array($userInfo['user_type'], [0])) { ?>
+                    <?php if(in_array($userInfo['user_type'], [0,1])) { ?>
                     <li class=" has-sub-menu <?php echo ($page == 'picks')?'selected':'';?>">
                         <a href="<?php echo site_url('picks'); ?>">
                             <div class="icon-w">
@@ -412,20 +412,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </li>
                     <?php } ?>
 
-                    <?php if(in_array($userInfo['user_type'], [0,1])) { ?>
+                    <?php if(in_array($userInfo['user_type'], [0,1,2])) { ?>
                     <li class="<?php echo ($page == 'orders')?'selected':'';?>">
                         <a href="<?php echo site_url('orders'); ?>">
                             <div class="icon-w">
-                                <div class="os-icon os-icon-files"></div>
+                                <div class="os-icon os-icon-list"></div>
                             </div>
                             <span>Orders</span></a>
                     </li>
                     <?php } ?>
-                    <?php if(in_array($userInfo['user_type'], [0])) { ?>
+                    <?php if(in_array($userInfo['user_type'], [0,1])) { ?>
                     <li class="<?php echo ($page == 'userlogs')?'selected':'';?>">
                         <a href="<?php echo site_url('userlogs'); ?>">
                             <div class="icon-w">
-                                <div class="os-icon os-icon-files"></div>
+                                <div class="os-icon os-icon-book-open"></div>
                             </div>
                             <span>Logs</span></a>
                     </li>

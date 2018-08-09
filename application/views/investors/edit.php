@@ -83,7 +83,7 @@
             </div>
 
             <div class="form-group col-md-6 col-sm-12">
-                <label for="starting_bankroll">Starting BankRoll</label>
+                <label for="starting_bankroll">Opening Balance</label>
                 <span class="info" id="starting_bankroll">$ <?=$investor['starting_bankroll']?></span>
                 <small id="openingBalanceHelp" class="form-text text-muted">Sum of all sportsbooks Opening balance.</small>
             </div>

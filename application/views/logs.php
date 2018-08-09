@@ -28,7 +28,7 @@
             <thead>
                 <tr>
                     <th></th>
-                    <th>Order #</th>
+                    <th>Action #</th>
                     <th>Date</th>
                     <th>Time</th>
                     <th>Order Entry Person</th>

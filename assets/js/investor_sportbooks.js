@@ -3,7 +3,7 @@ var currentTableYear = undefined;
 var pageType='week';
 var custom_headers = [
     [
-    '','Date <br/>Opened', 'Last <br/>Updated', 'Opening <br/>Balance',  'Current <br/>Balance', 'Change <br/>Since Start (%)'
+    '','Date <br/>Opened', 'Last <br/>Updated', 'Opening <br/>Balance',  'Current <br/>Balance', 'Change %'
     ]
 ];
 
@@ -51,7 +51,7 @@ var sportbooksSettings = {
     ],
     minSpareRows: 0,
     columnSorting: true,
-    colWidths: [200,150,150, 150, 150, 200, 200, 200, 90],
+    colWidths: [200, 150, 350, 150, 150, 200, 200, 200, 90],
     rowHeights: rowHeight,
     height: 300,
     className: "htCenter htMiddle",

@@ -182,8 +182,8 @@ $(document).ready(function() {
                 },
                 "targets": [5,6]
             },
-            {"className": "dt-center", "targets": [4,7]},
-            {"className": "dt-right", "targets": [5,6]}
+            // {"className": "dt-center", "targets": [4,7]},
+            // {"className": "dt-center", "targets": [5,6]}
         ],
         "order": [[0, 'asc']]
     } );

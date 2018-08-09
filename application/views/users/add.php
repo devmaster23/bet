@@ -32,10 +32,11 @@
                 <input required type="email" name="email" class="form-control" id="email" placeholder="">
             </div>
             <div class="form-group col-md-12 col-sm-12">
+                <label for="user_type">Select User Type</label>
                 <select class="form-control" name="user_type" required="">
                     <option value="">Select User Type</option>
-                    <option value="1">Order Entry</option>
-                    <option value="2">Game Entry</option>
+                    <option value="1">Admin</option>
+                    <option value="2">Order Entry</option>
                 </select>
             </div>
 

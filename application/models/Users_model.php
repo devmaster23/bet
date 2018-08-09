@@ -48,11 +48,11 @@ class Users_model extends CI_Model {
             $userType = 'Order Entry';
             switch ($item['user_type']) {
                 case '1':
-                    $userType = 'Order Entry';
+                    $userType = 'Admin';
                     break;
                 case '2':
                 default:
-                    $userType = 'Game Entry';
+                    $userType = 'Order Entry';
                     break;
             }
             $tmpArr['type'] = $userType;
@@ -109,14 +109,14 @@ class Users_model extends CI_Model {
             $userRole = 'Administrator';
             switch ($result['user_type']) {
                 case '0':
-                    $userRole = 'Administrator';
+                    $userRole = 'Supre Admin';
                     break;
                 case '1':
-                    $userRole = 'Order Entry';
+                    $userRole = 'Administrator';
                     break;
                 case '2':
                 default:
-                    $userRole = 'Game Entry';
+                    $userRole = 'Order Entry';
                     # code...
                     break;
             }

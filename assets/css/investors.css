@@ -4,7 +4,8 @@
     -webkit-appearance: textfield;
 }
 
-.investor-page #investors_tbl th{
+.investor-page #investors_tbl th,
+.investor-page #investors_tbl td{
     text-align: center;
 }
 .investor-page #investors_tbl .action-div a{

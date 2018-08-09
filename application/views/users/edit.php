@@ -33,7 +33,7 @@
                 <input required type="email" name="email" class="form-control" id="email" placeholder="" value="<?php echo $user['email']?>">
             </div>
             <div class="form-group col-md-12 col-sm-12">
-                <label for="usertype">UserType</label>
+                <label for="user_type">User Type</label>
                 <select class="form-control" name="user_type" required="">
                     <option value="">Select User Type</option>
                     <option value="1" <?php echo $user['user_type'] == 1 ? 'selected' : ''?> >Order Entry</option>
