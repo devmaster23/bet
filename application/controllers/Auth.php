@@ -31,7 +31,7 @@ class Auth extends CI_Controller {
             if($user)
             {
                 $this->authlibrary->login($user['id']);
-                if(in_array($user['user_type'], [0,2])){
+                if(in_array($user['user_type'], [0,1])){
                     return redirect('games', 'refresh');
                 }
                 else{

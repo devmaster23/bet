@@ -29,9 +29,6 @@ class Games extends CI_Controller {
     }
 
     $userInfo = $this->authlibrary->userInfo();
-    if(!in_array($userInfo['user_type'], [0,2])){
-      redirect('login');
-    }
 
     if (!$this->authlibrary->loggedin()) {
         redirect('login');

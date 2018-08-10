@@ -13,9 +13,6 @@ class Orders extends CI_Controller {
         }
         
         $userInfo = $this->authlibrary->userInfo();
-        if(!in_array($userInfo['user_type'], [0,1])){
-            redirect('login');
-        }
 
         $this->load->model('Order_model', 'model');
         $this->load->model('Investor_model', 'investor_model');
