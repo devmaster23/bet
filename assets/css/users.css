@@ -36,3 +36,7 @@
     text-align: right;
 }
 
+.user-page .hidden{
+    display: none;
+}
+

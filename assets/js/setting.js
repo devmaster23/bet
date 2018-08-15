@@ -215,7 +215,7 @@ function mergeFields(){
 
 function initData(data){
   cleanFomularColor();
-
+  updateLockIcon(data['is_lock']);
   var description = data['description'];
   $('#description').val(description);
 
@@ -377,8 +377,37 @@ function updateData(){
     });
 }
 
+function updateLockIcon(status){
+  if(status){
+   $("#lock-icon").addClass('locked');
+  }else{
+    $("#lock-icon").removeClass('locked');
+  }
+}
+
+function updateLockStatus(status){
+  $(".loading-div").show()
+  var betweek = $('.game-week-select').val()
+  $.ajax({
+      url: api_url+'/savelockstatus',
+      type: 'POST',
+      data: {
+        betweek: betweek,
+        locked: status ? '1' : '0'
+      },
+      success: function(data) {
+        $(".loading-div").hide()
+      }
+  });
+}
+
 $(document).ready(function(){
   categoryType = activeSetting['type'];
   categoryGroupUser = activeSetting['groupuser_id'];
   loadGroupUser();
+
+  $("#lock-icon").on('click', function(){
+    $(this).toggleClass('locked');
+    updateLockStatus($(this).hasClass('locked'));
+  })
 })

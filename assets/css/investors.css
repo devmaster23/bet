@@ -81,3 +81,18 @@
     font-weight: bold;
     padding:0px 20px;
 }
+
+.allocation-page [type=search]{
+    outline: 0 none;
+    outline-offset: 0px;
+    -webkit-appearance: textfield;
+}
+
+.allocation-page #allocations_wrapper{
+    margin-top: 20px;
+}
+
+.allocation-page #allocations th,
+.allocation-page #allocations td{
+    text-align: center;
+}

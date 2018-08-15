@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-use Screen\Capture;
-
 class Orders extends CI_Controller {
+    
+    private $userinfo;
 
     public function __construct() {
         parent::__construct();
@@ -12,7 +12,7 @@ class Orders extends CI_Controller {
             redirect('login');
         }
         
-        $userInfo = $this->authlibrary->userInfo();
+        $this->userInfo = $this->authlibrary->userInfo();
 
         $this->load->model('Order_model', 'model');
         $this->load->model('Investor_model', 'investor_model');
@@ -22,8 +22,32 @@ class Orders extends CI_Controller {
         $this->load->model('Settings_model', 'setting_model');
         $this->load->model('WorkSheet_model', 'worksheet_model');
         $this->load->model('OrderLog_model', 'orderlog_model');
+        $this->load->model('Users_model', 'users_model');
+        $this->load->model('SystemSettings_model', 'systemsettings_model');
         $this->load->library('session');
+
+        self::checkOrderOpen();
     }
+
+    private function checkOrderOpen()
+    {
+        $user_type = $this->userInfo['user_type'];
+        $isOpen = true;
+        if($user_type == $this->users_model->ORDER_ENTRY)
+        {
+            $betday = $this->systemsettings_model->getBetDay();
+            if($betday){
+                $_SESSION['betday'] = $betday;
+                $isOpen = true;
+            }else{
+                $isOpen = false;
+            }
+        }
+        if(!$isOpen){
+            redirect('no_orders');
+        }
+    }
+
     public function index()
     {
         $this->load->view('orders');

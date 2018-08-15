@@ -11,6 +11,7 @@ class Settings extends CI_Controller {
         }
         $this->load->model('Settings_model', 'model');
         $this->load->model('Picks_model', 'pick_model');
+        $this->load->model('SystemSettings_model', 'systemsettings_model');
         $this->load->library('session');
     }
 
@@ -25,6 +26,9 @@ class Settings extends CI_Controller {
         $data['fomularData'] = $this->model->getFomular();
 
         $data['activeSetting'] = $this->model->getActiveSetting($data['betweek']);
+
+        $openBetDay = $this->systemsettings_model->getBetDay();
+        $data['isLocked'] = ($openBetDay == $data['betweek'] ? 0 : 1);
 
         $this->load->view('settings', $data);
     }
@@ -57,6 +61,18 @@ class Settings extends CI_Controller {
         $data               = $_POST['data'];
 
         $data = $this->model->saveSettings($betweek, $categoryType, $categoryGroupUser,$data);
+        echo 'success';
+        die;
+    }
+
+    public function savelockstatus()
+    {
+        $betweek            = $_POST['betweek'];
+        $locked             = $_POST['locked'];
+        if($locked){
+            $betweek = 0;
+        }
+        $this->systemsettings_model->updateBetDay($betweek);
         echo 'success';
         die;
     }

@@ -12,6 +12,22 @@ $(document).ready(function() {
         "order": [[0, 'asc']]
     } );
      
+    $('#profile_img_button').on('click', function(){
+
+        $("input[name='profile_img']").click();
+    })
+
+    $("input[name='profile_img']").on('change',function(){
+        if (this.files && this.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                $('#profile_img_preview').show().attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
 
     $('#users tbody').on('click', '.delete', function () {
         var id = $(this).parents('.action-div').data('id');
@@ -44,7 +60,8 @@ $(document).ready(function() {
         confirm_password.setCustomValidity('');
       }
     }
-
-    password.onchange = validatePassword;
-    confirm_password.onkeyup = validatePassword;
+    if(password){
+        password.onchange = validatePassword;
+        confirm_password.onkeyup = validatePassword;
+    }
 } );

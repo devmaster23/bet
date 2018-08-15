@@ -40,6 +40,7 @@ class Settings_model extends CI_Model {
         $this->CI->load->model('WorkSheet_model');
         $this->CI->load->model('CustomBet_model');
         $this->CI->load->model('CustomBetAllocation_model');
+        $this->CI->load->model('SystemSettings_model');
 
         $this->numberOfTeams = array(
             'min' => 3,
@@ -653,10 +654,15 @@ class Settings_model extends CI_Model {
             $description = $data['description'];
         }
 
+        $betDayLock = $this->CI->SystemSettings_model->getBetDay();
+        $isLock = 1;
+        if($betday == $betDayLock)
+            $isLock = 0;
         $result = array(
             'bet_allocation'    => $settings,
             'bet_analysis'      => $bet_analysis,
-            'description'       => $description
+            'description'       => $description,
+            'is_lock'           => $isLock
         );
 
         return $result;

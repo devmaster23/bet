@@ -34,3 +34,5 @@ node_modules/*
 
 application/config/database2.php
 application/config/config.php
+
+uploads/*

@@ -1,5 +1,13 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+$CI =& get_instance();
+$CI->load->library('authlibrary');
+$userProfile = $CI->authlibrary->userInfo();
+$userAvatar = '/assets/img/avatar1.png';
+if($userProfile['user_type'] != 0 && $userProfile['profile_img']){
+    $userAvatar = '/uploads/'.$userProfile['profile_img'];
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -46,7 +54,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="menu-and-user">
                     <div class="logged-user-w">
                         <div class="avatar-w">
-                            <img alt="" src="<?php echo base_url('assets/img/avatar1.jpg')?>">
+                            <img alt="" src="<?php echo base_url($userAvatar)?>">
                         </div>
                         <div class="logged-user-info-w">
                             <div class="logged-user-name">
@@ -206,7 +214,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="logged-user-w avatar-inline">
                     <div class="logged-user-i">
                         <div class="avatar-w">
-                            <img alt="" src="<?php echo base_url('assets/img/avatar1.jpg')?>">
+                            <img alt="" src="<?php echo base_url($userAvatar)?>">
                         </div>
                         <div class="logged-user-info-w">
                             <div class="logged-user-name">
@@ -222,7 +230,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <div class="logged-user-menu color-style-bright">
                             <div class="logged-user-avatar-info">
                                 <div class="avatar-w">
-                                    <img alt="" src="<?php echo base_url('assets/img/avatar1.jpg')?>">
+                                    <img alt="" src="<?php echo base_url($userAvatar)?>">
                                 </div>
                                 <div class="logged-user-info-w">
                                     <div class="logged-user-name">
@@ -238,9 +246,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             </div>
                             <ul>
                                 
-                                <li>
+                                <!-- <li>
                                     <a href="#"><i class="os-icon os-icon-user-male-circle2"></i><span>Profile Details</span></a>
-                                </li>
+                                </li> -->
                                 <li>
                                     <a href="<?php echo site_url('logout'); ?>"><i class="os-icon os-icon-signs-11"></i><span>Logout</span></a>
                                 </li>

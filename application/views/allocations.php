@@ -11,7 +11,7 @@
     <h1 class="text-center"></h1>
 </div>
 
-<div id="main" class="sportbook-page">
+<div id="main" class="allocation-page">
     <div class="header-div">
         <div class="header-left-div">
             <?php $this->load->view('partials/game-select', array('betweek' => $betweek)); ?>
@@ -29,20 +29,21 @@
             <button type="button" class="btn btn-success" onClick="assignBets()">Assign</button>
         </div>
     </div>
-    
-    <table id="allocations" class="display" style="width:100%">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Current Balance</th>
-                <th>Current Bets</th>
-                <th>( % )</th>
-                <th>Desired ( % )</th>
-                <th>Money Allocation</th>
-                <th>( % )</th>
-                <th>Number of Bets</th>
-            </tr>
-        </thead>
-    </table>
+    <div class="allocations-div">
+        <table id="allocations" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Current Balance ($)</th>
+                    <th>Current Bets</th>
+                    <th>( % )</th>
+                    <th>Desired ( % )</th>
+                    <th>Money Allocation ($)</th>
+                    <th>( % )</th>
+                    <th>Number of Bets</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
 </div>
 <?php $this->load->view('footer', array('scripts' => $scripts)) ?>

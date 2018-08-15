@@ -198,12 +198,21 @@ class Investor_model extends CI_Model {
     public function getInvestorSportboooks($investorId, $betweek){
         $result = [];
         $sprotbookList = $this->CI->Investor_sportbooks_model->getListByInvestorId($investorId,$betweek);
+        $total_opening_balance = 0;
+        $total_current_balance = 0;
         foreach ($sprotbookList as $key => $sportbook_item) {
             $tmpArr = $sportbook_item;
-            $tmpArr['current_balance'] = floatval($sportbook_item['current_balance_'.$betweek]);
+            $total_current_balance += floatval($sportbook_item['current_balance_'.$betweek]);
+            $total_opening_balance += floatval($sportbook_item['opening_balance']);
+            $tmpArr['current_balance'] = number_format(floatval($sportbook_item['current_balance_'.$betweek]),2);
+            $tmpArr['opening_balance'] = number_format(floatval($sportbook_item['opening_balance']),2);
             $tmpArr['lastweek_balance'] = $betweek <= 1 ? 'NA': floatval($sportbook_item['current_balance_'.($betweek-1)]);
             $result[] = $tmpArr;
         }
+        $result[] = array(
+           'current_balance' =>  $total_current_balance,
+           'opening_balance' =>  $total_opening_balance,
+        );
         return $result;
     }
 
@@ -542,9 +551,9 @@ class Investor_model extends CI_Model {
                 else
                     $payout_win = $team['line'] == 0 ? 0: $before / ($team['line']/100*(-1));
                 $after = $before + $payout_win;
-                $tmpArr['before'] = number_format((float)$before, 2, '.', '');
-                $tmpArr['payout_win'] = number_format((float)$payout_win, 2, '.', '');
-                $tmpArr['after'] = number_format((float)$after, 2, '.', '');
+                $tmpArr['before'] = number_format((float)$before, 2, '.', ',');
+                $tmpArr['payout_win'] = number_format((float)$payout_win, 2, '.', ',');
+                $tmpArr['after'] = number_format((float)$after, 2, '.', ',');
 
                 $result[] = $tmpArr;
                 $index ++;
@@ -624,8 +633,8 @@ class Investor_model extends CI_Model {
             $result[] = array(
                 'team' => 'A '.$rr1.'-'.$rr2.' Round Robin is',
                 'line' => count($data).' Parlays',
-                'bet'  => $overall_bet,
-                'outcome' => number_format((float)$overall_outcome, 2, '.', '')
+                'bet'  => number_format($overall_bet,2),
+                'outcome' => number_format((float)$overall_outcome, 2, '.', ',')
             );
         }
 

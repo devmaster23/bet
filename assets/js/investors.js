@@ -92,20 +92,12 @@ var sportbookAddSettings = {
 function defaultValueRenderer(instance, td, row, col, prop, value, cellProperties) {
   var args = arguments;
   td.style.color = "#000";
-  td.style.textAlign = 'left';
+  td.style.textAlign = 'center';
   td.style.fontSize = fontSize;
   Handsontable.renderers.TextRenderer.apply(this, args);
-  if (prop == 'login_name' || prop == 'password')
+  if (prop == 'title' || prop == 'siteurl')
   {
     td.style.textAlign = "left";
-  }
-  if (prop == 'action')
-  {
-    td.style.textAlign = "center";
-  }
-  if (prop == 'opening_balance' || prop == 'current_balance' || prop == 'date_opened')
-  {
-    td.style.textAlign = "right";
   }
   if (prop == 'action')
   {
@@ -169,19 +161,19 @@ $(document).ready(function() {
             { "data": "email" },
             { "data": "phone_number" },
             { "data": "number_sportbooks"},
-            { "data": "starting_bankroll" },
-            { "data": "current_balance" },
+            { 
+                "data": "starting_bankroll",
+                render: $.fn.dataTable.render.number( ',', '.', 2)
+            },
+            { 
+                data: "current_balance",
+                render: $.fn.dataTable.render.number( ',', '.', 2)
+            },
             { "data": "group_label" },
             { "data": "ip" },
             { "data": "custom_action" }
         ],
         "columnDefs": [
-            {
-                "render": function ( data, type, row ) {
-                    return '$ '+ data;
-                },
-                "targets": [5,6]
-            },
             // {"className": "dt-center", "targets": [4,7]},
             // {"className": "dt-center", "targets": [5,6]}
         ],

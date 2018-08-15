@@ -1,6 +1,15 @@
-.content-div
-{
-    
+.save-button-div span#lock-icon{
+    display: inline-block;
+    height: 42px;
+    width: 30px;
+    background-image: url('/assets/img/unlock-icon.png');
+    background-size: 100% 100%;
+    vertical-align: middle;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.save-button-div span.locked{
+    background-image: url('/assets/img/lock-icon.png') !important;
 }
 .setting-div{
     margin: 0px 40px;

@@ -14515,7 +14515,10 @@ body.menu-side-right .layout-w {
 }
 
 .menu-position-top.menu-w .logged-user-w .avatar-w img {
+  background: #fff;
+  padding: 2px;
   width: 35px;
+  height: 35px;
 }
 
 .menu-position-top.menu-w .logged-user-w .logged-user-i .logged-user-menu {

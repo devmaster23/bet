@@ -55,3 +55,6 @@ $route['translate_uri_dashes'] = FALSE;
 
 $route['login'] = 'auth/user_login';
 $route['logout'] = 'auth/user_logout';
+
+/*--- Exceptions ---*/
+$route['no_orders'] = 'exceptions/no_orders';

@@ -3,13 +3,13 @@ var currentTableYear = undefined;
 var pageType='week';
 var custom_headers = [
     [
-    '','Date <br/>Opened', 'Last <br/>Updated', 'Opening <br/>Balance',  'Current <br/>Balance', 'Change %'
+    '','Date <br/>Opened', 'Last <br/>Updated', 'Opening <br/>Balance ($)',  'Current <br/>Balance ($)', 'Change %'
     ]
 ];
 
 var custom_headers_year = [
     [
-    '','Date <br/>Opened', 'Opening <br/>Balance'
+    '','Date <br/>Opened', 'Opening <br/>Balance ($)'
     ]
 ];
 
@@ -59,29 +59,6 @@ var sportbooksSettings = {
     colHeaders: true,
     outsideClickDeselects: false,
     nestedHeaders: custom_headers,
-    columnSummary: [
-      {
-        destinationRow: 0,
-        reversedRowCoords: true,
-        destinationColumn: 3,
-        type: 'sum',
-        forceNumeric: true
-      },
-      {
-        destinationRow: 0,
-        reversedRowCoords: true,
-        destinationColumn: 4,
-        type: 'sum',
-        forceNumeric: true
-      },
-      {
-        destinationRow: 0,
-        reversedRowCoords: true,
-        destinationColumn: 5,
-        type: 'sum',
-        forceNumeric: true
-      }
-    ],
     cells: function (row, col, prop) {
       var cellProperties = {};
       cellProperties.renderer = defaultValueRenderer;
@@ -240,7 +217,7 @@ var parlayOutcomeSetting = {
   height: 300,
   className: "htCenter htMiddle",
   rowHeaders: false,
-  colHeaders: ['', 'Before', 'Payout w/Win', 'After'],
+  colHeaders: ['', 'Before ($)', 'Payout w/Win ($)', 'After ($)'],
   outsideClickDeselects: false,
   cells: function (row, col, prop) {
     var cellProperties = {};
@@ -306,7 +283,7 @@ var rrTeamOutcomeSetting = {
   height: 300,
   className: "htCenter htMiddle",
   rowHeaders: false,
-  colHeaders: ['Team', 'Money Line', 'Bet', 'Outcome'],
+  colHeaders: ['Team', 'Money Line', 'Bet ($)', 'Outcome ($)'],
   outsideClickDeselects: false,
   cells: function (row, col, prop) {
     var cellProperties = {};
@@ -318,7 +295,6 @@ var rrTeamOutcomeSetting = {
 function createSheets(data) {
     var container = $('div#user_sportbook_week_table')[0];
     var dataWeek = data.slice()
-    dataWeek.push({});
     sportbooksSettings.data = dataWeek;
     currentTableWeek = new Handsontable(container, sportbooksSettings);
 

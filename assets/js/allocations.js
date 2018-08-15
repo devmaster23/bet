@@ -81,11 +81,17 @@ function initPage(){
         },
         "columns": [
             { "data": "title" },
-            { "data": "current_balance" },
+            { 
+                "data": "current_balance",
+                render: $.fn.dataTable.render.number( ',', '.', 2)
+            },
             { "data": "bet_count" },
             { "data": "percent" },
             { "data": "equal_percent" },
-            { "data": "current_balance" },
+            { 
+                "data": "current_balance",
+                render: $.fn.dataTable.render.number( ',', '.', 2)
+            },
             { "data": "valid_percent" },
             { "data": "valid_bet_count" }
         ],

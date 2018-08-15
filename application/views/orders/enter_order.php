@@ -175,7 +175,7 @@
                                 ?>
                                 <tr class="sportbook-tr <?=$clsSelected?> <?=$item['status']?>" data-id="<?=$item['sportbook_id']?>">
                                     <td><?=$item['title']?></td>
-                                    <td>$<?=$item['current_balance']?></td>
+                                    <td>$<?=number_format($item['current_balance'],2)?></td>
                                     <td><?=$item['bet_left']?></td>
                                     <td><?=$item['bet_placed']?></td>
                                 </tr>

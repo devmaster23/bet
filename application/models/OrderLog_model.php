@@ -74,7 +74,7 @@ class OrderLog_model extends CI_Model {
             $tmpArr['date'] = date_format($update_at, 'm.d');
             $tmpArr['time'] = date_format($update_at, 'H:i A');
             $tmpArr['user_name'] = $user_list[$item['user_id']]['name'];
-            $tmpArr['investor_name'] = $investor_list[$item['investor_id']]['first_name']. ' ' . $investor_list[$item['investor_id']]['first_name'];
+            $tmpArr['investor_name'] = $investor_list[$item['investor_id']]['first_name']. ' ' . $investor_list[$item['investor_id']]['last_name'];
             $tmpArr['sportbook_name'] = $sportbook_list[$item['sportbook_id']]['title'];
             $action_title = '';
             switch ($item['action']) {

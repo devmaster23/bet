@@ -28,6 +28,7 @@
         <?php $this->load->view('partials/game-select', array('betweek' => $betweek)); ?>
       </div>
       <div class="save-button-div">
+        <span id="lock-icon" class="<?=$isLocked ? 'locked' : ''?>"></span>
         <button type="button" class="btn btn-success btn-lg enter-game_save-button" onClick="updateData()">Update</button>
       </div>
     </div>

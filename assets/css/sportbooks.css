@@ -3,7 +3,10 @@
     outline-offset: 0px;
     -webkit-appearance: textfield;
 }
-
+.sportbook-page #sportbooks th,
+.sportbook-page #sportbooks td{
+    text-align: center;
+}
 .sportbook-page #sportbooks .action-div a{
     color: #187bd6;
     cursor: pointer;

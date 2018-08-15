@@ -7,14 +7,19 @@ class Users_model extends CI_Model {
         'name',
         'username',
         'email',
+        'profile_img',
         'password',
         'user_type',
     );
 
+    public $SUPER_ADMIN   = 0;
+    public $ADMIN         = 1;
+    public $ORDER_ENTRY   = 2;
+
     public function getAll(){
         $this->db->select('id, name')
             ->from($this->tableName)
-            ->order_by('name','asc');
+            ->order_by('id','asc');
         $result = $this->db->get()->result_array();;
         return $result;
     }
@@ -38,7 +43,7 @@ class Users_model extends CI_Model {
         $this->db->select('*')
             ->from($this->tableName)
             ->where('user_type !=', '0')
-            ->order_by('name','asc');
+            ->order_by('id','asc');
 
         $rows = $this->db->get()->result_array();;
 
@@ -97,6 +102,14 @@ class Users_model extends CI_Model {
         return true;
     }
 
+    public function deleteItem($id)
+    {
+        $this->db->where(array(
+            'id' => $id
+        ))->delete($this->tableName);
+        return true;
+    }
+
     public function getByID($id){
         $this->db->select('*')
             ->from($this->tableName)
@@ -109,7 +122,7 @@ class Users_model extends CI_Model {
             $userRole = 'Administrator';
             switch ($result['user_type']) {
                 case '0':
-                    $userRole = 'Supre Admin';
+                    $userRole = 'Super Admin';
                     break;
                 case '1':
                     $userRole = 'Administrator';
