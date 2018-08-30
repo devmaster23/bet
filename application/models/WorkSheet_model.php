@@ -2,12 +2,15 @@
 class WorkSheet_model extends CI_Model {
     private $tableName = 'work_sheet';
     private $CI = null;
+    private $hypoBetAmount;
 
     function __construct()
     {
         $this->CI =& get_instance();
+        $this->CI->load->model('Investor_model');
         $this->CI->load->model('Settings_model');
         $this->CI->load->model('Picks_model');
+        $this->CI->load->model('CustomBet_model');
     }
 
     private function getRobbinSetting($betday, $settingId = -1){
@@ -34,6 +37,13 @@ class WorkSheet_model extends CI_Model {
     {
         $activeSetting = $this->getRobbinSetting($betday, $settingId);
         return $activeSetting;
+    }
+
+    private function getHypoBetAmount()
+    {
+        $betday = isset($_SESSION['betday']) ? $_SESSION['betday'] : 0;
+        $activeSetting = $this->CI->Settings_model->getAppliedSetting($betday);
+        $this->hypoBetAmount = $activeSetting['bet_amount'];
     }
 
     public function getBetSetting($betday, $settingId = -1){
@@ -360,9 +370,114 @@ class WorkSheet_model extends CI_Model {
         return $result;
     }
 
+    private function formatCustomRR($rrArr, $pickData){  
+        $ret = [];
+        $data = [];
+        $id = $rrArr['id'];
+        $betArr = json_decode($rrArr['rr_bets']);
+        if(!count($betArr)){
+            return false;
+        }else{
+            foreach ($pickData as $key => $item) {
+                if(in_array($item['title'], $betArr)){
+                    $item['rush'] = $this->getRushValue($item);
+                    $data[] = $item;
+                }
+            } 
+        }
+        $ret['data'] = $data;
+        $ret['title'] = 'crr_'.$id;
+        $ret['bet_title'] = 'Custom RR';
+        $ret['game_type'] = $data[0]['game_type'];
+        $ret['bet_type'] = 'crr';
+        $ret['amount'] = $this->hypoBetAmount;
+        $ret['is_group'] = 1;
+        $ret['m_number'] = $this->CI->Settings_model->roundRobbinBetCounts($rrArr['rr_number1'], $rrArr['rr_number2'], null, null);
+        $ret['total_amount'] = $this->getTotalAmount( $ret, $rrArr['rr_number1'], $rrArr['rr_number2'] );
+        $ret['rrArr'] = array(
+            'rr1' => $rrArr['rr_number1'],
+            'rr2' => $rrArr['rr_number2'],
+            'rr3' => null,
+            'rr4' => null,
+        );
+        return $ret;
+    }
+
+    private function formatCustomParlay($rrArr, $pickData){
+        $ret = [];
+        $data = [];
+        $id = $rrArr['id'];
+        $betArr = json_decode($rrArr['parlay_bets']);
+        if(!count($betArr)){
+            return false;
+        }else{
+            foreach ($pickData as $key => $item) {
+                if(in_array($item['title'], $betArr)){
+                    $item['rush'] = $this->getRushValue($item);
+                    $data[] = $item;
+                }
+            } 
+        }
+        $ret['data'] = $data;
+        $ret['title'] = 'cparlay_'.$id;
+        $ret['bet_title'] = 'Custom Parlay';
+        $ret['game_type'] = $data[0]['game_type'];
+        $ret['bet_type'] = 'cparlay';
+        $ret['amount'] = $this->hypoBetAmount;
+        $ret['is_group'] = 1;
+        $ret['m_number'] = $rrArr['parlay_number'];
+        $ret['total_amount'] = $this->getTotalAmount( $ret, $rrArr['parlay_number'] );
+        $ret['rrArr'] = array(
+            'rr1' => $rrArr['parlay_number'],
+            'rr2' => null,
+            'rr3' => null,
+            'rr4' => null,
+        );
+        return $ret;
+    }
+
+    private function formatRR($settingData, $pick_data, $i, $j, $rrArr){
+        $data = [];
+        $rr_number = $rrArr['rr1'];
+        $candy_item = $this->getTeamFromPick($pick_data, $i, 'candy');
+        if(is_null($candy_item['team']))
+            return false;
+        $candy_key = $this->getTeamKey($pick_data, $i, 'candy');
+        $tmpArr = array();
+        $disableList = array();
+        for($k=0; $k<$rr_number-1; $k++){
+            $team_row_id = $settingData[$k][$j];
+            $team_info = $this->getTeamFromPick($pick_data, $team_row_id-1);
+            if(is_null($team_info['team']))
+                return false;
+            $team_key = $this->getTeamKey($pick_data, $team_row_id-1);
+
+            $team_info['rush'] = $this->getRushValue($team_info);
+            array_push($data,$team_info);
+            if($candy_item['team'] != null && $team_info['team'] != null && ($candy_item['team'] == $team_info['team'] || $candy_key == $team_key))
+                $disableList[] = $k;
+        }
+        if(count($disableList))
+            return false;
+        $candy_item['rush'] = $this->getRushValue($candy_item);
+        array_push($data,$candy_item);
+        $tmpArr['data'] = $data;
+        $tmpArr['title'] = chr(65+$j).($i+1);
+        $tmpArr['game_type'] = $candy_item['game_type'];
+        $tmpArr['bet_type'] = 'rr';
+        $tmpArr['bet_title'] = 'Round Robin';
+        $tmpArr['is_group'] = 1;
+        $tmpArr['amount'] = $this->hypoBetAmount;
+        $tmpArr['m_number'] = $this->CI->Settings_model->roundRobbinBetCounts( $rrArr['rr1'], $rrArr['rr2'], $rrArr['rr3'], $rrArr['rr4'] );
+        $tmpArr['total_amount'] = $this->getTotalAmount( $tmpArr, $rrArr['rr1'], $rrArr['rr2'], $rrArr['rr3'], $rrArr['rr4'] );
+        $tmpArr['rrArr'] = $rrArr;
+        return $tmpArr;
+    }
 
     public function getRROrders($betday, $inverstor_id = null)
     {
+        $this->getHypoBetAmount();
+
         $investor_setting = $this->CI->Settings_model->getActiveSettingByInvestor($betday, $inverstor_id);
         if($investor_setting){
             $type = $investor_setting['settingType'];
@@ -374,7 +489,6 @@ class WorkSheet_model extends CI_Model {
         
         
         $pick_data = $this->CI->Picks_model->getAll($betday, $type, $groupuser_id);
-
         $activeSetting = $investor_setting['data'];
 
         $rows = $this->db->select('*')->from($this->tableName)
@@ -385,12 +499,9 @@ class WorkSheet_model extends CI_Model {
             ))
             ->get()->result_array();
 
+        $custom_rows = $this->CI->CustomBet_model->getData($betday, $type, $groupuser_id);
 
         $result = array(
-            'rr1'   => 0,
-            'rr2'   => 0,
-            'rr3'   => 0,
-            'rr4'   => 0,
             'betday' => $betday,
             'data'   => array()
         );
@@ -399,15 +510,40 @@ class WorkSheet_model extends CI_Model {
 
         $ret = array(
             'rr' => array(),
+            'crr' => array(),
             'parlay' => array(),
+            'cparlay' => array(),
             'single' => array()
         );
 
         $singleBets = $this->CI->Picks_model->getIndividual($betday, 'pick', $type, $groupuser_id);
+        $singleBets = array_filter($singleBets, function($arrItem){
+            return $arrItem['selected'];
+        });
         foreach ($singleBets as &$item) {
             $item['rush'] = $this->getRushValue($item);
+            $item['bet_type'] = 'single';
+            $item['is_group'] = 0;
+            $item['bet_title'] = 'Single Bet';
+
+            $item['amount'] = $this->hypoBetAmount;
+            $item['m_number'] = 1;
+            $item['total_amount'] = $this->getTotalAmount( $item );
         }
         $ret['single']  = $singleBets;
+        
+        if(count($custom_rows)){
+            foreach ($custom_rows as $row_item) {
+                $picklist_data = $this->CI->Picks_model->getAllList($betday, $type, $groupuser_id);
+                $crr_item  = $this->formatCustomRR($row_item, $picklist_data);
+                if($crr_item)
+                    $ret['crr'][] = $crr_item;
+
+                $cparlay_item  = $this->formatCustomParlay($row_item, $picklist_data);
+                if($cparlay_item)
+                    $ret['cparlay'][] = $cparlay_item;
+            }
+        }
         
         if(count($rows))
         {
@@ -417,12 +553,16 @@ class WorkSheet_model extends CI_Model {
             $robin_2 = @$activeSetting['rr_number2'];
             $robin_3 = @$activeSetting['rr_number3'];
             $robin_4 = @$activeSetting['rr_number4'];
+            $robinArr = array(
+                'rr1' => $robin_1,
+                'rr2' => $robin_2,
+                'rr3' => $robin_3,
+                'rr4' => $robin_4,
+            );
             $parlayIds = empty($row['parlay_select'])? array() : json_decode($row['parlay_select']);
 
             $validColumnArr = array();
-            for($i =0; $i < $robin_2; $i ++)
-            {
-                $arrayItem = $settingData[$i];
+            foreach ($settingData as $key => $arrayItem) {
                 foreach ($arrayItem as $key1 => $value) {
                     if(!is_null($value) && $value != '')
                         $validColumnArr[$key1] = true;
@@ -432,42 +572,18 @@ class WorkSheet_model extends CI_Model {
             for($j=0; $j<count($validColumnArr); $j++){
                 for($i=0; $i<60; $i++){
 
-                    $candy_item = $this->getTeamFromPick($pick_data, $i, 'candy');
-                    if(is_null($candy_item['team']))
+                    $tmpArr = $this->formatRR($settingData, $pick_data, $i, $j, $robinArr);
+                    if(!$tmpArr) 
                         continue;
-                    $candy_key = $this->getTeamKey($pick_data, $i, 'candy');
-                    $tmpArr = array();
-                    $disableList = array();
-                    for($k=0; $k<$robin_1-1; $k++){
-                        $team_row_id = $settingData[$k][$j];
-                        $team_info = $this->getTeamFromPick($pick_data, $team_row_id-1);
-                        if(is_null($team_info['team']))
-                            continue;
-                        $team_key = $this->getTeamKey($pick_data, $team_row_id-1);
+                    $ret['rr'][] = $tmpArr;
 
-                        $team_info['rush'] = $this->getRushValue($team_info);
-                        array_push($tmpArr,$team_info);
-                        if($candy_item['team'] != null && $team_info['team'] != null && ($candy_item['team'] == $team_info['team'] || $candy_key == $team_key))
-                            $disableList[] = $k;
-                    }
-                    if(count($disableList))
-                        continue;
-                    $candy_item['rush'] = $this->getRushValue($candy_item);
-                    array_push($tmpArr,$candy_item);
-                    $tmpArr['title'] = chr(65+$j).($i+1);
-                    $tmpArr['game_type'] = $candy_item['game_type'];
                     $is_parlay = in_array($i."_".$j, $parlayIds) ? 1 : 0;
-
                     if($is_parlay)
                     {
                         $tmpArr['bet_type'] = 'parlay';
+                        $tmpArr['bet_title'] = 'Parlay';
                         $ret['parlay'][] = $tmpArr;
                     }
-                    $tmpArr['bet_type'] = 'rr';
-                    
-                    if(!isset($roundrobins[$j]))
-                        $roundrobins[$j] = [];    
-                    $roundrobins[$j][] = $tmpArr;                    
                 }
             }
 
@@ -483,16 +599,6 @@ class WorkSheet_model extends CI_Model {
                     if(!isset($roundrobins[$j][$i]))
                         continue;
                     $ret['rr'][] = $roundrobins[$j][$i];
-                }
-            }
-
-            date_default_timezone_set('America/Los_Angeles');
-            $west_date = date('Y-m-d h:i:s');
-
-            foreach ($ret as &$ret_arr) {
-                foreach ($ret_arr as &$betItem) {
-                    $betItem['amount'] = 100;
-                    $betItem['total_amount'] = $this->getTotalAmount($betItem, $robin_1, $robin_2, $robin_3, $robin_4 );
                 }
             }
 
@@ -516,12 +622,12 @@ class WorkSheet_model extends CI_Model {
         }
     }
 
-    private function getTotalAmount($bet, $n, $r1, $r2, $r3){
+    private function getTotalAmount($bet, $n=null, $r1=null, $r2=null, $r3=null){
         $bet_type = $bet['bet_type'];
         $total_amount = $bet['amount'];
-        if($bet_type == 'rr'){
+        if($bet_type == 'rr' || $bet_type == 'crr'){
             $total_amount = $bet['amount'] * $this->CI->Settings_model->roundRobbinBetCounts($n, $r1, $r2, $r3);
-        }else if($bet_type == 'parlay'){
+        }else if($bet_type == 'parlay' || $bet_type == 'cparlay'){
             $total_amount = $bet['amount'] * $n;
         }
         return $total_amount;
@@ -600,8 +706,8 @@ class WorkSheet_model extends CI_Model {
         $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
         $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
 
-        $candy_data = $this->CI->Picks_model->getIndividual($betday, 'candy',$type);
-        $pick_data = $this->CI->Picks_model->getIndividual($betday, 'pick',$groupuser_id);
+        $candy_data = $this->CI->Picks_model->getIndividual($betday, 'candy', $type, $groupuser_id);
+        $pick_data = $this->CI->Picks_model->getIndividual($betday, 'pick', $type, $groupuser_id);
 
         $parlayCnt = $this->getParlayCount($betday);
 

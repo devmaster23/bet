@@ -8,7 +8,8 @@ function format ( d ) {
     {
         title = 'Single Bet';
         var data = JSON.parse(d.data);
-        var setting = d.setting;
+        console.log(data);
+        var setting = data.rrArr;
 
         if(d.bet_type == 'rr')
             title = 'Round Robin';
@@ -53,7 +54,7 @@ function format ( d ) {
                     <td>`+data.time+`</td>
                 </tr>`;
         }else{
-            $.each(data, function(key, item){
+            $.each(data.data, function(key, item){
                 if(item['vrn'] == undefined)
                     return false;
                 result += `<tr class="">

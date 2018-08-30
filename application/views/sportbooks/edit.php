@@ -69,31 +69,31 @@
         <div class="row rule-div" style="margin-bottom: 50px;">
             <div class="col-md-4">
                 <h3>Singe Bet</h3>
-                <div>
+                <div class="form-group">
                     <label for="singlebet_min">Min</label>
                     <input required type="text" name="singlebet_min" id="singlebet_min" value="<?=$sportbook_item['singlebet_min']?>">
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="singlebet_max">Max</label>
                     <input required type="text" name="singlebet_max" id="singlebet_max" value="<?=$sportbook_item['singlebet_max']?>">
                 </div>
             </div>
             <div class="col-md-4">
                 <h3>Parlay</h3>
-                <div>
+                <div class="form-group">
                     <label for="parlay_min_team">Min Number of Teams</label>
                     <input required type="text" name="parlay_min_team" id="parlay_min_team" value="<?=$sportbook_item['parlay_min_team']?>">
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="parlay_max_team">Maxium Number of Teams</label>
                     <input required type="text" name="parlay_max_team" id="parlay_max_team" value="<?=$sportbook_item['parlay_max_team']?>">
                 </div>
                 <div class="mt-3"></div>
-                <div>
+                <div class="form-group">
                     <label for="parlay_min_bet">Min Bet</label>
                     <input required type="text" name="parlay_min_bet" id="parlay_min_bet" value="<?=$sportbook_item['parlay_min_bet']?>">
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="parlay_max_bet">Max Bet</label>
                     <input required type="text" name="parlay_max_bet" id="parlay_max_bet" value="<?=$sportbook_item['parlay_max_bet']?>">
                 </div>
@@ -101,24 +101,24 @@
 
             <div class="col-md-4">
                 <h3>Round Robin</h3>
-                <div>
+                <div class="form-group">
                     <label for="rr_min_team">Min Number of Teams</label>
                     <input required type="text" name="rr_min_team" id="rr_min_team" value="<?=$sportbook_item['rr_min_team']?>">
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="rr_max_team">Maxium Number of Teams</label>
                     <input required type="text" name="rr_max_team" id="rr_max_team" value="<?=$sportbook_item['rr_max_team']?>">
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="rr_max_combination">Maxium Combination</label>
                     <input required type="text" name="rr_max_combination" id="rr_max_combination" value="<?=$sportbook_item['rr_max_combination']?>">
                 </div>
                 <div class="mt-3"></div>
-                <div>
+                <div class="form-group">
                     <label for="rr_min_bet">Min Bet</label>
                     <input required type="text" name="rr_min_bet" id="rr_min_bet" value="<?=$sportbook_item['rr_min_bet']?>">
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="rr_max_bet">Max Bet</label>
                     <input required type="text" name="rr_max_bet" id="rr_max_bet" value="<?=$sportbook_item['rr_max_bet']?>">
                 </div>

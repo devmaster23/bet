@@ -65,26 +65,23 @@
                     <div class="element-box no-border-radius gray-top clearfix">
                         <h5 class="form-header">Description</h5>
                         <?php 
+                            $is_group = 0;
                             if(!is_null($bet)){
-                                $title = 'Single Bet';
-                                $betType = $bet['bet_type'];
-                                if($betType == 'rr')
-                                    $title = 'Round Robin';
-                                else if($betType == 'parlay')
-                                    $title = 'Parlay';
+                                $is_group = $bet['is_group'];
                         ?>
                         <div class="description-div">
                             <div class="description-div_type">
                                 <img src="<?php echo base_url('assets/img/'.$bet['logo'])?>">
                                 <span class="setting-span"><?=$bet['game_type']?></span>
-                                <span class="setting-span"><?=$title?></span>
+                                <span class="setting-span"><?=$bet['bet_title']?></span>
                             </div>
                             <div>
-                                <?php if($betType == 'rr' || $betType == 'parlay') { ?>
-                                <span class="setting-span number red"><?=$setting['rr_number1']?></span>
-                                <span class="setting-span number"><?=$setting['rr_number2']?></span>
-                                <span class="setting-span number"><?=$setting['rr_number3']?></span>
-                                <span class="setting-span number"><?=$setting['rr_number4']?></span>
+                                <?php if($is_group) { 
+                                    ?>
+                                <span class="setting-span number red"><?=$bet['rrArr']['rr1']?></span>
+                                <span class="setting-span number"><?=$bet['rrArr']['rr2']?></span>
+                                <span class="setting-span number"><?=$bet['rrArr']['rr3']?></span>
+                                <span class="setting-span number"><?=$bet['rrArr']['rr4']?></span>
                                 <?php } ?>
                             </div>
                         </div>
@@ -98,7 +95,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php if($betType == 'single') { ?>
+                                <?php if(!$is_group) { ?>
                                 <tr class="<?=$bet['rush']? 'red': ''?>" >
                                     <td class="bold"><?=$bet['vrn']?></td>
                                     <td class="bold"><?=$bet['type']?></td>
@@ -106,15 +103,15 @@
                                     <td><?=$bet['time']?></td>
                                 </tr>
                                 <?php } else{ 
-                                    for ($i=0; $i< $rr1; $i++) {
-                                        if(!isset($bet[$i]['vrn']) || empty($bet[$i]['vrn']))
+                                    for ($i=0; $i< $bet['rrArr']['rr1']; $i++) {
+                                        if(!isset($bet['data'][$i]['vrn']) || empty($bet['data'][$i]['vrn']))
                                             continue;
                                 ?>
-                                <tr class="<?=$bet[$i]['rush']? 'red': ''?>">
-                                    <td class="bold"><?=$bet[$i]['vrn']?></td>
-                                    <td class="bold"><?=$bet[$i]['type']?></td>
-                                    <td class="text-left"><?=$bet[$i]['team']?></td>
-                                    <td class="<?php ?>"><?=$bet[$i]['time']?></td>
+                                <tr class="<?=$bet['data'][$i]['rush']? 'red': ''?>">
+                                    <td class="bold"><?=$bet['data'][$i]['vrn']?></td>
+                                    <td class="bold"><?=$bet['data'][$i]['type']?></td>
+                                    <td class="text-left"><?=$bet['data'][$i]['team']?></td>
+                                    <td class="<?php ?>"><?=$bet['data'][$i]['time']?></td>
                                 </tr>
                                 <?php 
                                     } 
@@ -150,11 +147,12 @@
                         <a href="<?=$prev_url?>"><img class="prev-img" src="/assets/img/prev.png" /></a>
                         <div>
                             <button type="button" data-type="no_bet" class="btn btn-danger no-bet save-button"><img class="camera-img" src="/assets/img/camera_icon.png" /></button>
-                            <button type="button" data-type="reassign" class="btn btn-warning reassign save-button"><img class="camera-img" src="/assets/img/camera_icon.png" /></button>
+                            <button type="button" data-type="reassign" class="btn btn-warning reassign save-button" data-toggle="modal" data-target="#reassign_modal"><img class="camera-img" src="/assets/img/camera_icon.png" /></button>
                             <button type="button" data-type="placed" class="btn btn-success bet-placed save-button"><img class="camera-img" src="/assets/img/camera_icon.png" /></button>
                         </div>
                         <a href="<?=$next_url?>"><img class="next-img" src="/assets/img/prev.png" /></a>
                         <input type="hidden" name="sportbookID" value="">
+                        <input type="hidden" name="betAmount" value="">
                         <input type="hidden" name="submit_type" value="reassign">
                     </form>
                     <?php } ?>
@@ -198,5 +196,45 @@
             <?php }?>
         </div>
     </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="reassign_modal" tabindex="-1" role="dialog" aria-labelledby="reassign_modalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Reassign Modal</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <label for="reassign_sportbook_id"> Sportbook</label>
+            <select class="form-control" id="reassign_sportbook_id" name="reassign_sportbook_id">
+                <?php
+                foreach ($sportbookList as $item) {
+                    if($item['selected'])
+                        continue;
+                ?>
+                    <option value="<?=$item['id']?>"><?=$item['title']?></option>
+                <?php
+                    }
+                ?>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="bet_amount"> Bet Amount </label>
+            <input class="form-control" type="number" id="bet_amount" name="bet_amount" align="center">
+        </div>
+        <input type="hidden" id="valid_bet_amount" value="<?=$bet['total_amount']?>">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        <button type="button" id="reassign" class="btn btn-warning">Reassign</button>
+      </div>
+    </div>
+  </div>
 </div>
 <?php $this->load->view('footer', array('scripts' => $scripts)) ?>

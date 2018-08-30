@@ -72,10 +72,10 @@ class Investor_sportbooks_model extends CI_Model {
             'updated_at' => $date_opened
         );
 
-        $this->db->where(array(
-            'investor_id' => $investorId,
-            'sportbook_id' => $sportbookId,
-        ))->update($this->tableName, $newData);
+        // $this->db->where(array(
+        //     'investor_id' => $investorId,
+        //     'sportbook_id' => $sportbookId,
+        // ))->update($this->tableName, $newData);
         return true;
     }
 
@@ -107,10 +107,10 @@ class Investor_sportbooks_model extends CI_Model {
             'updated_at' => $date_opened
         );
 
-        $this->db->where(array(
-            'investor_id' => $investorId,
-            'sportbook_id' => $sportbookId,
-        ))->update($this->tableName, $newData);
+        // $this->db->where(array(
+        //     'investor_id' => $investorId,
+        //     'sportbook_id' => $sportbookId,
+        // ))->update($this->tableName, $newData);
         return $removeBalance;
     }
 

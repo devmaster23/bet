@@ -32,7 +32,7 @@ class OrderLog_model extends CI_Model {
         {
             if(!is_null($bet_item))
             {
-                $addDate['bet_id'] = $bet_item['title'];
+                $addDate['bet_id'] = $bet_item['order_id'];
                 $addDate['bet_type'] = $bet_item['bet_type'];
                 $addDate['data'] = json_encode($bet_item);
             }
@@ -56,18 +56,9 @@ class OrderLog_model extends CI_Model {
         $sportbook_list = $this->Sportbook_model->getKeyValueList();
         $investor_list = $this->Investor_model->getKeyValueList();
 
-        $setting_arr = [];
-
         foreach ($rows as $key => $item) {
 
             $investor_id = $item['investor_id'];
-            if(!array_key_exists($investor_id, $setting_arr))
-            {
-                $bet_setting = $this->WorkSheet_model->getRROrders($betweek,$investor_id);
-                $setting_arr[$investor_id] = $bet_setting;
-            }else{
-                $bet_setting = $setting_arr[$investor_id];
-            }
 
             $tmpArr = $item;
             $update_at = new DateTime($item['updated_at']);
@@ -93,7 +84,6 @@ class OrderLog_model extends CI_Model {
                     break;
             }
             $tmpArr['action_title'] = $action_title;
-            $tmpArr['setting'] = $bet_setting;
 
             $bet_data = json_decode($item['data']);
             $filename = 'icon_NFL.png';

@@ -100,14 +100,33 @@ class Orders extends CI_Controller {
 
         $this->setting_model->setActiveSetting($betweek,$investorId);
 
-        $worksheet = $this->worksheet_model->getRROrders($data['betweek'],$investorId);
-        $bets = $this->model->getBetArr($worksheet);
+        $bets = $this->model->getOrders($data['betweek'],$investorId);
+        if(isset($_POST['sportbookID']))
+        {
+            $sportbookID = $_POST['sportbookID'];
+            $submit_type = $_POST['submit_type'];
+            $betAmount = $_POST['betAmount'];
+
+            $selectedBet = $bets[$betIndex-1];
+            if($submit_type == 'reassign')
+            {
+                $this->model->reassignOrder($data['betweek'], $investorId, $sportbookID, $selectedBet, $betAmount);
+            }else{
+                if($sportbookID != "" && isset($bets[$betIndex-1]))
+                {
+                    $this->model->addOrder($data['betweek'], $investorId, $sportbookID, $selectedBet, $betAmount, $submit_type);
+                }else{
+                    $this->model->removeOrder($data['betweek'], $investorId, $selectedBet);
+                }
+            }
+            redirect($_SERVER['HTTP_REFERER']);
+        }
 
         if(isset($_REQUEST['bet_key']))
         {
             $bet_key = $_REQUEST['bet_key'];
             $tmpBetItem = array_filter($bets,function($item) use($bet_key){
-                return $item['title'] == $bet_key;
+                return $item['order_id'] == $bet_key;
             }); 
             $key_arr = array_keys($tmpBetItem);
             if(count($key_arr)){
@@ -117,19 +136,6 @@ class Orders extends CI_Controller {
             }
         }
 
-
-        if(isset($_POST['sportbookID']))
-        {
-            $sportbookID = $_POST['sportbookID'];
-            $submit_type = $_POST['submit_type'];
-            $selectedBet = $bets[$betIndex-1];
-            if($sportbookID != "" && isset($bets[$betIndex-1]))
-            {
-                $this->model->addOrder($data['betweek'], $investorId, $sportbookID, $selectedBet, $submit_type);
-            }else{
-                $this->model->removeOrder($data['betweek'], $investorId, $selectedBet);
-            }
-        }
         if(is_null($investorId))
         {
             redirect('/orders', 'refresh');
@@ -172,10 +178,9 @@ class Orders extends CI_Controller {
 
         $data['bet'] = $bet;
         $data['sportbookList'] = $this->model->getSportbook($investor['sportbooks'], $data['betweek'], $investorId, $data['bet']);
-        // var_dump($data['sportbookList'][0]);die;
         $data['sportbook'] = $this->model->getSelectedSportbook($data['sportbookList']);
 
-        $data['setting'] = $this->setting_model->getActiveSetting($data['betweek']);
+        // $data['setting'] = $this->setting_model->getActiveSetting($data['betweek']);
         $data['iframe_src'] = 'http://'.$data['sportbook']['siteurl'];
 
         $data['bet_count'] = count($bets);

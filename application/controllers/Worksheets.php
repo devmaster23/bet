@@ -138,8 +138,11 @@ class Worksheets extends CI_Controller {
     public function loadCustomBet(){
         $betweek = $_POST['betweek'];
         $_SESSION['betday'] = $betweek;
-        $data['data'] = $this->custombet_model->getData($betweek);    
-        $data['bets'] = $this->pick_model->getAllList($betweek);
+        $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
+        $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+
+        $data['data'] = $this->custombet_model->getData($betweek, $type, $groupuser_id);
+        $data['bets'] = $this->pick_model->getAllList($betweek, $type, $groupuser_id);
         header('Content-Type: application/json');
         echo json_encode( $data);
         die;
@@ -216,7 +219,9 @@ class Worksheets extends CI_Controller {
     public function saveCustomBet(){
         $betweek = $_POST['betweek'];
         $data = $_POST['data'];
-        $this->custombet_model->saveCustomBet($betweek, $data);
+        $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
+        $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+        $this->custombet_model->saveCustomBet($betweek, $data, $type, $groupuser_id);
         echo 'success';
         die;   
     }

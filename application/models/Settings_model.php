@@ -27,7 +27,8 @@ class Settings_model extends CI_Model {
         'parlay_number1',
         'pick_allocation',
         'pick_number1',
-        'description'
+        'description',
+        'bet_amount'
     );
 
 
@@ -43,12 +44,12 @@ class Settings_model extends CI_Model {
         $this->CI->load->model('SystemSettings_model');
 
         $this->numberOfTeams = array(
-            'min' => 3,
+            'min' => 1,
             'max' => 8
         );
 
         $this->numberOfPicks = array(
-            'min' => 2,
+            'min' => 1,
             'max' => 8
         );
 
@@ -265,6 +266,40 @@ class Settings_model extends CI_Model {
         }
         return true;
     }
+
+    public function setBetAmount($betday, $investor_id, $bet_amount)
+    {
+        $investor = $this->CI->Investor_model->getByID($investor_id);
+        $group_id = isset($investor['group_id']) ? $investor['group_id'] : null;
+        $investor_setting = $this->getInvestorSetting($betday, $investor_id);
+        if(!$this->isEmptySetting($investor_setting))
+        {
+            $setting_type = 2;
+            $setting_id = $investor_id;
+        }else{
+            $group_setting = $this->getGroupSetting($betday, $group_id);
+            if(!$this->isEmptySetting($group_setting))
+            {
+                $setting_type = 1;
+                $setting_id = $group_id;
+            }else{
+                $setting_type = 0;
+                $setting_id = 0;
+            }
+        }
+        $updateQuery = $this->db->where(array(
+            'betday'    => $betday,
+            'type'      => $setting_type,
+        ));
+        if($setting_type != 0)
+            $updateQuery = $updateQuery->where('groupuser_id', $setting_id);
+
+        $updateQuery->update('settings', array(
+            'bet_amount'    => $bet_amount
+        ));
+
+        return true;
+    }
     public function getSettingByType($betday, $type, $groupuser_id)
     {
         $result = null;
@@ -350,8 +385,11 @@ class Settings_model extends CI_Model {
             'pick_allocation'    => 0,
             'pick_number1'    => 0,
             'description'   => '',
+            'bet_amount'   => 0,
             'title'         => 'Default'
         );
+
+
 
         if(count($rows))
         {
@@ -387,6 +425,7 @@ class Settings_model extends CI_Model {
             $result['pick_allocation'] = $setting['pick_allocation'];
             $result['pick_number1'] = $setting['pick_number1'];
             $result['description'] = $setting['description'];
+            $result['bet_amount'] = $setting['bet_amount'];
             $result['title'] = $this->getSettingTitle($setting['type'],$setting['groupuser_id']);
         }
         return $result;
@@ -425,6 +464,7 @@ class Settings_model extends CI_Model {
             'pick_allocation'    => 0,
             'pick_number1'    => 0,
             'description'   => '',
+            'bet_amount'   => 0,
             'title'         => ''
         );
 
@@ -442,6 +482,7 @@ class Settings_model extends CI_Model {
             $result['pick_allocation'] = $data['pick_allocation'];
             $result['pick_number1'] = $data['pick_number1'];
             $result['description'] = $data['description'];
+            $result['bet_amount'] = $data['bet_amount'];
             $result['title'] = $this->getSettingTitle($data['type'],$data['groupuser_id']);
         }
         return $result;
@@ -486,6 +527,7 @@ class Settings_model extends CI_Model {
         $fomularData = $this->fomularData;
         $settings = $this->defaultSetting;
         $description = '';
+        $bet_amount = 0;
         $bet_analysis = $this->defaultResult;
 
         $candy_data = $this->CI->Picks_model->getIndividual($betday, 'candy',$categoryType, $categoryGroupUser);
@@ -581,7 +623,7 @@ class Settings_model extends CI_Model {
             $bet_analysis[$bet_analysis_index]['rr1'] = '';
             $bet_analysis[$bet_analysis_index]['rr2'] = '';
             $bet_analysis[$bet_analysis_index]['sheet'] = (int)$parlayCnt > 0 ? $parlayCnt : '' ;
-            $parlay_ordernumber = (int)$parlayCnt > 0 ? 1 : '';
+            $parlay_ordernumber = (int)$parlayCnt > 0 ? $parlayCnt : '';
             $bet_analysis[$bet_analysis_index]['order'] = $parlay_ordernumber;
             $bet_analysis[$bet_analysis_index]['bets'] = $parlay_ordernumber;
 
@@ -631,27 +673,32 @@ class Settings_model extends CI_Model {
                 );
 
                 $custom_bet_allocation += @$fomularData[$custom_bet_item['rr_number1']][$custom_bet_item['rr_number2']];
+                if($custom_bet_item['rr_number1'] && $custom_bet_item['rr_number2']){
+                    $bet_analysis[] = array(
+                        'title'     => "Custom RR ".($key+1),
+                        'rr1'       => $custom_bet_item['rr_number1'],
+                        'rr2'       => $custom_bet_item['rr_number2'],
+                        'sheet'     => 1,
+                        'order'     => 1,
+                        'bets'      => $custom_bet_allocation
+                    );
+                }
 
-                $bet_analysis[] = array(
-                    'title'     => "Custom RR ".($key+1),
-                    'rr1'       => $custom_bet_item['rr_number1'],
-                    'rr2'       => $custom_bet_item['rr_number2'],
-                    'sheet'     => 1,
-                    'order'     => 1,
-                    'bets'      => $custom_bet_allocation
-                );
-
-                $bet_analysis[] = array(
-                    'title'     => "Custom Custom Parlay ".($key+1),
-                    'rr1'       => '',
-                    'rr2'       => '',
-                    'sheet'     => '',
-                    'order'     => 1,
-                    'bets'      => 1
-                );
+                if($custom_bet_item['parlay_number']){
+                    $bet_analysis[] = array(
+                        'title'     => "Custom Custom Parlay ".($key+1),
+                        'rr1'       => '',
+                        'rr2'       => '',
+                        'sheet'     => '',
+                        'order'     => 1,
+                        'bets'      => 1
+                    );
+                }
             }   
 
             $description = $data['description'];
+            if(!empty($data['bet_amount']))
+                $bet_amount = $data['bet_amount'];
         }
 
         $betDayLock = $this->CI->SystemSettings_model->getBetDay();
@@ -662,6 +709,7 @@ class Settings_model extends CI_Model {
             'bet_allocation'    => $settings,
             'bet_analysis'      => $bet_analysis,
             'description'       => $description,
+            'bet_amount'        => $bet_amount,
             'is_lock'           => $isLock
         );
 
@@ -674,6 +722,7 @@ class Settings_model extends CI_Model {
         $jsonData = json_decode($data);
         $settingData = $jsonData->data;
         $description = $jsonData->description;
+        $bet_amount = $jsonData->bet_amount;
 
         $_SESSION['settingType'] = $categoryType;
         $_SESSION['settingGroupuserId'] = $categoryGroupUser;
@@ -701,6 +750,7 @@ class Settings_model extends CI_Model {
             'pick_allocation' => @$settingData[3]['1'],
             'pick_number1'  => @$settingData[3]['2'],
             'description'   => $description,
+            'bet_amount'   => $bet_amount,
         );
 
         if ( $rows->num_rows() > 0 ) 

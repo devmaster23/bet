@@ -38,6 +38,7 @@ class Investor_model extends CI_Model {
         $this->CI->load->model('Investor_sportbooks_model');
         $this->CI->load->model('WorkSheet_model');
         $this->CI->load->model('Groups_model');
+        $this->CI->load->model('Settings_model');
 
         $this->groups = $this->CI->Groups_model->getAll();
     }
@@ -204,76 +205,37 @@ class Investor_model extends CI_Model {
             $tmpArr = $sportbook_item;
             $total_current_balance += floatval($sportbook_item['current_balance_'.$betweek]);
             $total_opening_balance += floatval($sportbook_item['opening_balance']);
-            $tmpArr['current_balance'] = number_format(floatval($sportbook_item['current_balance_'.$betweek]),2);
-            $tmpArr['opening_balance'] = number_format(floatval($sportbook_item['opening_balance']),2);
-            $tmpArr['lastweek_balance'] = $betweek <= 1 ? 'NA': floatval($sportbook_item['current_balance_'.($betweek-1)]);
+            $opening_balance = floatval($sportbook_item['opening_balance']);
+            $current_balance = floatval($sportbook_item['current_balance_'.$betweek]);
+            $current_change = $opening_balance != 0 ? $current_balance / $opening_balance : 0;
+            $tmpArr['current_change'] = number_format($current_change * 100,2, '.', '');
+            $tmpArr['current_balance'] = number_format($current_balance,2);
+            $tmpArr['opening_balance'] = number_format($opening_balance,2);
             $result[] = $tmpArr;
         }
+        $total_current_change = $total_opening_balance != 0 ? $total_current_balance / $total_opening_balance : 0;
         $result[] = array(
-           'current_balance' =>  $total_current_balance,
-           'opening_balance' =>  $total_opening_balance,
+           'current_balance' =>  number_format($total_current_balance, 2),
+           'opening_balance' =>  number_format($total_opening_balance, 2),
+           'current_change' =>  number_format($total_current_change * 100,2, '.', ''),
         );
         return $result;
     }
 
-    public function assign($investorId, $betweek)
+    public function assign($investorId, $betweek, $bet_amount = 1)
     {
         $result = [];
-        $sprotbookList = $this->CI->Investor_sportbooks_model->getListByInvestorId($investorId,$betweek);
+        $sprotbookList = $this->getInvestorSportboooksWithBets($investorId,$betweek);
         $totalBalance = 0;
         $totalValidBalance = 0;
-        $sportbookCount = count($sprotbookList);
-
-        $rrStructureCnt = 0;
-
         $worksheet = $this->WorkSheet_model->getRROrders($betweek, $investorId);
-        
-        if($worksheet['rr2'])
-            $rrStructureCnt ++;
-        if($worksheet['rr3'])
-            $rrStructureCnt ++;
-        if($worksheet['rr4'])
-            $rrStructureCnt ++;
+        $assignes = getBetArr($worksheet);
 
-        $assignes = array();
-
-        if(isset($worksheet['data']['rr']))
-        {
-            $assignes = array_merge($assignes, $worksheet['data']['rr']);
-        }
-
-        if(isset($worksheet['data']['parlay']))
-        {
-            $assignes = array_merge($assignes, $worksheet['data']['parlay']);
-        }
-
-        if(isset($worksheet['data']['single']))
-        {
-            $assignes = array_merge($assignes, $worksheet['data']['single']);
-        }
 
         foreach ($sprotbookList as $key => $sportbook_item)
-            $totalBalance += floatval($sportbook_item['current_balance_'.$betweek]);
-
-        foreach ($sprotbookList as $key => $sportbook_item) {
-            $tmpArr = array(
-                'id' => $sportbook_item['id'],
-                'title' => $sportbook_item['title']
-            );
-            $tmpArr['current_balance'] = floatval($sportbook_item['current_balance_'.$betweek]);
-            $tmpArr['percent'] = $totalBalance == 0 ? 0 : $tmpArr['current_balance'] / $totalBalance * 100;
-            $tmpArr['equal_percent'] = $sportbookCount == 0 ? 0 : 100 / $sportbookCount;
-            $tmpArr['bet_count'] = $sportbook_item['bet_count'];
-            $tmpArr['is_valid'] = false;
-            if($tmpArr['percent'] > $tmpArr['equal_percent'] / 2)
-            {   
-                $tmpArr['is_valid'] = true;
-                $totalValidBalance += $tmpArr['current_balance'];
-            }
-
-            $tmpArr['percent'] = number_format((float)$tmpArr['percent'], 2, '.', '');
-            $tmpArr['equal_percent'] = number_format((float)$tmpArr['equal_percent'], 2, '.', '');
-            $result[] = $tmpArr;
+        {
+            if($sportbook_item['is_valid'])
+                $totalBalance += floatval($sportbook_item['current_balance']);
         }
 
         $this->db->where(array(
@@ -282,75 +244,53 @@ class Investor_model extends CI_Model {
         ))->delete('orders');
 
         $tmpBetCount = 0;
-        $totalBetCount = count($assignes);
+        usort($sprotbookList, function($a,$b){
+            if ($a['current_balance'] == $b['current_balance']) {
+                return 0;
+            }
+            return ($a['current_balance'] > $b['current_balance']) ? -1 : 1;
+        });
 
-        foreach ($result as $key => $item) {
-            $betCount = 0;
+        foreach ($sprotbookList as $key => $item) {
             if($item['is_valid'])
             {
-                $betPercent = $totalValidBalance == 0 ? 0 : $item['current_balance'] / $totalValidBalance * 100;
-                $betCount = ceil($totalBetCount * $betPercent / 100);
-                if($tmpBetCount + $betCount > $totalBetCount)
-                {
-                    $betCount = $totalBetCount - $tmpBetCount;
-                }
+                // var_dump($item);die;
+                $betPercent = $item['valid_percent'];
+                $betCount = $item['valid_bet_count'];
                 $betAssign = array_slice($assignes, $tmpBetCount, $betCount);
-
                 $tmpBetCount += $betCount;
-                foreach ($betAssign as $betItem) {
-                    switch ($betItem['bet_type']) {
-                        case 'parlay':
-                            $bet_type = 1;
-                            break;
-                        case 'rr':
-                            $bet_type = 2;
-                            break;
-                        default:
-                            $bet_type = 0;
-                            break;
-                    }
 
+                foreach ($betAssign as $betItem) {
                     $orderData = array(
                         'betday'        => $betweek,
                         'investor_id'   => $investorId,
                         'sportbook_id'  => $item['id'],
-                        'bet_type'      => $bet_type,
+                        'bet_type'      => $betItem['bet_type'],
                         'bet_id'        => $betItem['title'],
-                        'bet_amount'    => 100
+                        'bet_amount'    => $bet_amount,
+                        'bet_total_amount' => $bet_amount * $betItem['m_number']
                     );
                     $this->db->insert('orders', $orderData);
                 }
             }
 
         }
+
+        $this->CI->Settings_model->setBetAmount($betweek, $investorId, $bet_amount);
         return array('status'=>'success');
     }
 
     public function getInvestorSportboooksWithBets($investorId, $betweek){
         $result = [];
         $sprotbookList = $this->CI->Investor_sportbooks_model->getListByInvestorId($investorId,$betweek);
+
         $totalBalance = 0;
         $totalValidBalance = 0;
         $sportbookCount = count($sprotbookList);
 
-        $rrStructureCnt = 0;
-
         $worksheet = $this->WorkSheet_model->getRROrders($betweek,$investorId);
-        if($worksheet['rr2'])
-            $rrStructureCnt ++;
-        if($worksheet['rr3'])
-            $rrStructureCnt ++;
-        if($worksheet['rr4'])
-            $rrStructureCnt ++;
-
-        $totalBetCount = 0;
-
-        if(isset($worksheet['data']['single']))
-            $totalBetCount += count($worksheet['data']['single']);
-        if(isset($worksheet['data']['parlay']))
-            $totalBetCount += count($worksheet['data']['parlay']);
-        if(isset($worksheet['data']['rr']))
-            $totalBetCount += count($worksheet['data']['rr']);
+        $bets = getBetArr($worksheet);
+        $totalBetCount = count($bets);
 
         foreach ($sprotbookList as $key => $sportbook_item)
             $totalBalance += floatval($sportbook_item['current_balance_'.$betweek]);
@@ -373,27 +313,40 @@ class Investor_model extends CI_Model {
 
             $tmpArr['percent'] = number_format((float)$tmpArr['percent'], 2, '.', '');
             $tmpArr['equal_percent'] = number_format((float)$tmpArr['equal_percent'], 2, '.', '');
+            $tmpArr['valid_percent'] = 0;
+            $tmpArr['valid_bet_count'] = 0;
+            $tmpArr['balance_left'] = $tmpArr['current_balance'];
             $result[] = $tmpArr;
         }
 
         $tmpBetCount = 0;
+        usort($result, function($a,$b){
+            if ($a['current_balance'] == $b['current_balance']) {
+                return 0;
+            }
+            return ($a['current_balance'] > $b['current_balance']) ? -1 : 1;
+        });
 
         foreach ($result as $key => &$item) {
-            $item['valid_percent'] = '';
-            $item['valid_bet_count'] = 0;
             if($item['is_valid'])
             {
+                $item['valid_bet_count'] = 0;
                 $item['valid_percent'] = $totalValidBalance == 0 ? 0 : $item['current_balance'] / $totalValidBalance * 100;
                 $item['valid_percent'] = number_format((float)$item['valid_percent'], 2, '.', '');
                 if($tmpBetCount < $totalBetCount)
                 {
-                    $item['valid_bet_count'] = ceil($totalBetCount * $item['valid_percent'] / 100);
-                    $tmpBetCount += $item['valid_bet_count'];
-                    if($tmpBetCount > $totalBetCount)
-                    {
-                        $item['valid_bet_count'] = $totalBetCount - $tmpBetCount + $item['valid_bet_count'];
+                    $item['valid_bet_count'] = round($totalBetCount * $item['valid_percent'] / 100);
+                    if($tmpBetCount + $item['valid_bet_count'] > $totalBetCount)
+                        $item['valid_bet_count'] = $totalBetCount - $tmpBetCount;
 
+                    $betAssign = array_slice($bets, $tmpBetCount, $item['valid_bet_count']);
+                    $tmpBetCount += $item['valid_bet_count'];
+                    
+                    foreach ($betAssign as $betItem) {
+                        $item['balance_left'] -= $betItem['total_amount'];
                     }
+                    if($tmpBetCount > $totalBetCount)
+                        break;
                 }
             }
 

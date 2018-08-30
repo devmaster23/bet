@@ -30,17 +30,25 @@
         </div>
     </div>
     <div class="allocations-div">
+        <div class="text-center hypo-bet-div">
+            <div>
+                <label>Hypothetical Bet Amount: $<span id="hypo_bet_amount"></span></label>
+            </div>
+            <div>
+                <label>Current Bet Amount: <input type="number" name="current_bet" /></label>
+            </div>
+        </div>
         <table id="allocations" class="display" style="width:100%">
             <thead>
                 <tr>
                     <th>Title</th>
                     <th>Current Balance ($)</th>
+                    <th>( % )</th>
+                    <th>Optimal ( % )</th>
+                    <th>( % )</th>
+                    <th>Desired Bets</th>
+                    <th>Balance after Bets ($)</th>
                     <th>Current Bets</th>
-                    <th>( % )</th>
-                    <th>Desired ( % )</th>
-                    <th>Money Allocation ($)</th>
-                    <th>( % )</th>
-                    <th>Number of Bets</th>
                 </tr>
             </thead>
         </table>

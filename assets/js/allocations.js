@@ -44,13 +44,15 @@ function assignBets(){
 
     var betweek = $('.game-week-select').val();
     var investorId = $('.investor-select').val();
+    var bet_amount = $("input[name='current_bet']").val();
         
     $.ajax({
         url: api_url+'/assign',
         type: 'POST',
         data: {
             'betweek': betweek,
-            'investorId': investorId
+            'investorId': investorId,
+            'bet_amount': bet_amount
         },
         success: function(data) {
             initPage();
@@ -58,10 +60,10 @@ function assignBets(){
         }
     });
 }
-
-function initPage(){
-    var betweek = $('.game-week-select').val();
-    var investorId = $('.investor-select').val();
+function loadData(data){
+    
+    $("span[id='hypo_bet_amount']").html(data['hypo_bet_amount']);
+    $("input[name='current_bet']").val(data['current_bet_amount']);
 
     if(mainTable != null)
     {
@@ -69,49 +71,46 @@ function initPage(){
         $('#myTable').empty();
 
     }
-
     mainTable = $('#allocations').DataTable( {
-        "ajax": {
-            "url": api_url+"/loadSportbooks",
-            "type": 'post',
-            "data" : {
-                'betweek': betweek,
-                'investorId': investorId
-            },
-        },
+        "data": data['data'],
         "columns": [
             { "data": "title" },
             { 
                 "data": "current_balance",
                 render: $.fn.dataTable.render.number( ',', '.', 2)
             },
-            { "data": "bet_count" },
             { "data": "percent" },
             { "data": "equal_percent" },
+            { "data": "valid_percent" },
+            { "data": "valid_bet_count" },
             { 
-                "data": "current_balance",
+                "data": "balance_left",
                 render: $.fn.dataTable.render.number( ',', '.', 2)
             },
-            { "data": "valid_percent" },
-            { "data": "valid_bet_count" }
+            { "data": "bet_count" },
         ],
         "columnDefs": [
             {"className": "dt-right", "targets": "_all"},
-            {
-                "render": function ( data, type, row ) {
-                    return '$ '+ data;
-                },
-                "targets": 1
-            },
-            {
-                "render": function ( data, type, row ) {
-                    return '$ '+ data;
-                },
-                "targets": 5
-            }
         ],
         "order": [[1, 'desc']]
     } );
+}
+function initPage(){
+    var betweek = $('.game-week-select').val();
+    var investorId = $('.investor-select').val();
+
+    $.ajax({
+        url: api_url+'/loadSportbooks',
+        type: 'POST',
+        data: {
+            'betweek': betweek,
+            'investorId': investorId
+        },
+        success: function(data) {
+            loadData(data);
+            $(".loading-div").hide()
+        }
+    });
 }
 $(document).ready(function() {
     initPage();

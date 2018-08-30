@@ -96,3 +96,20 @@
 .allocation-page #allocations td{
     text-align: center;
 }
+.allocation-page .hypo-bet-div{
+    text-align: center;
+    margin-top: 20px;
+    font-size: 25px;
+}
+.allocation-page .hypo-bet-div span{
+    font-size: 40px;
+    margin-left: 10px;
+}
+
+.allocation-page .hypo-bet-div input[name=current_bet]{
+    padding: 5px;
+    border: 2px solid #3E4B5B;
+    outline: 0 none;
+    text-align: center;
+    margin-left: 10px;
+}

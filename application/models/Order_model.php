@@ -28,6 +28,14 @@ class Order_model extends CI_Model {
         'password'
     );
 
+    private $sordOrder = array(
+        'rr' => 1,
+        'crr' => 2,
+        'parlay' => 3,
+        'cparlay' => 4,
+        'single' => 5
+    );
+
     function __construct()
     {
         $this->CI =& get_instance();
@@ -69,26 +77,53 @@ class Order_model extends CI_Model {
     public function getTotalBetCount($betweek, $investorId = null)
     {
         $worksheet = $this->worksheet_model->getRROrders($betweek,$investorId);
-        $total_bets = 0;
-        if(isset($worksheet['data']['rr']))
-        {
-            $total_bets += count($worksheet['data']['rr']);
-        }
-
-        if(isset($worksheet['data']['parlay']))
-        {
-            $total_bets += count($worksheet['data']['parlay']);
-        }
-
-        if(isset($worksheet['data']['single']))
-        {
-            $total_bets += count($worksheet['data']['single']);
-        }
-
-        return $total_bets;
+        $bets = getBetArr($worksheet);
+        return count($bets);
     }
 
-    public function addOrder($betweek, $investorId, $sportbookID, $bet, $submit_type = null)
+    public function reassignOrder($betweek, $investorId, $sportbookID, $bet, $betAmount)
+    {
+        $submit_type = 'reassign';
+        $orderId = $bet['order_id'];
+        $betId = $bet['title'];
+        $betTotalAmount = $bet['total_amount'];
+
+        if($betTotalAmount <= $betAmount){
+            $rows = $this->db->where(array(
+                'id'  => $orderId
+            ))->update($this->tableName, array(
+                'sprotbook_id' => $sportbookID
+            ));
+
+        }else{
+            $newBalance = $betTotalAmount - $betAmount;            
+            
+            $rows = $this->db->where(array(
+                'id'  => $orderId
+            ))->update($this->tableName, array(
+                'bet_total_amount' => $newBalance
+            ));
+
+            $newData = array(
+                'investor_id' => $investorId,
+                'sportbook_id'  => $sportbookID,
+                'betday'  => $betweek,
+                'bet_id' => $betId,
+                'bet_type' => $bet['bet_type'],
+                'bet_amount' => $bet['bet_amount'],
+                'bet_total_amount' => $betAmount,
+            );
+
+            $this->db->insert($this->tableName, $newData);
+            $newId = $this->db->insert_id();
+            $bet['order_id'] = $newId;
+        }
+        $bet['total_amount'] = $betAmount;
+
+        $this->OrderLog_model->addLog($betweek, $investorId, $sportbookID, $submit_type, $betAmount, $bet);
+        return true;
+    }
+    public function addOrder($betweek, $investorId, $sportbookID, $bet, $betAmount, $submit_type = null)
     {
         $betId = $bet['title'];
         $newData = array(
@@ -160,12 +195,14 @@ class Order_model extends CI_Model {
             $this->db->where(array(
                 'id' => $prevRowID
             ))->update($this->tableName, $newData);
-
+            $insert_id = $prevRowID;
         }else{
             $this->db->insert($this->tableName, $newData);
+            $insert_id = $this->db->insert_id();
         }
+        $bet['order_id'] = $insert_id;
 
-        $this->OrderLog_model->addLog($betweek, $investorId, $sportbookID, $submit_type, $submit_type, $bet);
+        $this->OrderLog_model->addLog($betweek, $investorId, $sportbookID, $submit_type, $betTotalAmount, $bet);
         return true;
     }
 
@@ -184,19 +221,39 @@ class Order_model extends CI_Model {
     public function getOrders($betweek, $investorId)
     {
         $result = [];
+        $worksheet = $this->worksheet_model->getRROrders($betweek, $investorId);
+        $bets = getBetArr($worksheet);
 
         $rows = $this->db->select('*')
         ->from($this->tableName)
         ->where(array(
             'investor_id' => $investorId,
             'betday' => $betweek
-        ))->get()->result_array();
+        ))
+        ->get()->result_array();
+
         if(count($rows))
         {
+            usort($rows, function($a,$b){
+                if ($this->sordOrder[$a['bet_type']] == $this->sordOrder[$b['bet_type']]) {
+                    return 0;
+                }
+                return ($this->sordOrder[$a['bet_type']] > $this->sordOrder[$b['bet_type']]) ? 1 : -1;
+            });
+
             foreach ($rows as $item) {
-                if(!isset($result[$item['sportbook_id']]))
-                    $result[$item['sportbook_id']] = array();
-                $result[$item['sportbook_id']][] = $item['bet_id'];
+                $bet_item = array_filter($bets, function($tmp) use($item){
+                    return ($tmp['title'] == $item['bet_id']) && ($tmp['bet_type'] == $item['bet_type']);
+                });
+                if($bet_item){
+                    $result_item = reset($bet_item);
+                    $result_item['bet_amount'] = $item['bet_amount'];
+                    $result_item['total_amount']  = $item['bet_total_amount'];
+                    $result_item['order_id']  = $item['id'];
+                    $result[] = $result_item;
+                }else{
+                    continue;
+                }
             }
         }
         return $result;
@@ -211,6 +268,7 @@ class Order_model extends CI_Model {
         ->where(array(
             'investor_id' => $investorId,
             'betday' => $betweek,
+            'bet_type' => $bet['bet_type'],
             'bet_id' => $bet['title']
         ))->get()->result_array();
 
@@ -247,6 +305,14 @@ class Order_model extends CI_Model {
             $item['bet_left'] = @$bet_count_list[$item['sportbook_id']]['bet_left'];
             $item['bet_placed'] = @$bet_count_list[$item['sportbook_id']]['bet_placed'];
         }
+
+        usort($result, function($a,$b){
+            if ($a['current_balance'] == $b['current_balance']) {
+                return 0;
+            }
+            return ($a['current_balance'] > $b['current_balance']) ? -1 : 1;
+        });
+        
         return $result;
     }
 
@@ -281,26 +347,6 @@ class Order_model extends CI_Model {
             $result = $rows;
         }
         return $result;
-    }
-
-    public function getBetArr($worksheet)
-    {
-        $bets = [];
-        if(isset($worksheet['data']['rr']))
-        {
-            $bets = array_merge($bets, $worksheet['data']['rr']);
-        }
-
-        if(isset($worksheet['data']['parlay']))
-        {
-            $bets = array_merge($bets, $worksheet['data']['parlay']);
-        }
-
-        if(isset($worksheet['data']['single']))
-        {
-            $bets = array_merge($bets, $worksheet['data']['single']);
-        }
-        return $bets;
     }
 
     public function q($sql) {

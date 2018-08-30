@@ -106,33 +106,14 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
   td.style.textAlign = "left";
   td.style.fontSize = fontSize;
   Handsontable.renderers.TextRenderer.apply(this, args);
-  if (prop == 'opening_balance' || prop == 'current_balance')
+  if (prop == 'opening_balance' || prop == 'current_balance' || prop == 'current_change')
   {
     td.style.textAlign = "right";
   }
   if (prop == 'date_opened' || prop == 'updated_at'){
     td.style.textAlign = "center";
   }
-  if (prop == 'current_change')
-  { 
-    td.style.textAlign = "right";
-    var current_balance = eval(instance.getDataAtRowProp(row,'current_balance')),
-        opening_balance = eval(instance.getDataAtRowProp(row,'opening_balance'));
-    var percent = opening_balance == 0 ? '0' : (current_balance - opening_balance ) / opening_balance * 100;
-    td.innerHTML = eval(percent).toFixed(2) + ' %';
-  }
-  if (prop == 'lastweek_change')
-  { 
-    var lastweek_balance = eval(instance.getDataAtRowProp(row,'lastweek_balance')),
-        current_balance = eval(instance.getDataAtRowProp(row,'current_balance'));
-    var percent = 'NA'
-    if(lastweek_balance != 'NA')
-    {
-        percent = current_balance == 0 ? '0' : (lastweek_balance - current_balance ) / current_balance * 100;
-        percent = eval(percent).toFixed(2) + ' %';
-    }
-    td.innerHTML = percent;
-  }
+
   return td;
 }
 

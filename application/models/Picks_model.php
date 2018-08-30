@@ -119,11 +119,8 @@ class Picks_model extends CI_Model {
         return $ret;
     }
 
-    public function getAllList($betday)
+    public function getAllList($betday,$type, $groupuser_id)
     {
-        $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
-        $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
-
         $this->db->select('*')->from('games');
         $this->db->where(array(
             'betday' => $betday
@@ -142,6 +139,8 @@ class Picks_model extends CI_Model {
         foreach($rows as $key => $item){
             $team1_game_pts = json_decode($item['team1_game_pts_sel']);
             $team1_game_ml = json_decode($item['team1_game_ml_sel']);
+            $team1_game_rl = json_decode($item['team1_game_rl_sel']);
+            $team1_game_rrl = json_decode($item['team1_game_rrl_sel']);
             $team1_game_total = json_decode($item['team1_game_total_sel']);
             $team1_first_half_pts = json_decode($item['team1_first_half_pts_sel']);
             $team1_first_half_ml = json_decode($item['team1_first_half_ml_sel']);
@@ -149,6 +148,8 @@ class Picks_model extends CI_Model {
             
             $team2_game_pts = json_decode($item['team2_game_pts_sel']);
             $team2_game_ml = json_decode($item['team2_game_ml_sel']);
+            $team2_game_rl = json_decode($item['team2_game_rl_sel']);
+            $team2_game_rrl = json_decode($item['team2_game_rrl_sel']);
             $team2_game_total = json_decode($item['team2_game_total_sel']);
             $team2_first_half_pts = json_decode($item['team2_first_half_pts_sel']);
             $team2_first_half_ml = json_decode($item['team2_first_half_ml_sel']);
@@ -159,6 +160,11 @@ class Picks_model extends CI_Model {
                 $ret[] = $this->getPickData($item, 1, 'pts', false, $pickSelectList);
             if((isset($team1_game_ml->pick) && $team1_game_ml->pick) || (isset($team1_game_ml->wrapper) && $team1_game_ml->wrapper) || (isset($team1_game_ml->candy) && $team1_game_ml->candy))
                 $ret[] = $this->getPickData($item, 1, 'ml', false, $pickSelectList);
+            if((isset($team1_game_rl->pick) && $team1_game_rl->pick) || (isset($team1_game_rl->wrapper) && $team1_game_rl->wrapper) || (isset($team1_game_rl->candy) && $team1_game_rl->candy))
+                $ret[] = $this->getPickData($item, 1, 'rl', false, $pickSelectList);
+            if((isset($team1_game_rrl->pick) && $team1_game_rrl->pick) || (isset($team1_game_rrl->wrapper) && $team1_game_rrl->wrapper) || (isset($team1_game_rrl->candy) && $team1_game_rrl->candy))
+                $ret[] = $this->getPickData($item, 1, 'rrl', false, $pickSelectList);
+
             if((isset($team1_game_total->pick) && $team1_game_total->pick) || (isset($team1_game_total->wrapper) && $team1_game_total->wrapper) || (isset($team1_game_total->candy) && $team1_game_total->candy))
                 $ret[] = $this->getPickData($item, 1, 'total', false, $pickSelectList);
 
@@ -173,6 +179,10 @@ class Picks_model extends CI_Model {
                 $ret[] = $this->getPickData($item, 2, 'pts', false, $pickSelectList);
             if((isset($team2_game_ml->pick) && $team2_game_ml->pick) || (isset($team2_game_ml->wrapper) && $team2_game_ml->wrapper) || (isset($team2_game_ml->candy) && $team2_game_ml->candy))
                 $ret[] = $this->getPickData($item, 2, 'ml', false, $pickSelectList);
+            if((isset($team2_game_rl->pick) && $team2_game_rl->pick) || (isset($team2_game_rl->wrapper) && $team2_game_rl->wrapper) || (isset($team2_game_rl->candy) && $team2_game_rl->candy))
+                $ret[] = $this->getPickData($item, 2, 'rl', false, $pickSelectList);
+            if((isset($team2_game_rrl->pick) && $team2_game_rrl->pick) || (isset($team2_game_rrl->wrapper) && $team2_game_rrl->wrapper) || (isset($team2_game_rrl->candy) && $team2_game_rrl->candy))
+                $ret[] = $this->getPickData($item, 2, 'rrl', false, $pickSelectList);
             if((isset($team2_game_total->pick) && $team2_game_total->pick) || (isset($team2_game_total->wrapper) && $team2_game_total->wrapper) || (isset($team2_game_total->candy) && $team2_game_total->candy))
                 $ret[] = $this->getPickData($item, 2, 'total', false, $pickSelectList);
 
@@ -332,6 +342,8 @@ class Picks_model extends CI_Model {
         foreach($rows as $key => $item){
             $team1_game_pts = json_decode($item['team1_game_pts_sel']);
             $team1_game_ml = json_decode($item['team1_game_ml_sel']);
+            $team1_game_rl = json_decode($item['team1_game_rl_sel']);
+            $team1_game_rrl = json_decode($item['team1_game_rrl_sel']);
             $team1_game_total = json_decode($item['team1_game_total_sel']);
             $team1_first_half_pts = json_decode($item['team1_first_half_pts_sel']);
             $team1_first_half_ml = json_decode($item['team1_first_half_ml_sel']);
@@ -339,6 +351,8 @@ class Picks_model extends CI_Model {
             
             $team2_game_pts = json_decode($item['team2_game_pts_sel']);
             $team2_game_ml = json_decode($item['team2_game_ml_sel']);
+            $team2_game_rl = json_decode($item['team2_game_rl_sel']);
+            $team2_game_rrl = json_decode($item['team2_game_rrl_sel']);
             $team2_game_total = json_decode($item['team2_game_total_sel']);
             $team2_first_half_pts = json_decode($item['team2_first_half_pts_sel']);
             $team2_first_half_ml = json_decode($item['team2_first_half_ml_sel']);
@@ -348,6 +362,10 @@ class Picks_model extends CI_Model {
                 $ret[] = $this->getPickData($item, 1, 'pts', false, $pickSelectList);
             if(isset($team1_game_ml->$type_item) && $team1_game_ml->$type_item)
                 $ret[] = $this->getPickData($item, 1, 'ml', false, $pickSelectList);
+            if(isset($team1_game_rl->$type_item) && $team1_game_rl->$type_item)
+                $ret[] = $this->getPickData($item, 1, 'rl', false, $pickSelectList);
+            if(isset($team1_game_rrl->$type_item) && $team1_game_rrl->$type_item)
+                $ret[] = $this->getPickData($item, 1, 'rrl', false, $pickSelectList);
             if(isset($team1_game_total->$type_item) && $team1_game_total->$type_item)
                 $ret[] = $this->getPickData($item, 1, 'total', false, $pickSelectList);
 
@@ -362,6 +380,10 @@ class Picks_model extends CI_Model {
                 $ret[] = $this->getPickData($item, 2, 'pts', false, $pickSelectList);
             if(isset($team2_game_ml->$type_item) && $team2_game_ml->$type_item)
                 $ret[] = $this->getPickData($item, 2, 'ml', false, $pickSelectList);
+            if(isset($team2_game_rl->$type_item) && $team2_game_rl->$type_item)
+                $ret[] = $this->getPickData($item, 2, 'rl', false, $pickSelectList);
+            if(isset($team2_game_rrl->$type_item) && $team2_game_rrl->$type_item)
+                $ret[] = $this->getPickData($item, 2, 'rrl', false, $pickSelectList);
             if(isset($team2_game_total->$type_item) && $team2_game_total->$type_item)
                 $ret[] = $this->getPickData($item, 2, 'total', false, $pickSelectList);
 

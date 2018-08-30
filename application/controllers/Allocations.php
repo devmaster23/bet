@@ -13,6 +13,8 @@ class Allocations extends CI_Controller {
 
         $this->load->model('Investor_sportbooks_model', 'model');
         $this->load->model('Investor_model', 'investor_model');
+        $this->load->model('WorkSheet_model', 'worksheet_model');
+        $this->load->model('Settings_model', 'setting_model');
         $this->load->library('session');
     }
     public function index()
@@ -36,8 +38,29 @@ class Allocations extends CI_Controller {
         $betweek = $_POST['betweek'];
         $_SESSION['betday'] = $betweek;
         
+        $worksheet = $this->worksheet_model->getRROrders($betweek,$investorId);
+        $bets = getBetArr($worksheet);
+        $setting = $this->setting_model->getActiveSettingByInvestor($betweek,$investorId);
         $investor_sportbooks = $this->investor_model->getInvestorSportboooksWithBets($investorId, $betweek);
+
+        $total_balance = 0;
+        foreach ($investor_sportbooks as $item) {
+            $total_balance += $item['current_balance'];
+        }
+
+        $allocation_percent = $setting['data']['rr_allocation'];
+        $optimal_balance = $total_balance * $allocation_percent / 100;
+
+        $total_m_number = 0;
+        foreach ($bets as $item) {
+            $total_m_number += $item['m_number'];
+        }
+
+        $hypo_bet_amount = $total_m_number ? $optimal_balance / $total_m_number : 1;
+        $hypo_bet_amount = roundBetAmount($hypo_bet_amount);
         $data['data'] = $investor_sportbooks;
+        $data['current_bet_amount'] = $setting['data']['bet_amount'];
+        $data['hypo_bet_amount'] = $hypo_bet_amount;
         header('Content-Type: application/json');
         echo json_encode( $data);
     }
@@ -46,7 +69,8 @@ class Allocations extends CI_Controller {
     {
         $investorId = $_POST['investorId'];
         $betweek = $_POST['betweek'];
-        $result = $this->investor_model->assign($investorId, $betweek);
+        $bet_amount = $_POST['bet_amount'];
+        $result = $this->investor_model->assign($investorId, $betweek, $bet_amount);
         header('Content-Type: application/json');
         echo json_encode( $result);
     }

@@ -91,8 +91,26 @@ $(document).ready(function() {
             sportbookID = $($objSelected[0]).data('id');
 
         var submit_type = $(this).data('type');
-        $('#submit-form input[name=sportbookID]').val(sportbookID);
-        $('#submit-form input[name=submit_type]').val(submit_type);
-        $('#submit-form').submit();
+        if(submit_type != 'reassign')
+        {
+            $('#submit-form input[name=sportbookID]').val(sportbookID);
+            $('#submit-form input[name=submit_type]').val(submit_type);
+            $('#submit-form').submit();
+        }
+    })
+
+    $("#reassign_modal #reassign").on('click', function(){
+        var sportbookID = $("#reassign_sportbook_id").val(),
+            bet_amount = $("#bet_amount").val(),
+            valid_bet_amount = $("#valid_bet_amount").val();
+
+        if(bet_amount > valid_bet_amount){
+            alert("Bet amount should be less or equal to " + valid_bet_amount);
+        }else{
+            $('#submit-form input[name=sportbookID]').val(sportbookID);
+            $('#submit-form input[name=submit_type]').val('reassign');
+            $('#submit-form input[name=betAmount]').val(bet_amount);
+            $('#submit-form').submit();   
+        }
     })
 } );

@@ -218,6 +218,7 @@ function initData(data){
   updateLockIcon(data['is_lock']);
   var description = data['description'];
   $('#description').val(description);
+  $('#bet_amount').val(data['bet_amount']);
 
   var container = $('#bet_allocation')[0];
   tmpSetting = Object.assign({},hotSettings);
@@ -265,7 +266,7 @@ function updateFomularColor(x,y,custom)
       var selectClass = 'selected';
       if(custom)
         selectClass = 'custom-selected';
-      $("#fomularTable tbody tr:eq("+(value-3)+") td:eq("+(value1-1)+")" ).addClass(selectClass);
+      $("#fomularTable tbody tr:eq("+(value-1)+") td:eq("+(value1)+")" ).addClass(selectClass);
     });
   });
 }
@@ -356,6 +357,7 @@ $(document).on('click','#category-group-user li', function(){
 function updateData(){
     var betweek = $('.game-week-select').val();
     var description = $('#description').val();
+    var bet_amount = $('#bet_amount').val();
     var tableData = tableObject.getData();
     $(".loading-div").show()
     $.ajax({
@@ -367,7 +369,8 @@ function updateData(){
           categoryGroupUser: categoryGroupUser,
           data: JSON.stringify({
             data: tableData,
-            description: description
+            description: description,
+            bet_amount: bet_amount
           })
         },
         success: function(data) {
