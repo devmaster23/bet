@@ -177,7 +177,7 @@ class Orders extends CI_Controller {
         $data['investor'] = $investor;
 
         $data['bet'] = $bet;
-        $data['sportbookList'] = $this->model->getSportbook($investor['sportbooks'], $data['betweek'], $investorId, $data['bet']);
+        $data['sportbookList'] = $this->model->getSportbook($investor['sportbooks'], $data['betweek'], $investorId, $bet);
         $data['sportbook'] = $this->model->getSelectedSportbook($data['sportbookList']);
 
         // $data['setting'] = $this->setting_model->getActiveSetting($data['betweek']);

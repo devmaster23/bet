@@ -125,27 +125,19 @@ class Order_model extends CI_Model {
     }
     public function addOrder($betweek, $investorId, $sportbookID, $bet, $betAmount, $submit_type = null)
     {
-        $betId = $bet['title'];
         $newData = array(
             'investor_id' => $investorId,
             'sportbook_id'  => $sportbookID,
             'betday'  => $betweek,
-            'bet_id' => $betId
+            'bet_type' => $bet['bet_type'],
+            'bet_id' => $bet['title'],
+            'bet_status' => $submit_type
         );
-
-        if($submit_type == 'reassign')
-            $submit_type == null;
-        if(!is_null($submit_type))
-        {
-            $newData['bet_status'] = $submit_type;
-        }
 
         $rows = $this->db->select('*')
         ->from($this->tableName)
         ->where(array(
-            'investor_id' => $investorId,
-            'betday'  => $betweek,
-            'bet_id'  => $betId
+            'id' => $bet['order_id']
         ))->get()->result_array();
 
 
@@ -208,11 +200,8 @@ class Order_model extends CI_Model {
 
     public function removeOrder($betweek, $investorId, $bet)
     {
-        $betId = $bet['title'];
         $rows = $this->db->where(array(
-            'investor_id' => $investorId,
-            'betday'  => $betweek,
-            'bet_id'  => $betId
+            'id' => $bet['order_id']
         ))->delete($this->tableName);
 
         return true;
@@ -236,11 +225,14 @@ class Order_model extends CI_Model {
         {
             usort($rows, function($a,$b){
                 if ($this->sordOrder[$a['bet_type']] == $this->sordOrder[$b['bet_type']]) {
-                    return 0;
+                    if($a['bet_id'] == $b['bet_id'])
+                    {
+                        return $a['id'] > $b['id'] ? 1 : -1;
+                    }
+                    return $a['bet_id'] > $b['bet_id'] ? 1 : -1;    
                 }
                 return ($this->sordOrder[$a['bet_type']] > $this->sordOrder[$b['bet_type']]) ? 1 : -1;
             });
-
             foreach ($rows as $item) {
                 $bet_item = array_filter($bets, function($tmp) use($item){
                     return ($tmp['title'] == $item['bet_id']) && ($tmp['bet_type'] == $item['bet_type']);
@@ -250,6 +242,7 @@ class Order_model extends CI_Model {
                     $result_item['bet_amount'] = $item['bet_amount'];
                     $result_item['total_amount']  = $item['bet_total_amount'];
                     $result_item['order_id']  = $item['id'];
+                    $result_item['sportbook_id']  = $item['sportbook_id'];
                     $result[] = $result_item;
                 }else{
                     continue;
@@ -265,12 +258,7 @@ class Order_model extends CI_Model {
 
         $rows = $this->db->select('*')
         ->from($this->tableName)
-        ->where(array(
-            'investor_id' => $investorId,
-            'betday' => $betweek,
-            'bet_type' => $bet['bet_type'],
-            'bet_id' => $bet['title']
-        ))->get()->result_array();
+        ->where('id', $bet['order_id'])->get()->result_array();
 
         $orders = $this->db->select('*')
         ->from($this->tableName)
