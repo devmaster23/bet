@@ -231,7 +231,6 @@ class Investor_model extends CI_Model {
         $worksheet = $this->WorkSheet_model->getRROrders($betweek, $investorId);
         $assignes = getBetArr($worksheet);
 
-
         foreach ($sprotbookList as $key => $sportbook_item)
         {
             if($sportbook_item['is_valid'])
@@ -327,13 +326,15 @@ class Investor_model extends CI_Model {
             return ($a['current_balance'] > $b['current_balance']) ? -1 : 1;
         });
 
+        $tempKey = null;
         foreach ($result as $key => &$item) {
             if($item['is_valid'])
             {
+                $tempKey = $key;
                 $item['valid_bet_count'] = 0;
                 $item['valid_percent'] = $totalValidBalance == 0 ? 0 : $item['current_balance'] / $totalValidBalance * 100;
                 $item['valid_percent'] = number_format((float)$item['valid_percent'], 2, '.', '');
-                if($tmpBetCount < $totalBetCount)
+                if($tmpBetCount <= $totalBetCount)
                 {
                     $item['valid_bet_count'] = round($totalBetCount * $item['valid_percent'] / 100);
                     if($tmpBetCount + $item['valid_bet_count'] > $totalBetCount)
@@ -350,6 +351,9 @@ class Investor_model extends CI_Model {
                 }
             }
 
+        }
+        if($tmpBetCount < $totalBetCount && !is_null($tempKey)){
+            $result[$tempKey]['valid_bet_count'] += $totalBetCount - $tmpBetCount;
         }
 
         return $result;

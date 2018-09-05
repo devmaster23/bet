@@ -87,21 +87,25 @@ class Order_model extends CI_Model {
         $orderId = $bet['order_id'];
         $betId = $bet['title'];
         $betTotalAmount = $bet['total_amount'];
+        $m_number = $bet['m_number'];
 
         if($betTotalAmount <= $betAmount){
             $rows = $this->db->where(array(
                 'id'  => $orderId
             ))->update($this->tableName, array(
-                'sprotbook_id' => $sportbookID
+                'sportbook_id' => $sportbookID
             ));
 
         }else{
-            $newBalance = $betTotalAmount - $betAmount;            
+            $newBalance = $betTotalAmount - $betAmount;
+            $newBetUnit = (int)$newBalance / $m_number;
+            $betUnit = (int)$betAmount / $m_number;
             
             $rows = $this->db->where(array(
                 'id'  => $orderId
             ))->update($this->tableName, array(
-                'bet_total_amount' => $newBalance
+                'bet_total_amount' => $newBalance,
+                'bet_amount' => $newBetUnit
             ));
 
             $newData = array(
@@ -110,7 +114,7 @@ class Order_model extends CI_Model {
                 'betday'  => $betweek,
                 'bet_id' => $betId,
                 'bet_type' => $bet['bet_type'],
-                'bet_amount' => $bet['bet_amount'],
+                'bet_amount' => $betUnit,
                 'bet_total_amount' => $betAmount,
             );
 

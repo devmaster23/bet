@@ -52,7 +52,7 @@ class Allocations extends CI_Controller {
         $optimal_balance = $total_balance * $allocation_percent / 100;
 
         $total_m_number = 0;
-        foreach ($bets as $item) {
+        foreach ($worksheet['data']['rr'] as $item) {
             $total_m_number += $item['m_number'];
         }
 

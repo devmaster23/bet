@@ -20,6 +20,7 @@
 <script>
     var page_type = 'enter_order';
     var api_url = "<?php echo site_url('orders'); ?>";
+    var m_number = "<?=$bet['m_number']?>";
 </script>
 <!-- <div class="container page-title">
     <h1 class="text-center"></h1>
@@ -121,7 +122,7 @@
 
                         <div class="total-div">
                             <label style="text-transform: uppercase;">Bet Amount:</label>
-                            <span>$ <?=$bet['amount']?></span>
+                            <span>$ <?=$bet['bet_amount']?></span>
                         </div>
                         <div class="total-div">
                             <label style="text-transform: uppercase;">Total:</label>

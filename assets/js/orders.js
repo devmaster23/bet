@@ -101,9 +101,20 @@ $(document).ready(function() {
 
     $("#reassign_modal #reassign").on('click', function(){
         var sportbookID = $("#reassign_sportbook_id").val(),
-            bet_amount = $("#bet_amount").val(),
-            valid_bet_amount = $("#valid_bet_amount").val();
+            bet_amount = parseFloat($("#bet_amount").val()),
+            valid_bet_amount = parseFloat($("#valid_bet_amount").val());
+        
+        if(m_number < 2)
+        {
+            alert("Bet couldn't be reassigned!");
+            return false;
+        }
 
+        if(bet_amount % m_number != 0)
+        {
+            alert("Bet amount should be times of " + m_number);
+            return false;
+        }
         if(bet_amount > valid_bet_amount){
             alert("Bet amount should be less or equal to " + valid_bet_amount);
         }else{

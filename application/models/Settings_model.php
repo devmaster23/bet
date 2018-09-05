@@ -44,12 +44,12 @@ class Settings_model extends CI_Model {
         $this->CI->load->model('SystemSettings_model');
 
         $this->numberOfTeams = array(
-            'min' => 1,
+            'min' => 2,
             'max' => 8
         );
 
         $this->numberOfPicks = array(
-            'min' => 1,
+            'min' => 2,
             'max' => 8
         );
 
