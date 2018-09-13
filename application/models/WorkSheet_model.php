@@ -549,6 +549,8 @@ class WorkSheet_model extends CI_Model {
         {
             $row = $rows[0];
             $settingData = json_decode($row['sheet_data']);
+            if(!$settingData)
+                $settingData = [];
             $robin_1 = @$activeSetting['rr_number1'];
             $robin_2 = @$activeSetting['rr_number2'];
             $robin_3 = @$activeSetting['rr_number3'];

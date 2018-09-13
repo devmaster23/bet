@@ -48,14 +48,14 @@ class Allocations extends CI_Controller {
             $total_balance += $item['current_balance'];
         }
 
-        $allocation_percent = $setting['data']['rr_allocation'];
+        $allocation_percent = $setting['data']['bet_allocation'];
         $optimal_balance = $total_balance * $allocation_percent / 100;
 
         $total_m_number = 0;
-        foreach ($worksheet['data']['rr'] as $item) {
+        foreach ($bets as $item) {
             $total_m_number += $item['m_number'];
         }
-
+        
         $hypo_bet_amount = $total_m_number ? $optimal_balance / $total_m_number : 1;
         $hypo_bet_amount = roundBetAmount($hypo_bet_amount);
         $data['data'] = $investor_sportbooks;
