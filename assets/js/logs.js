@@ -71,7 +71,7 @@ function format ( d ) {
 
             <div class="total-div">
                 <label style="text-transform: uppercase;">Bet Amount:</label>
-                <span>$ ` + data.amount + `</span>
+                <span>$ ` + data.bet_amount + `</span>
             </div>
             <div class="total-div">
                 <label style="text-transform: uppercase;">Total:</label>

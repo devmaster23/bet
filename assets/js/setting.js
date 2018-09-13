@@ -253,7 +253,7 @@ function initData(data){
   mergeFields();
 }
 function cleanFomularColor(){
-  $("#fomularTable tbody td").removeClass('selected'); 
+  $("#fomularTable tbody td").removeClass('selected').removeClass('custom-selected'); 
 }
 function updateFomularColor(x,y,custom)
 {
@@ -266,7 +266,7 @@ function updateFomularColor(x,y,custom)
       var selectClass = 'selected';
       if(custom)
         selectClass = 'custom-selected';
-      $("#fomularTable tbody tr:eq("+(value-1)+") td:eq("+(value1)+")" ).addClass(selectClass);
+      $("#fomularTable tbody tr:eq("+(value-2)+") td:eq("+(value1-1)+")" ).addClass(selectClass);
     });
   });
 }

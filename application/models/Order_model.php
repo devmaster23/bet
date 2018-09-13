@@ -81,31 +81,31 @@ class Order_model extends CI_Model {
         return count($bets);
     }
 
-    public function reassignOrder($betweek, $investorId, $sportbookID, $bet, $betAmount)
+    public function reassignOrder($betweek, $investorId, $sportbookID, $bet, $newBetAmount)
     {
         $submit_type = 'reassign';
         $orderId = $bet['order_id'];
         $betId = $bet['title'];
-        $betTotalAmount = $bet['total_amount'];
+        $betAmount = $bet['bet_amount'];
         $m_number = $bet['m_number'];
-
-        if($betTotalAmount <= $betAmount){
+        if($betAmount <= $newBetAmount){
             $rows = $this->db->where(array(
                 'id'  => $orderId
             ))->update($this->tableName, array(
                 'sportbook_id' => $sportbookID
             ));
-
+            $newBetTotalAmount = $bet['total_amount'];
         }else{
-            $newBalance = $betTotalAmount - $betAmount;
-            $newBetUnit = (int)$newBalance / $m_number;
-            $betUnit = (int)$betAmount / $m_number;
+            $newBetTotalAmount = $newBetAmount * $m_number;
+
+            $leftBalance = $betAmount - $newBetAmount;
+            $leftBetTotalAmount = $leftBalance * $m_number;
             
             $rows = $this->db->where(array(
                 'id'  => $orderId
             ))->update($this->tableName, array(
-                'bet_total_amount' => $newBalance,
-                'bet_amount' => $newBetUnit
+                'bet_total_amount' => $leftBetTotalAmount,
+                'bet_amount' => $leftBalance
             ));
 
             $newData = array(
@@ -114,17 +114,19 @@ class Order_model extends CI_Model {
                 'betday'  => $betweek,
                 'bet_id' => $betId,
                 'bet_type' => $bet['bet_type'],
-                'bet_amount' => $betUnit,
-                'bet_total_amount' => $betAmount,
+                'bet_amount' => $newBetAmount,
+                'bet_total_amount' => $newBetTotalAmount,
             );
 
             $this->db->insert($this->tableName, $newData);
             $newId = $this->db->insert_id();
             $bet['order_id'] = $newId;
         }
-        $bet['total_amount'] = $betAmount;
 
-        $this->OrderLog_model->addLog($betweek, $investorId, $sportbookID, $submit_type, $betAmount, $bet);
+        $bet['amount'] = $newBetAmount;
+        $bet['total_amount'] = $newBetTotalAmount;
+
+        $this->OrderLog_model->addLog($betweek, $investorId, $sportbookID, $submit_type, $newBetAmount, $bet);
         return true;
     }
     public function addOrder($betweek, $investorId, $sportbookID, $bet, $betAmount, $submit_type = null)

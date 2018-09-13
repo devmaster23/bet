@@ -378,12 +378,17 @@ class WorkSheet_model extends CI_Model {
         if(!count($betArr)){
             return false;
         }else{
-            foreach ($pickData as $key => $item) {
-                if(in_array($item['title'], $betArr)){
+            foreach ($betArr as $key => $betTitle) {
+                $result = array_filter($pickData, function($a) use($betTitle){
+                    return $a['title'] == $betTitle;
+                });
+                if(count($result)){
+                    $item = reset($result);
                     $item['rush'] = $this->getRushValue($item);
                     $data[] = $item;
                 }
-            } 
+
+            }
         }
         $ret['data'] = $data;
         $ret['title'] = 'crr_'.$id;
@@ -411,13 +416,19 @@ class WorkSheet_model extends CI_Model {
         if(!count($betArr)){
             return false;
         }else{
-            foreach ($pickData as $key => $item) {
-                if(in_array($item['title'], $betArr)){
+            foreach ($betArr as $key => $betTitle) {
+                $result = array_filter($pickData, function($a) use($betTitle){
+                    return $a['title'] == $betTitle;
+                });
+                if(count($result)){
+                    $item = reset($result);
                     $item['rush'] = $this->getRushValue($item);
                     $data[] = $item;
                 }
-            } 
+
+            }
         }
+        
         $ret['data'] = $data;
         $ret['title'] = 'cparlay_'.$id;
         $ret['bet_title'] = 'Custom Parlay';
@@ -425,8 +436,8 @@ class WorkSheet_model extends CI_Model {
         $ret['bet_type'] = 'cparlay';
         $ret['amount'] = $this->hypoBetAmount;
         $ret['is_group'] = 1;
-        $ret['m_number'] = $rrArr['parlay_number'];
-        $ret['total_amount'] = $this->getTotalAmount( $ret, $rrArr['parlay_number'] );
+        $ret['m_number'] = 1;
+        $ret['total_amount'] = $this->getTotalAmount( $ret, 1 );
         $ret['rrArr'] = array(
             'rr1' => $rrArr['parlay_number'],
             'rr2' => null,
@@ -615,9 +626,10 @@ class WorkSheet_model extends CI_Model {
 
     private function getRushValue($game){
         date_default_timezone_set('America/Los_Angeles');
-        $west_time = date('Y-m-d h:i:s', strtotime('-30 minutes'));
+        $west_time = date('Y-m-d h:i:s');
+        $rush_time = date('Y-m-d h:i:s', strtotime('-30 minutes'));
         $gameTime = date('Y-m-d H:i:s', strtotime("{$game['date']} {$game['time']}"));
-        if($gameTime > $west_time){
+        if($gameTime > $rush_time && $gameTime < $west_time ){
             return true;
         }else {
             return false;

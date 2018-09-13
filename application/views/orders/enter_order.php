@@ -20,7 +20,7 @@
 <script>
     var page_type = 'enter_order';
     var api_url = "<?php echo site_url('orders'); ?>";
-    var m_number = "<?=$bet['m_number']?>";
+    var valid_bet_amount = "<?=$bet['bet_amount']?>";
 </script>
 <!-- <div class="container page-title">
     <h1 class="text-center"></h1>
@@ -204,7 +204,7 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Reassign Modal</h5>
+        <h5 class="modal-title">Reassign</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -229,7 +229,6 @@
             <label for="bet_amount"> Bet Amount </label>
             <input class="form-control" type="number" id="bet_amount" name="bet_amount" align="center">
         </div>
-        <input type="hidden" id="valid_bet_amount" value="<?=$bet['total_amount']?>">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>

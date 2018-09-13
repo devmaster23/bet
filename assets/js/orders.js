@@ -101,27 +101,21 @@ $(document).ready(function() {
 
     $("#reassign_modal #reassign").on('click', function(){
         var sportbookID = $("#reassign_sportbook_id").val(),
-            bet_amount = parseFloat($("#bet_amount").val()),
-            valid_bet_amount = parseFloat($("#valid_bet_amount").val());
+            new_bet_amount = parseFloat($("#bet_amount").val())
         
-        if(m_number < 2)
-        {
-            alert("Bet couldn't be reassigned!");
+        if(new_bet_amount > valid_bet_amount){
+            alert("Bet amount should be less or equal to " + valid_bet_amount);
             return false;
         }
 
-        if(bet_amount % m_number != 0)
-        {
-            alert("Bet amount should be times of " + m_number);
+        if(new_bet_amount <= 0){
+            alert("Bet amount should be positive!");
             return false;
         }
-        if(bet_amount > valid_bet_amount){
-            alert("Bet amount should be less or equal to " + valid_bet_amount);
-        }else{
-            $('#submit-form input[name=sportbookID]').val(sportbookID);
-            $('#submit-form input[name=submit_type]').val('reassign');
-            $('#submit-form input[name=betAmount]').val(bet_amount);
-            $('#submit-form').submit();   
-        }
+
+        $('#submit-form input[name=sportbookID]').val(sportbookID);
+        $('#submit-form input[name=submit_type]').val('reassign');
+        $('#submit-form input[name=betAmount]').val(new_bet_amount);
+        $('#submit-form').submit();   
     })
 } );
