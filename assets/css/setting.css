@@ -20,6 +20,9 @@
 .setting-div .user-group-div{
     flex: 0 0 400px;
 }
+.setting-div .user-group-div .is_open_check_box{
+    
+}
 .metrics-div{
 
 }

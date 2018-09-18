@@ -294,18 +294,25 @@ function updateGroupUserList(data,categoryType){
     $.each(data, function(key,item){
       if(categoryGroupUser == null)
       {
-        html += '<li data-value="'+item.id+'" class="'+(key == 0?'selected':'')+'">'+item.name+'</li>'; 
+        html += '<li data-value="'+item.id+'" class="'+(key == 0?'selected':'')+'">'; 
         if(key == 0)
           categoryGroupUser = item.id;
       }
       else{
         if( item['id'] == categoryGroupUser )
         {
-          html += '<li data-value="'+item.id+'" class="selected">'+item.name+'</li>';
+          html += '<li data-value="'+item.id+'" class="selected">';
         }
         else
-          html += '<li data-value="'+item.id+'">'+item.name+'</li>';
+          html += '<li data-value="'+item.id+'">';
       }
+      var id = 'styled-checkbox-u'+key;
+      var checked = '';
+      if( eval(item.is_open) )
+        checked = 'checked';
+      html += '<input class="styled-checkbox is_open_check_box" id="'+id+'" type="checkbox" '+checked+'>'+
+              '<label for="'+id+'">'+item.name+'</label>'+
+              '</li>';
     })
   }
   $('#category-group-user').html(html);
@@ -353,6 +360,27 @@ $(document).on('click','#category-group-user li', function(){
     initPage();
   }
 });
+
+$(document).on('change', ".is_open_check_box", function(e){
+  var betweek = $('.game-week-select').val();
+  var value = $(this).closest('li').data('value');
+  var isChecked = $(this).prop('checked');
+
+  $.ajax({
+    url: api_url+'/updateIsOpen',
+    type: 'POST',
+    data: {
+      betweek: betweek,
+      categoryType: categoryType,
+      categoryGroupUser: value,
+      isChecked: isChecked
+    },
+    dataType: 'json',
+    success: function() {
+      initPage();
+    }
+  });
+})
 
 function updateData(){
     var betweek = $('.game-week-select').val();

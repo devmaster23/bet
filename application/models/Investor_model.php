@@ -51,6 +51,15 @@ class Investor_model extends CI_Model {
         return $result;
     }
 
+    public function getAllWithOpenStatus( $betday ){
+        $this->db->select("G.id, CONCAT(G.first_name, ' ' ,G.last_name)  AS name, S.is_open")
+            ->from($this->tableName.' as G')
+            ->join('settings as S', 'S.betday = '.$betday.' AND S.type = 2 AND S.groupuser_id = G.id', 'left')
+            ->order_by('name','asc');
+        $result = $this->db->get()->result_array();
+        return $result;
+    }
+
     public function getKeyValueList()
     {
         $result = [];
@@ -116,14 +125,32 @@ class Investor_model extends CI_Model {
         return $phoneNumber;
     }
 
-    public function getIdList()
+    public function getIdList( $betweek )
     {
         $result = [];
         $rows = $this->db->select('*')
             ->from($this->tableName)
             ->order_by('id','asc')
             ->get()->result_array();
+
+        $isOpenList = $this->CI->Settings_model->getOpenList($betweek);
+
         foreach ($rows as $key => $item) {
+            $group_id = $item['group_id'];
+            $investor_id = $item['id'];
+            $allow = false;
+            if (in_array($investor_id, $isOpenList['user'])) {
+                $allow = true;
+            }
+            if (in_array($group_id, $isOpenList['group'])) {
+                $allow = true;
+            }
+            if ($isOpenList['all']) {
+                $allow = true;
+            }
+            if(!$allow)
+                continue;
+
             $result[] = array(
                 'id' => $item['id'],
                 'name' => $item['first_name'] . ' ' . $item['last_name']
@@ -149,6 +176,8 @@ class Investor_model extends CI_Model {
             ->from($this->tableName)
             ->order_by('id','asc')
             ->get()->result_array();
+
+        $settingOpenList = $this->CI->Settings_model->getOpenList($betweek);
 
         foreach ($rows as $key => $item) {
             $tmpArr = $item;

@@ -1,13 +1,13 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+include('BaseController.php');
 
-class Settings extends CI_Controller {
+class Settings extends BaseController {
 
     public function __construct() {
         parent::__construct();
-        $this->load->library('authlibrary');    
-        if (!$this->authlibrary->loggedin()) {
-            redirect('login');
+        if ($this->userInfo['user_type'] == 2) {
+            redirect('orders');
         }
         $this->load->model('Settings_model', 'model');
         $this->load->model('Picks_model', 'pick_model');
@@ -30,12 +30,18 @@ class Settings extends CI_Controller {
         $openBetDay = $this->systemsettings_model->getBetDay();
         $data['isLocked'] = ($openBetDay == $data['betweek'] ? 0 : 1);
 
+        $data['isAllActive'] = $this->model->isActiveSetting($data['betweek'], 0 , 0);
+
         $this->load->view('settings', $data);
     }
 
     public function loadGroupUser(){
+        $date = new DateTime(date('Y-m-d'));
+        $betweek = $date->format('W');
+        $betweek = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
         $categoryType = $_POST['categoryType'];
-        $data = $this->model->getGroupUserList($categoryType);
+        
+        $data = $this->model->getGroupUserList($betweek, $categoryType);
         header('Content-Type: application/json');
         echo json_encode( $data);
         die;
@@ -61,6 +67,17 @@ class Settings extends CI_Controller {
         $data               = $_POST['data'];
 
         $data = $this->model->saveSettings($betweek, $categoryType, $categoryGroupUser,$data);
+        echo 'success';
+        die;
+    }
+
+    public function updateIsOpen(){
+        $betweek            = $_POST['betweek'];
+        $categoryType       = $_POST['categoryType'];
+        $categoryGroupUser  = $_POST['categoryGroupUser'];
+        $isChecked               = $_POST['isChecked'];
+
+        $data = $this->model->updateIsOpen($betweek, $categoryType, $categoryGroupUser, $isChecked);
         echo 'success';
         die;
     }

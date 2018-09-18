@@ -1,16 +1,16 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+include('BaseController.php');
 
-class Allocations extends CI_Controller {
+class Allocations extends BaseController {
 
     public function __construct() {
         parent::__construct();
-        
-        $this->load->library('authlibrary');    
-        if (!$this->authlibrary->loggedin()) {
-            redirect('login');
-        }
 
+        if ($this->userInfo['user_type'] == 2) {
+            redirect('orders');
+        }
+        
         $this->load->model('Investor_sportbooks_model', 'model');
         $this->load->model('Investor_model', 'investor_model');
         $this->load->model('WorkSheet_model', 'worksheet_model');
@@ -21,12 +21,18 @@ class Allocations extends CI_Controller {
     {
         $date = new DateTime(date('Y-m-d'));
         $betweek = $date->format('W');
-        $investors = $this->investor_model->getIdList();
-        $investorId = isset($_GET['investorId'])? $_GET['investorId'] : $investors[0]['id'] ;
-
         $data['betweek'] = isset($_SESSION['betday']) ? $_SESSION['betday'] :$betweek;
-        $data['investors'] = $investors;
-        $data['investorId'] = $investorId;
+
+        $investors = $this->investor_model->getIdList($data['betweek']);
+        if (count($investors)) {
+            $investorId = isset($_GET['investorId'])? $_GET['investorId'] : $investors[0]['id'] ;
+            $data['investors'] = $investors;
+            $data['investorId'] = $investorId;
+        } else {
+            $data['investors'] = null;
+            $data['investorId'] = null;
+        }
+
         $data['pageType'] = 'allocations';
         $data['pageTitle'] = 'Allocation of Money';
 

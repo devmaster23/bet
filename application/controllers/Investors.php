@@ -1,13 +1,13 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+include('BaseController.php');
 
-class Investors extends CI_Controller {
+class Investors extends BaseController {
     private $pageType = 'investors';
     public function __construct() {
         parent::__construct();
-        $this->load->library('authlibrary');    
-        if (!$this->authlibrary->loggedin()) {
-            redirect('login');
+        if ($this->userInfo['user_type'] == 2) {
+            redirect('orders');
         }
         $this->load->model('Investor_model', 'model');
         $this->load->model('Sportbook_model', 'sportbook_model');

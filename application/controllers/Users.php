@@ -1,16 +1,14 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+include('BaseController.php');
 
-class Users extends CI_Controller {
+class Users extends BaseController {
 
     public function __construct() {
         parent::__construct();
-        $this->load->library('authlibrary');
-        
-        if (!$this->authlibrary->loggedin()) {
-            redirect('login');
+        if (!$this->userInfo['user_type'] == 0) {
+            redirect('/');
         }
-
         $config = array(
         'upload_path' => "./uploads/",
         'allowed_types' => "gif|jpg|png|jpeg|pdf",

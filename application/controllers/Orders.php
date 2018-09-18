@@ -1,19 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+include('BaseController.php');
 
-class Orders extends CI_Controller {
-    
-    private $userinfo;
+class Orders extends BaseController {
 
     public function __construct() {
         parent::__construct();
-        $this->load->library('authlibrary');    
-        if (!$this->authlibrary->loggedin()) {
-            redirect('login');
-        }
         
-        $this->userInfo = $this->authlibrary->userInfo();
-
         $this->load->model('Order_model', 'model');
         $this->load->model('Investor_model', 'investor_model');
         $this->load->model('Investor_sportbooks_model', 'investor_sportbooks_model');
@@ -99,7 +92,10 @@ class Orders extends CI_Controller {
         $data['betweek'] = $betweek;
 
         $this->setting_model->setActiveSetting($betweek,$investorId);
-
+        $activeSetting = $this->setting_model->getActiveSettingByInvestor($betweek, $investorId);
+        if (@$activeSetting['data']['is_open'] != '1') {
+            redirect('no_orders');
+        }
         $bets = $this->model->getOrders($data['betweek'],$investorId);
         if(isset($_POST['sportbookID']))
         {
@@ -203,8 +199,12 @@ class Orders extends CI_Controller {
             $this->orderlog_model->addLog($betweek, $investorId, $investorSportbookId, 'balance', $current_balance);
         }
         $data['betweek'] = $betweek;
+        $this->setting_model->setActiveSetting($betweek,$investorId);
         $setting = $this->setting_model->getActiveSetting($data['betweek']);
-
+        if (@$setting['is_open'] != '1') {
+            redirect('no_orders');
+        }
+        
         if(is_null($investorId))
         {
             redirect('/orders', 'refresh');

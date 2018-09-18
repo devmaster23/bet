@@ -37,9 +37,16 @@
       <div class="setting-div">
         <div class="user-group-div">
           <ul class="category-select" id="category-type">
-            <li data-value="0" class="<?php echo ($categoryType == 0 ? 'selected':'')?>">All</li>
-            <li data-value="1" class="<?php echo ($categoryType == 1 ? 'selected':'')?>">Groups</li>
-            <li data-value="2" class="<?php echo ($categoryType == 2 ? 'selected':'')?>">Individuals</li>
+            <li data-value="0" class="<?php echo ($categoryType == 0 ? 'selected':'')?>">
+              <input class="styled-checkbox is_open_check_box" id="styled-checkbox-1" type="checkbox" <?=$isAllActive?'checked':''?>>
+              <label for="styled-checkbox-1">All</label>
+            </li>
+            <li data-value="1" class="<?php echo ($categoryType == 1 ? 'selected':'')?>">
+              Groups
+            </li>
+            <li data-value="2" class="<?php echo ($categoryType == 2 ? 'selected':'')?>">
+              Individuals
+            </li>
           </ul>
           <ul class="category-select" id="category-group-user">
           </ul>

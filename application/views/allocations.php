@@ -25,19 +25,28 @@
                 </select>
             </div>
         </div>
+        <?php if (!is_null($investorId)) { ?>
         <div class="pull-right">
             <button type="button" class="btn btn-success" onClick="assignBets()">Assign</button>
         </div>
+        <?php }?>
     </div>
     <div class="allocations-div">
         <div class="text-center hypo-bet-div">
-            <div>
-                <label>Hypothetical Bet Amount: $<span id="hypo_bet_amount"></span></label>
-            </div>
-            <div>
-                <label>Current Bet Amount: <input type="number" name="current_bet" /></label>
-            </div>
+            <?php if (!is_null($investorId)) { ?>
+                <div>
+                    <label>Hypothetical Bet Amount: $<span id="hypo_bet_amount"></span></label>
+                </div>
+                <div>
+                    <label>Current Bet Amount: <input type="number" name="current_bet" /></label>
+                </div>
+            <?php } else { ?>
+                <div>
+                    <label>No Investors</label>
+                </div>
+            <?php } ?>
         </div>
+        <?php if (!is_null($investorId)) { ?>
         <table id="allocations" class="display" style="width:100%">
             <thead>
                 <tr>
@@ -52,6 +61,7 @@
                 </tr>
             </thead>
         </table>
+        <?php } ?>
     </div>
 </div>
 <?php $this->load->view('footer', array('scripts' => $scripts)) ?>

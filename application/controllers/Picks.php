@@ -1,7 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+include('BaseController.php');
 
-class Picks extends CI_Controller {
+class Picks extends BaseController {
     private $pageTitles = array(
         'all_picks'  => 'All Picks',
         'ncaa_m' =>'NCAA M', 
@@ -25,9 +26,8 @@ class Picks extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->library('authlibrary');    
-        if (!$this->authlibrary->loggedin()) {
-            redirect('login');
+        if ($this->userInfo['user_type'] == 2) {
+            redirect('orders');
         }
         $this->load->model('Picks_model', 'model');
         $this->load->library('session');

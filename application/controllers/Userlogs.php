@@ -1,19 +1,17 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+include('BaseController.php');
 
 use Screen\Capture;
 
-class Userlogs extends CI_Controller {
+class Userlogs extends BaseController {
 
     public function __construct() {
       parent::__construct();
-      $this->load->library('authlibrary');
-      if (!$this->authlibrary->loggedin()) {
-          redirect('login');
+      if ($this->userInfo['user_type'] == 2) {
+        redirect('orders');
       }
-      
-      $userInfo = $this->authlibrary->userInfo();
-      if(!in_array($userInfo['user_type'], [0,1])){
+      if(!in_array($this->userInfo['user_type'], [0,1])){
           redirect('login');
       }
 

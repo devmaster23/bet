@@ -1,7 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+include('BaseController.php');
 
-class Worksheets extends CI_Controller {
+class Worksheets extends BaseController {
     private $pageTitles = array(
         'bets'  => 'Bets',
         'bet_summary' =>'Summary', 
@@ -12,10 +13,11 @@ class Worksheets extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->library('authlibrary');    
-        if (!$this->authlibrary->loggedin()) {
-            redirect('login');
+
+        if ($this->userInfo['user_type'] == 2) {
+            redirect('orders');
         }
+        
         $this->load->model("WorkSheet_model","model");
         $this->load->model("Picks_model","pick_model");
         $this->load->model("CustomBet_model","custombet_model");

@@ -98,19 +98,20 @@ function loadData(data){
 function initPage(){
     var betweek = $('.game-week-select').val();
     var investorId = $('.investor-select').val();
-
-    $.ajax({
-        url: api_url+'/loadSportbooks',
-        type: 'POST',
-        data: {
-            'betweek': betweek,
-            'investorId': investorId
-        },
-        success: function(data) {
-            loadData(data);
-            $(".loading-div").hide()
-        }
-    });
+    if(investorId){
+        $.ajax({
+            url: api_url+'/loadSportbooks',
+            type: 'POST',
+            data: {
+                'betweek': betweek,
+                'investorId': investorId
+            },
+            success: function(data) {
+                loadData(data);
+                $(".loading-div").hide()
+            }
+        });
+    }
 }
 $(document).ready(function() {
     initPage();

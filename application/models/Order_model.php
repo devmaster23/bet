@@ -42,6 +42,7 @@ class Order_model extends CI_Model {
         $this->CI->load->model('Investor_sportbooks_model');
         $this->CI->load->model('OrderLog_model');
         $this->CI->load->model('Order_model');
+        $this->CI->load->model('Settings_model');
     }
 
     public function getInvestorList($betweek){
@@ -52,7 +53,23 @@ class Order_model extends CI_Model {
             ->order_by('id','asc')
             ->get()->result_array();
 
+        $isOpenList = $this->CI->Settings_model->getOpenList($betweek);
+
         foreach ($rows as $key => $item) {
+            $group_id = $item['group_id'];
+            $investor_id = $item['id'];
+            $allow = false;
+            if (in_array($investor_id, $isOpenList['user'])) {
+                $allow = true;
+            }
+            if (in_array($group_id, $isOpenList['group'])) {
+                $allow = true;
+            }
+            if ($isOpenList['all']) {
+                $allow = true;
+            }
+            if(!$allow)
+                continue;
             $tmpArr = $item;
             $investorId = $item['id'];
 

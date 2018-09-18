@@ -141,14 +141,14 @@ class Settings_model extends CI_Model {
         return $count;
     }
 
-    public function getGroupUserList($categoryType){
+    public function getGroupUserList($betday, $categoryType){
         $result = array();
         switch ($categoryType) {
             case 1:
-                $result = $this->CI->Groups_model->getAll();
+                $result = $this->CI->Groups_model->getAllWithOpenStatus($betday);
                 break;
             case 2:
-                $result = $this->CI->Investor_model->getAll();
+                $result = $this->CI->Investor_model->getAllWithOpenStatus($betday);
                 break;
             case 0:
             default:
@@ -465,7 +465,8 @@ class Settings_model extends CI_Model {
             'pick_number1'    => 0,
             'description'   => '',
             'bet_amount'   => 0,
-            'title'         => ''
+            'title'         => '',
+            'is_open'       => 0,
         );
 
         if(count($rows))
@@ -484,6 +485,7 @@ class Settings_model extends CI_Model {
             $result['description'] = $data['description'];
             $result['bet_amount'] = $data['bet_amount'];
             $result['title'] = $this->getSettingTitle($data['type'],$data['groupuser_id']);
+            $result['is_open'] = $data['is_open'];
         }
         return $result;
     }
@@ -803,6 +805,79 @@ class Settings_model extends CI_Model {
                 ),$customData));
             }
         }
+    }
+
+    public function updateIsOpen($betweek, $categoryType, $categoryGroupUser, $isChecked)
+    {
+        $isChecked = $isChecked == 'true' ? 1 : 0;
+        $count = $this->db->from($this->tableName)->where(array(
+            'betday'        => $betweek,
+            'type'          => $categoryType,
+            'groupuser_id'  => $categoryGroupUser,
+        ))->get()->num_rows();
+        if( $count ) {
+            $this->db->where(array(
+                'betday'        => $betweek,
+                'type'          => $categoryType,
+                'groupuser_id'  => $categoryGroupUser,
+            ))->update($this->tableName, array(
+                'is_open'       => $isChecked
+            ));
+        } else {
+            $newData = array(
+                'betday'        => $betweek,
+                'type'          => $categoryType,
+                'groupuser_id'  => $categoryGroupUser,
+                'is_open'       => $isChecked
+            );
+            $this->db->insert('settings', $newData);
+        }
+        
+        return true;
+    }
+
+    public function isActiveSetting($betweek, $categoryType, $categoryGroupUser)
+    {
+        $result = false;
+        $rows = $this->db->from($this->tableName)->where(array(
+            'betday'        => $betweek,
+            'type'          => $categoryType,
+            'groupuser_id'  => $categoryGroupUser,
+        ))->get()->result_array();
+        if(count($rows)) {
+            $setting = $rows[0];
+            if( $setting['is_open'] )
+                $result = true;
+        }
+        return $result;
+    }
+
+    public function getOpenList( $betday )
+    {
+        $result = array(
+            'all'       => false,
+            'group'     => [],
+            'user'      => []
+        );
+        $rows = $this->db->from($this->tableName)->where(array(
+            'betday'        => $betday,
+        ))->get()->result_array();
+        foreach ($rows as $key => $item) {
+            if( $item['is_open'] == '1') {
+                switch ($item['type']) {
+                    case 0:
+                        $result['all'] = true;
+                        break;
+                    case 1:
+                        $result['group'][] = $item['groupuser_id'];
+                        break;
+                    case 2:
+                        $result['user'][] = $item['groupuser_id'];
+                        break;
+                }
+            }
+        }
+        return $result;
     }
 
     public function q($sql) {
