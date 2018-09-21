@@ -49,6 +49,14 @@ $(document).ready(function(){
         width: '100px'
       }).change();
   });
+
+  $(document).on('click','.fake-checkbox', function(e){
+    var checkbox = $(this).siblings('.styled-checkbox');
+    checkbox.prop("checked", !checkbox.prop("checked"));
+    checkbox.trigger('change');
+    e.preventDefault();
+    e.stopPropagation();
+  })
 })
 
 

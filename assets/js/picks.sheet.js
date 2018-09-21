@@ -233,13 +233,19 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
   {
     td.style.textAlign = "left";
   }
+
+  if (row % 4 == 0 || row % 4 == 1) {
+    td.style.backgroundColor = '#e5e5e5';
+  }
   Handsontable.renderers.TextRenderer.apply(this, args);
 }
 function coverRenderer (instance, td, row, col, prop, value, cellProperties) {
   var jsonObj = {},
     checked = false,
     checkedList = [];
-  
+  if (row % 4 == 0 || row % 4 == 1) {
+    td.style.backgroundColor = '#e5e5e5';
+  }
   var displayValueIndex = prop + '_value';
   var displayValue = instance.getDataAtRowProp(row, displayValueIndex);
 
@@ -441,10 +447,11 @@ function setStyle(){
       content: function() {
         var row = $(this).data('row');
         var prop = $(this).data('prop');
-        var html = '<div id="popup-div" data-row="'+row+'" data-prop="'+prop+'">'+
-          '<div><input type="checkbox" '+($(this).data('pick') == true?'checked':'')+' class="pick-checkbox" id="pick"/><label for="pick">PICK</label></div>'+
-          '<div><input type="checkbox" '+($(this).data('wrapper') == true?'checked':'')+' class="pick-checkbox" id="wrapper"/><label for="wrapper">WRAPPER</label></div>'+
-          '<div><input type="checkbox" '+($(this).data('candy') == true?'checked':'')+' class="pick-checkbox" id="candy"/><label for="candy">CANDY</label></div>'+
+        var html = '<div class="popup-heading">Select all the apply:</div>'+
+          '<div id="popup-div" data-row="'+row+'" data-prop="'+prop+'">'+
+          '<div class="pick-button '+($(this).data('wrapper') == true?'selected':'')+'" id="wrapper">Wrapper</div>'+
+          '<div class="pick-button '+($(this).data('candy') == true?'selected':'')+'" id="candy">Candy</div>'+
+          '<div class="pick-button '+($(this).data('pick') == true?'selected':'')+'" id="pick">Pick</div>'+
           '</div>';
         return html;
       }
@@ -508,19 +515,25 @@ $(document).ready(function() {
       $(".popover").popover('hide');
     }
   });
-  $(document).on('change','.pick-checkbox',function(){
+  $(document).on('click','.pick-button',function(){
 
     var hot = tableObject,
         tableData = hot.getSourceData(),
         $popoverDiv = $(this).parents('#popup-div'),
         row = $popoverDiv.data('row'),
         prop = $popoverDiv.data('prop');
-    var jsonObj = {
-        'pick': $popoverDiv.find('[id="pick"]').is(':checked'),
-        'wrapper': $popoverDiv.find('[id="wrapper"]').is(':checked'),
-        'candy': $popoverDiv.find('[id="candy"]').is(':checked'),
-    }    
+    $(this).toggleClass('selected');
 
+    var pickValue = $popoverDiv.find('[id="pick"]').hasClass('selected'),
+        wrapperValue = $popoverDiv.find('[id="wrapper"]').hasClass('selected'),
+        candyValue = $popoverDiv.find('[id="candy"]').hasClass('selected');
+
+    var jsonObj = {
+        'pick': pickValue,
+        'wrapper': wrapperValue,
+        'candy': candyValue,
+    }    
+    console.log(jsonObj);
     tableData[row][prop] = JSON.stringify(jsonObj);
     refreshTable(hot,tableData);
   })

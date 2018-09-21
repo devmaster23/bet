@@ -38,8 +38,11 @@
         <div class="user-group-div">
           <ul class="category-select" id="category-type">
             <li data-value="0" class="<?php echo ($categoryType == 0 ? 'selected':'')?>">
-              <input class="styled-checkbox is_open_check_box" id="styled-checkbox-1" type="checkbox" <?=$isAllActive?'checked':''?>>
-              <label for="styled-checkbox-1">All</label>
+              <div class="styled-checkbox-wrapper">
+                <input class="styled-checkbox is_open_check_box" data-maincheckbox="1" type="checkbox" <?=$isAllActive?'checked':''?>>
+                <span class="checkbox fake-checkbox"></span>
+              </div>
+              <label>All</label>
             </li>
             <li data-value="1" class="<?php echo ($categoryType == 1 ? 'selected':'')?>">
               Groups

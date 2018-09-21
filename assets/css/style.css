@@ -157,7 +157,7 @@
 .pick-game .handsontable table.htCore tbody tr:nth-child(odd) td:nth-of-type(3),
 .pick-game .handsontable table.htCore tbody tr:nth-child(odd) td:nth-of-type(4)
 {
-    border-bottom: 3px solid #8ea9db;
+    border-bottom: 3px solid #999999;
 }
 
 .all-picks .handsontable table.htCore thead tr:first-of-type th:nth-of-type(1),
@@ -362,7 +362,7 @@
     text-align: center;
 }
 .pick-check-box[checked="true"]{
-    background-color: #8ea9db;
+    background-color: #1e4dc3;
     color: #fff;
 }
 .popover{
@@ -376,7 +376,6 @@
     justify-content:center;
 }
 #popup-div div{
-    padding: 0px 10px;
     text-align:center;
     display: block;
 }
@@ -777,51 +776,90 @@ tr.shown td.details-control {
     color: inherit !important;
 }
 
-.styled-checkbox {
-  position: absolute;
-  opacity: 0;
+.styled-checkbox-wrapper{
+    position: relative;
+    display: inline-block;
 }
-.styled-checkbox + label {
-  position: relative;
-  cursor: pointer;
-  padding: 0;
+
+/* Remove System Checkbox */
+input[type="checkbox"].styled-checkbox {
+  display:none;
 }
-.styled-checkbox + label:before {
-  content: '';
-  border: 1px solid #999;
-  margin-right: 10px;
-  display: inline-block;
-  vertical-align: text-top;
-  width: 20px;
-  height: 20px;
-  background: white;
+
+/* Fake checkbox made in CSS */
+.fake-checkbox {
+  display:inline-block;
+  width:20px;
+  height:20px;
+  vertical-align: middle;
+  background: #ededed;
+  border: 1px solid #aeaeae;
+  border-radius: 4px;
+  margin: 0 .5em 0 0;
 }
-.styled-checkbox:hover + label:before {
-  background: #3d80db;
-}
-.styled-checkbox:focus + label:before {
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
-}
-.styled-checkbox:checked + label:before {
-  background: #3d80db;
-}
-.styled-checkbox:disabled + label {
-  color: #b8b8b8;
-  cursor: auto;
-}
-.styled-checkbox:disabled + label:before {
-  box-shadow: none;
-  background: #ddd;
-}
-.styled-checkbox:checked + label:after {
-  content: '';
-  position: absolute;
-  left: 5px;
-  top: 12px;
-  background: white;
-  width: 2px;
-  height: 2px;
-  box-shadow: 2px 0 0 white, 4px 0 0 white, 4px -2px 0 white, 4px -4px 0 white, 4px -6px 0 white, 4px -8px 0 white;
+
+/* Adding the checkmark when the checkbox is checked */
+input[type="checkbox"].styled-checkbox:checked + span:after {
+  content:"";
+  display:block;
+  width: 6px;
+  height: 18px;
+  border: solid #047bf8;
+  border-width: 0 4px 4px 0;
+  position:absolute;
+  top: .2em;
+  left: .5em;
   -webkit-transform: rotate(45deg);
-          transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+}
+
+.popover-body{
+    padding: 0px !important;
+    -webkit-box-shadow: 0px 0px 16px 1px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 16px 1px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 16px 1px rgba(0,0,0,0.75);
+    border-radius: 7px;
+}
+
+.popup-heading{
+    padding: 6px 15px;
+    background-color: #000033;
+    color: #fff;
+    font-size: 18px;
+    border-radius: 7px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+.popover-body .pick-button{
+    min-width: 83px;
+    margin: 5px;
+    padding: 5px 10px;
+    background: #fff;
+    color: #333;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.popover-body .pick-button:hover{
+    background: #ccc;
+}
+
+.popover-body .pick-button:hover{
+    background: #ccc;
+}
+
+.popover-body #pick.selected{
+    color: #fff;
+    background: #3399ff;
+}
+
+.popover-body #wrapper.selected{
+    color: #fff;
+    background: #339900;
+}
+
+.popover-body #candy.selected{
+    color: #fff;
+    background: #ff0000;
 }

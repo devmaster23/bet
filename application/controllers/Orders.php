@@ -92,10 +92,6 @@ class Orders extends BaseController {
         $data['betweek'] = $betweek;
 
         $this->setting_model->setActiveSetting($betweek,$investorId);
-        $activeSetting = $this->setting_model->getActiveSettingByInvestor($betweek, $investorId);
-        if (@$activeSetting['data']['is_open'] != '1') {
-            redirect('no_orders');
-        }
         $bets = $this->model->getOrders($data['betweek'],$investorId);
         if(isset($_POST['sportbookID']))
         {
@@ -201,9 +197,6 @@ class Orders extends BaseController {
         $data['betweek'] = $betweek;
         $this->setting_model->setActiveSetting($betweek,$investorId);
         $setting = $this->setting_model->getActiveSetting($data['betweek']);
-        if (@$setting['is_open'] != '1') {
-            redirect('no_orders');
-        }
         
         if(is_null($investorId))
         {
