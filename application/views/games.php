@@ -32,7 +32,7 @@
 	<div class="content-div">
 		<div class="enter-game">
 			<div class="element-box no-border-radius gray-top">
-				<div id="<?php echo $pageType?>">
+				<div class="table-wrapper" id="<?php echo $pageType?>">
 					<div class="sheet"></div>
 				</div>
 			</div>

@@ -78,6 +78,10 @@
     border-top: 1px solid #eee;
 }
 
+.enter-game .table-wrapper {
+    overflow-x: scroll;
+}
+
 .enter-game .handsontable table.htCore th,
 .pick-game .handsontable table.htCore th, 
 .all-picks .handsontable table.htCore th  {
@@ -584,7 +588,7 @@
 }
 .custom-bet-item .bet-item-header{
     padding: 50px 0px 10px;
-    text-align: left;
+    text-align: center;
 }
 .custom-bet-item .bet-item-header span,
 .custom-bet-item .bet-item-header label,
