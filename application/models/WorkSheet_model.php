@@ -210,6 +210,7 @@ class WorkSheet_model extends CI_Model {
             $robin_1 = @$activeSetting['rr_number1'];
             $robin_2 = @$activeSetting['rr_number2'];
             $robin_3 = @$activeSetting['rr_number3'];
+
             if(!empty($settingData))
             {
                 $validColumnArr = array();
@@ -229,6 +230,9 @@ class WorkSheet_model extends CI_Model {
                     for($j=0; $j<count($validColumnArr); $j++){
                         for($k=0; $k<$robin_1-1; $k++){
                             $team_row_id = $settingData[$k][$j];
+                            if ($team_row_id) {
+                                continue;
+                            }
                             $team_info = $this->getTeamFromPick($pick_data, $team_row_id-1);
                             $team_key = $this->getTeamKey($pick_data, $team_row_id-1);
                             if($candy_item['team'] != null && $team_info['team'] != null && ($candy_item['team'] == $team_info['team'] || $candy_key == $team_key))

@@ -66,6 +66,9 @@ class Settings extends BaseController {
         $categoryGroupUser  = $_POST['categoryGroupUser'];
         $data               = $_POST['data'];
 
+        $_SESSION['settingType'] = $categoryType;
+        $_SESSION['settingGroupuserId'] = $categoryGroupUser;
+
         $data = $this->model->saveSettings($betweek, $categoryType, $categoryGroupUser,$data);
         echo 'success';
         die;
