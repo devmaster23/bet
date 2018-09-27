@@ -88,6 +88,8 @@
     padding-left: 0px;
 }
 .category-select li{
+    display: flex;
+    align-items: center;
     cursor: pointer;
     list-style: none;
     padding: 3px 10px;
@@ -100,6 +102,10 @@
 
 .category-select li.selected{
     background-color: #999;
+}
+
+.category-select li label{
+    word-break: break-all;
 }
 
 #category-group-user{
