@@ -397,22 +397,22 @@ class Settings_model extends CI_Model {
             $setting = $rows[0];
             $type = $setting['type'];
             $groupuser_id= $setting['groupuser_id'];
-            if($this->isEmptySetting($setting))
-            {
-                switch ($type) {
-                    case '2':
-                        $setting = $this->getGroupSetting($betday,$groupuser_id);
-                        if($this->isEmptySetting($setting))
-                            $setting = $this->getAllSetting($betday);
-                        break;
-                    case '1':
-                        $setting = $this->getAllSetting($betday);
-                        break;
-                    case '0':
-                    default:
-                        break;
-                }
-            }
+            // if($this->isEmptySetting($setting))
+            // {
+            //     switch ($type) {
+            //         case '2':
+            //             $setting = $this->getGroupSetting($betday,$groupuser_id);
+            //             if($this->isEmptySetting($setting))
+            //                 $setting = $this->getAllSetting($betday);
+            //             break;
+            //         case '1':
+            //             $setting = $this->getAllSetting($betday);
+            //             break;
+            //         case '0':
+            //         default:
+            //             break;
+            //     }
+            // }
 
             $result['type'] = $setting['type'];
             $result['groupuser_id'] = $setting['groupuser_id'];

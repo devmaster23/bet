@@ -343,6 +343,14 @@ if($userProfile['user_type'] != 0 && $userProfile['profile_img']){
                         </div>
                     </li>
 
+                    <li class=" <?php echo ($page == 'settings')?'selected':'';?>">
+                        <a href="<?php echo site_url('settings'); ?>">
+                            <div class="icon-w">
+                                <div class="os-icon os-icon-check-circle"></div>
+                            </div>
+                            <span>Control</span></a>
+                    </li>
+
                     <li class=" has-sub-menu <?php echo ($page == 'worksheets')?'selected':'';?>">
                         <a href="<?php echo site_url('worksheets'); ?>">
                             <div class="icon-w">
@@ -378,13 +386,6 @@ if($userProfile['user_type'] != 0 && $userProfile['profile_img']){
                         </div>
                     </li>
 
-                    <li class=" <?php echo ($page == 'settings')?'selected':'';?>">
-                        <a href="<?php echo site_url('settings'); ?>">
-                            <div class="icon-w">
-                                <div class="os-icon os-icon-check-circle"></div>
-                            </div>
-                            <span>Control</span></a>
-                    </li>
                     <li class=" has-sub-menu <?php echo ($page == 'investors')?'selected':'';?>">
                         <a href="<?php echo site_url('investors'); ?>">
                             <div class="icon-w">
