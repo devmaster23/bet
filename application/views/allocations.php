@@ -17,7 +17,7 @@
             <?php $this->load->view('partials/game-select', array('betweek' => $betweek)); ?>
 
             <div class="investor-select-div">
-                <label>Bet Day</label>
+                <label>Investors</label>
                 <select class="select2-large investor-select" name="investor-select" onchange="initPage()">
                     <?php foreach($investors as $investor) {?>
                     <option <?php if($investor['id'] == $investorId) echo "selected";?> value="<?php echo $investor['id']?>"><?php echo $investor['name']?></option>

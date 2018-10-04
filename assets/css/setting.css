@@ -79,13 +79,14 @@
 
 .category-select{
     list-style: none;
-    width: 180px;
+    width: 240px;
     float: left;
     margin: 0px;
     padding-left: 20px;
 }
 .category-select:first-of-type{
     padding-left: 0px;
+    width: 120px;
 }
 .category-select li{
     display: flex;

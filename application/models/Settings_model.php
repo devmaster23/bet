@@ -651,28 +651,32 @@ class Settings_model extends CI_Model {
                     }
                 }
 
-                $settings[] = array(
-                    'id'          => $custom_bet_item['id'],
-                    'type'        => 'rr',
-                    'title'     => "Custom RR ".($key+1),
-                    'bet_percent' => floatval($rr_allocation),
-                    'bet_text'    => 'by',
-                    'bet_number1' => $custom_bet_item['rr_number1'],
-                    'bet_number2' => $custom_bet_item['rr_number2'] ? $custom_bet_item['rr_number2'] : "",
-                    'bet_number3' => "",
-                    'bet_number4' => ""
-                );
+                if ($custom_bet_item['rr_number1'] && $custom_bet_item['rr_number2']) {
+                    $settings[] = array(
+                        'id'          => $custom_bet_item['id'],
+                        'type'        => 'rr',
+                        'title'     => "Custom RR ".($key+1),
+                        'bet_percent' => floatval($rr_allocation),
+                        'bet_text'    => 'by',
+                        'bet_number1' => $custom_bet_item['rr_number1'],
+                        'bet_number2' => $custom_bet_item['rr_number2'] ? $custom_bet_item['rr_number2'] : "",
+                        'bet_number3' => "",
+                        'bet_number4' => ""
+                    );
+                }
 
-                $settings[] = array(
-                    'id'          => $custom_bet_item['id'],
-                    'type'        => 'parlay',
-                    'title' => "Custom Parlay ".($key+1),
-                    'bet_percent' => floatval($parlay_allocation),
-                    'bet_number1' => $custom_bet_item['parlay_number'],
-                    'bet_number2' => "",
-                    'bet_number3' => "",
-                    'bet_number4' => ""
-                );
+                if($custom_bet_item['parlay_number']) {
+                    $settings[] = array(
+                        'id'          => $custom_bet_item['id'],
+                        'type'        => 'parlay',
+                        'title' => "Custom Parlay ".($key+1),
+                        'bet_percent' => floatval($parlay_allocation),
+                        'bet_number1' => $custom_bet_item['parlay_number'],
+                        'bet_number2' => "",
+                        'bet_number3' => "",
+                        'bet_number4' => ""
+                    );
+                }
 
                 $custom_bet_allocation += @$fomularData[$custom_bet_item['rr_number1']][$custom_bet_item['rr_number2']];
                 if($custom_bet_item['rr_number1'] && $custom_bet_item['rr_number2']){
