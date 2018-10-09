@@ -318,8 +318,8 @@ class Investor_model extends CI_Model {
                 $betAssign = array_slice($assignes, $tmpBetCount, $betCount);
                 $tmpBetCount += $betCount;
 
-                $bet_amount = $this->getAmountPerItem($betItem);
                 foreach ($betAssign as $betItem) {
+                    $bet_amount = $this->getAmountPerItem($betItem);
                     $orderData = array(
                         'betday'        => $betweek,
                         'investor_id'   => $investorId,
