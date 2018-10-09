@@ -56,12 +56,12 @@
           <div class="clearfix"></div>
         </div>
         <div class="element-box no-border-radius gray-top clearfix">
-          <div class="description-div">
+          <!-- <div class="description-div">
             <p class="title">Bet Amount</p>
             <div class="description">
               <input id="bet_amount" type="number" placeholder="Insert Hypothetical Bet Amount"/>
             </div>
-          </div>
+          </div> -->
           <div class="metrics-div">
             <h5 class="form-header">Allocation & Structure</h5>
             <div class="metrics-inner-table">
