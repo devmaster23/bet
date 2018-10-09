@@ -4,6 +4,7 @@ class Investor_model extends CI_Model {
     private $relationTableName = 'investor_sportbooks';
     private $pageURL = 'investors';
     private $CI = null;
+    private $bet_amounts = [];
 
     private $dbColumns = array(
         'group_id',
@@ -251,8 +252,37 @@ class Investor_model extends CI_Model {
         return $result;
     }
 
+    public function fetchBetAmount($betday, $inverstor_id)
+    {
+        // Load bet amounts for this investor
+        $sql = "SELECT * FROM `bet_amounts` WHERE `betday`='$betday' AND `investor_id`='$inverstor_id'";
+        $row = $this->db->query($sql)->row();
+        if ($row) {
+            $this->bet_amounts = json_decode($row->data, true);
+        }
+    }
+
+    public function getAmountPerItem($item)
+    {
+        $bet_amount = 0;
+        switch ($item['bet_type']) {
+            case 'crr':
+            case 'cparlay':
+                // Remove 'c' from the beginning of the title
+                $bet_amount = $this->bet_amounts[substr($item['title'], 1)] ?? 0;
+                break;
+            default:
+                $bet_amount = $this->bet_amounts[$item['bet_type']] ?? 0;
+                break;
+        }
+
+        return $bet_amount;
+    }
+
     public function assign($investorId, $betweek, $bet_amount = 1)
     {
+        $this->fetchBetAmount($betweek, $investorId);
+
         $result = [];
         $sprotbookList = $this->getInvestorSportboooksWithBets($investorId,$betweek);
         $totalBalance = 0;
@@ -288,6 +318,7 @@ class Investor_model extends CI_Model {
                 $betAssign = array_slice($assignes, $tmpBetCount, $betCount);
                 $tmpBetCount += $betCount;
 
+                $bet_amount = $this->getAmountPerItem($betItem);
                 foreach ($betAssign as $betItem) {
                     $orderData = array(
                         'betday'        => $betweek,
@@ -322,6 +353,16 @@ class Investor_model extends CI_Model {
 
         foreach ($sprotbookList as $key => $sportbook_item)
             $totalBalance += floatval($sportbook_item['current_balance_'.$betweek]);
+
+        // Get current betday setting
+        $query = $this->db->select('*')
+            ->from('settings')
+            ->where(array(
+                'betday' => $betweek,
+                'groupuser_id'  => $investorId
+            ));
+        $row = $query->get()->row_array();
+        $total_bet_percent = $row ? $row['bet_allocation'] : 0;
 
         foreach ($sprotbookList as $key => $sportbook_item) {
             $tmpArr = array(
@@ -365,7 +406,14 @@ class Investor_model extends CI_Model {
                 $item['valid_percent'] = number_format((float)$item['valid_percent'], 2, '.', '');
                 if($tmpBetCount <= $totalBetCount)
                 {
-                    $item['valid_bet_count'] = round($totalBetCount * $item['valid_percent'] / 100);
+                    // $item['valid_bet_count'] = round($totalBetCount * $item['valid_percent'] / 100);
+                    $allowed_balance = intval($item['current_balance'] * $total_bet_percent / 100);
+                    for ($i = $tmpBetCount; $i < count($bets); $i ++) {
+                        $allowed_balance -= $bets[$i]['total_amount'];
+                        if ($allowed_balance <= 0) break;
+                        
+                        $item['valid_bet_count'] += 1;
+                    }
                     if($tmpBetCount + $item['valid_bet_count'] > $totalBetCount)
                         $item['valid_bet_count'] = $totalBetCount - $tmpBetCount;
 
@@ -379,7 +427,6 @@ class Investor_model extends CI_Model {
                         break;
                 }
             }
-
         }
         if($tmpBetCount < $totalBetCount && !is_null($tempKey)){
             $result[$tempKey]['valid_bet_count'] += $totalBetCount - $tmpBetCount;

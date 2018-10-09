@@ -32,7 +32,7 @@
         <?php }?>
     </div>
     <div class="allocations-div">
-        <div class="text-center hypo-bet-div">
+        <!-- <div class="text-center hypo-bet-div">
             <?php if (!is_null($investorId)) { ?>
                 <div>
                     <label>Hypothetical Bet Amount: $<span id="hypo_bet_amount"></span></label>
@@ -45,7 +45,7 @@
                     <label>No Investors</label>
                 </div>
             <?php } ?>
-        </div>
+        </div> -->
         <?php if (!is_null($investorId)) { ?>
         <table id="allocations" class="display" style="width:100%">
             <thead>

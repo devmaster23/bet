@@ -81,6 +81,7 @@ class Orders extends BaseController {
         $investorId = isset($_REQUEST['id'])? $_REQUEST['id'] : null;
 
         $betIndex = isset($_REQUEST['bet_id'])? $_REQUEST['bet_id'] : 1;
+
         $date = new DateTime(date('Y-m-d'));
         $betweek = $date->format('W');
         if(isset($_REQUEST['betday'])){

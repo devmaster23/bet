@@ -56,7 +56,8 @@ class Settings_model extends CI_Model {
         $this->defaultSetting = array(
             array(
                 'title' => $this->headerName[0],
-                'bet_percent'    => 0
+                'bet_percent'    => 0,
+                'recommend_bet_amount'     => 'Bet Amount'
             ),
             array(
                 'title' => $this->headerName[1],
@@ -719,6 +720,97 @@ class Settings_model extends CI_Model {
             'is_lock'           => $isLock
         );
 
+        // Calculate Recommend Bet Amounts for each bet type
+        $bet_percents = [];
+        for ($i = 1; $i < count($settings); $i ++) {
+            $percent = $settings[$i]['bet_percent'] ?? 0;
+            $bet_percents[] = $percent;
+        }
+
+        $bets = getBetArr($this->CI->WorkSheet_model->getRROrders($betday, $categoryGroupUser));
+        foreach ($bets as &$item) {
+            unset($item['data']);
+        }
+
+        $orders_cnt = [];
+        $custom_orders_cnt = [];
+        foreach ($bets as $item) {
+            if ($item['bet_type'] == 'rr') {
+                if (!isset($orders_cnt[0])) {
+                    $orders_cnt[0] = 0;
+                }
+                $orders_cnt[0] += $item['m_number'];
+            }
+            elseif ($item['bet_type'] == 'parlay') {
+                if (!isset($orders_cnt[1])) {
+                    $orders_cnt[1] = 0;
+                }
+                $orders_cnt[1] += $item['m_number'];
+            }
+            elseif ($item['bet_type'] == 'single') {
+                if (!isset($orders_cnt[2])) {
+                    $orders_cnt[2] = 0;
+                }
+                $orders_cnt[2] += $item['m_number'];
+            }
+            elseif ($item['bet_type'] == 'crr' || $item['bet_type'] == 'cparlay') {
+                $bet_id = intval(explode('_', $item['title'])[1]);
+                if (!isset($custom_orders_cnt[$bet_id])) {
+                    $custom_orders_cnt[$bet_id] = 0;
+                }
+                $custom_orders_cnt[$bet_id] += $item['m_number'];
+            }
+        }
+        $recommend_bet_amounts = [];
+        $investor_sportbooks = $this->CI->Investor_model->getInvestorSportboooksWithBets($categoryGroupUser, $betday);
+
+        $total_balance = 0;
+        foreach ($investor_sportbooks as $item) {
+            $total_balance += $item['current_balance'];
+        }
+        for ($i = 0; $i < count($orders_cnt); $i ++) {
+            $optimal_balance = $settings[$i+1]['bet_percent'] ? ($total_balance * $settings[$i+1]['bet_percent'] / 100) : 0;
+            $recommend_bet_amount = roundBetAmount($optimal_balance / $orders_cnt[$i]);
+            $settings[$i+1]['recommend_bet_amount'] = $recommend_bet_amount ? $recommend_bet_amount : '';
+        }
+        // For custom bets only
+        foreach ($settings as &$item) {
+            if (isset($item['id']) && isset($custom_orders_cnt[$item['id']])) {
+                $optimal_balance = $item['bet_percent'] ? ($total_balance * $item['bet_percent'] / 100) : 0;
+                if (!$optimal_balance || !$custom_orders_cnt[$item['id']]) {
+                    $item['recommend_bet_amountsmount'] = '';   
+                }
+                else {
+                    $item['recommend_bet_amount'] = roundBetAmount($optimal_balance / $custom_orders_cnt[$item['id']]);
+                }
+            }
+        }
+
+        // Load bet amounts for each bet type
+        $sql = "SELECT * FROM `bet_amounts` WHERE `betday`='$betday' AND `investor_id`='$categoryGroupUser'";
+        $row = $this->db->query($sql)->row();
+        if ($row) {
+            $bet_amounts = json_decode($row->data, true);
+            for ($i = 1; $i < count($settings); $i ++) {
+                if (strpos($settings[$i]['title'], 'Round Robin') !== false) {
+                    $settings[$i]['bet_amount'] = $bet_amounts['rr'];
+                }
+                elseif (strpos($settings[$i]['title'], 'Parlays') !== false) {
+                    $settings[$i]['bet_amount'] = $bet_amounts['parlay'];
+                }
+                elseif (strpos($settings[$i]['title'], 'Individual') !== false) {
+                    $settings[$i]['bet_amount'] = $bet_amounts['single'];
+                }
+                elseif (strpos($settings[$i]['title'], 'Custom') !== false) {
+                    $key = $settings[$i]['type'] . '_' . $settings[$i]['id'];
+                    if (isset($bet_amounts[$key])) {
+                        $settings[$i]['bet_amount'] = $bet_amounts[$key];
+                    }
+                }
+            }
+        }
+        $result['bet_allocation'] = $settings;
+
         return $result;
     }
 
@@ -779,18 +871,30 @@ class Settings_model extends CI_Model {
             $this->db->insert('settings', $newData);
         }
 
-        for($i=4; $i< count($settingData); $i = $i+2)
+        for($i=4; $i< count($settingData); $i ++)
         {
-            $bet_id = $settingData[$i][7];
+            $bet_id = $settingData[$i][9];
             $custom_bet_rows = array_filter($custom_bet_allocations, function($item) use($bet_id, $categoryType, $categoryGroupUser){
                 return ((($categoryType == 0 && $item['type'] == $categoryType) || 
                     ($item['type'] == $categoryType && $item['groupuser_id'] == $categoryGroupUser)) && 
                     ($item['bet_id'] == $bet_id));
             });
-            $customData = array(
-                'rr_allocation'     => $settingData[$i][1],
-                'parlay_allocation' => $settingData[$i+1][1]
-            );
+
+            if (isset($settingData[$i+1]) && $bet_id == $settingData[$i+1][9]) {
+                $customData = array(
+                    'rr_allocation'     => $settingData[$i][1],
+                    'parlay_allocation' => $settingData[$i+1][1]
+                );
+                $i ++;
+            }
+            else {
+                $key1 = $settingData[$i][10] == 'rr' ? 'rr_allocation' : 'parlay_allocation';
+                $key2 = $key1 == 'rr_allocation' ? 'parlay_allocation' : 'rr_allocation';
+                $customData = array(
+                    $key1   => $settingData[$i][1],
+                    $key2   => 0
+                );
+            }
             
             if(count($custom_bet_rows))
             {   
@@ -807,6 +911,40 @@ class Settings_model extends CI_Model {
                     'groupuser_id'  => $categoryGroupUser,
                     'bet_id'        => $bet_id
                 ),$customData));
+            }
+        }
+
+        // Save bet amounts for indviduals
+        if ($categoryGroupUser) {
+            $bet_amounts = [
+                'rr'        => $settingData[1][8] ?? 0,
+                'parlay'    => $settingData[2][8] ?? 0,
+                'single'    => $settingData[3][8] ?? 0,
+            ];
+            for ($i = 4; $i < count($settingData); $i ++) {
+                $key = $settingData[$i][10] . '_' . $settingData[$i][9];
+                $bet_amounts[$key] = $settingData[$i][8] ?? 0;
+            }
+            $this->db->where(array(
+                'betday'        => $betday,
+                'investor_id'   => $categoryGroupUser
+            ));
+            $query = $this->db->get('bet_amounts');
+            if ($query->num_rows()) {
+                $this->db->where(array(
+                    'betday'        => $betday,
+                    'investor_id'   => $categoryGroupUser
+                ));
+                $this->db->update('bet_amounts', array(
+                    'data'  => json_encode($bet_amounts)
+                ));
+            }
+            else {
+                $this->db->insert('bet_amounts', array(
+                    'betday'        => $betday,
+                    'investor_id'   => $categoryGroupUser,
+                    'data'          => json_encode($bet_amounts)
+                ));
             }
         }
     }

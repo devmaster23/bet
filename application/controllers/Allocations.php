@@ -45,6 +45,7 @@ class Allocations extends BaseController {
         $_SESSION['betday'] = $betweek;
         
         $worksheet = $this->worksheet_model->getRROrders($betweek,$investorId);
+
         $bets = getBetArr($worksheet);
         $setting = $this->setting_model->getActiveSettingByInvestor($betweek,$investorId);
         $investor_sportbooks = $this->investor_model->getInvestorSportboooksWithBets($investorId, $betweek);
@@ -75,8 +76,8 @@ class Allocations extends BaseController {
     {
         $investorId = $_POST['investorId'];
         $betweek = $_POST['betweek'];
-        $bet_amount = $_POST['bet_amount'];
-        $result = $this->investor_model->assign($investorId, $betweek, $bet_amount);
+        // $bet_amount = $_POST['bet_amount'];
+        $result = $this->investor_model->assign($investorId, $betweek);
         header('Content-Type: application/json');
         echo json_encode( $result);
     }

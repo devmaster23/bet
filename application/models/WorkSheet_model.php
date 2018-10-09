@@ -3,6 +3,7 @@ class WorkSheet_model extends CI_Model {
     private $tableName = 'work_sheet';
     private $CI = null;
     private $hypoBetAmount;
+    private $bet_amounts = [];
 
     function __construct()
     {
@@ -229,7 +230,7 @@ class WorkSheet_model extends CI_Model {
                     $candy_key = $this->getTeamKey($pick_data, $i, 'candy');
                     for($j=0; $j<count($validColumnArr); $j++){
                         for($k=0; $k<$robin_1-1; $k++){
-                            $team_row_id = $settingData[$k][$j];
+                            $team_row_id = intval($settingData[$k][$j]);
                             // if ($team_row_id) {
                             //     continue;
                             // }
@@ -399,7 +400,8 @@ class WorkSheet_model extends CI_Model {
         $ret['bet_title'] = 'Custom RR';
         $ret['game_type'] = $data[0]['game_type'];
         $ret['bet_type'] = 'crr';
-        $ret['amount'] = $this->hypoBetAmount;
+        // $ret['amount'] = $this->hypoBetAmount;
+        $ret['amount'] = $this->getAmountPerItem($ret);
         $ret['is_group'] = 1;
         $ret['m_number'] = $this->CI->Settings_model->roundRobbinBetCounts($rrArr['rr_number1'], $rrArr['rr_number2'], null, null);
         $ret['total_amount'] = $this->getTotalAmount( $ret, $rrArr['rr_number1'], $rrArr['rr_number2'] );
@@ -438,7 +440,7 @@ class WorkSheet_model extends CI_Model {
         $ret['bet_title'] = 'Custom Parlay';
         $ret['game_type'] = $data[0]['game_type'];
         $ret['bet_type'] = 'cparlay';
-        $ret['amount'] = $this->hypoBetAmount;
+        $ret['amount'] = $this->getAmountPerItem($ret);
         $ret['is_group'] = 1;
         $ret['m_number'] = 1;
         $ret['total_amount'] = $this->getTotalAmount( $ret, 1 );
@@ -482,16 +484,44 @@ class WorkSheet_model extends CI_Model {
         $tmpArr['bet_type'] = 'rr';
         $tmpArr['bet_title'] = 'Round Robin';
         $tmpArr['is_group'] = 1;
-        $tmpArr['amount'] = $this->hypoBetAmount;
+        $tmpArr['amount'] = $this->getAmountPerItem($tmpArr);
         $tmpArr['m_number'] = $this->CI->Settings_model->roundRobbinBetCounts( $rrArr['rr1'], $rrArr['rr2'], $rrArr['rr3'], $rrArr['rr4'] );
         $tmpArr['total_amount'] = $this->getTotalAmount( $tmpArr, $rrArr['rr1'], $rrArr['rr2'], $rrArr['rr3'], $rrArr['rr4'] );
         $tmpArr['rrArr'] = $rrArr;
         return $tmpArr;
     }
 
+    public function fetchBetAmount($betday, $inverstor_id)
+    {
+        // Load bet amounts for this investor
+        $sql = "SELECT * FROM `bet_amounts` WHERE `betday`='$betday' AND `investor_id`='$inverstor_id'";
+        $row = $this->db->query($sql)->row();
+        if ($row) {
+            $this->bet_amounts = json_decode($row->data, true);
+        }
+    }
+
+    public function getAmountPerItem($item)
+    {
+        $bet_amount = 0;
+        switch ($item['bet_type']) {
+            case 'crr':
+            case 'cparlay':
+                // Remove 'c' from the beginning of the title
+                $bet_amount = $this->bet_amounts[substr($item['title'], 1)] ?? 0;
+                break;
+            default:
+                $bet_amount = $this->bet_amounts[$item['bet_type']] ?? 0;
+                break;
+        }
+
+        return $bet_amount;
+    }
+
     public function getRROrders($betday, $inverstor_id = null)
     {
         $this->getHypoBetAmount();
+        $this->fetchBetAmount($betday, $inverstor_id);
 
         $investor_setting = $this->CI->Settings_model->getActiveSettingByInvestor($betday, $inverstor_id);
         if($investor_setting){
@@ -531,17 +561,21 @@ class WorkSheet_model extends CI_Model {
             'single' => array()
         );
 
+        
+
         $singleBets = $this->CI->Picks_model->getIndividual($betday, 'pick', $type, $groupuser_id);
         $singleBets = array_filter($singleBets, function($arrItem){
             return $arrItem['selected'];
         });
+
         foreach ($singleBets as &$item) {
             $item['rush'] = $this->getRushValue($item);
             $item['bet_type'] = 'single';
             $item['is_group'] = 0;
             $item['bet_title'] = 'Single Bet';
 
-            $item['amount'] = $this->hypoBetAmount;
+            // $item['amount'] = $this->hypoBetAmount;
+            $item['amount'] = $this->getAmountPerItem($item);
             $item['m_number'] = 1;
             $item['total_amount'] = $this->getTotalAmount( $item );
         }

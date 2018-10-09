@@ -42,6 +42,16 @@ var hotSettings = {
         readOnly: false
       },
       {
+        data: 'recommend_bet_amount',
+        type: 'numeric',
+        readOnly: false
+      },
+      {
+        data: 'bet_amount',
+        type: 'numeric',
+        readOnly: false
+      },
+      {
         data: 'id',
         type: 'numeric',
         readOnly: false
@@ -52,7 +62,7 @@ var hotSettings = {
         readOnly: false
       }
   ],
-  colWidths: [250, 100, 80, 80, 80, 80, 80],
+  colWidths: [250, 80, 55, 55, 55, 55, 55, 72, 72],
   rowHeights: custom_rowHeight,
   className: "htCenter htMiddle",
   rowHeaders: false,
@@ -61,16 +71,15 @@ var hotSettings = {
   height: 400,
   outsideClickDeselects: false,
   autoRowSize: true,
-  fixedRowsTop: 1,
   viewportColumnRenderingOffset: 100, 
   hiddenColumns: {
-    columns: [7,8],
+    columns: [9, 10],
     indicators: false
   },
   cells: function (row, col, prop) {
     var cellProperties = {};
     cellProperties.renderer = defaultValueRenderer;
-    if((row == 0 && col>0) || (row == 1 && col == 3) || (row >= 2 && col > 1)){
+    if((row == 0 && col>0) || (row == 1 && col == 3 || col == 7) || (row >= 2 && col > 1 && col < 8)){
       cellProperties.readOnly = true;
     }
     return cellProperties;
@@ -151,7 +160,7 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
   td.style.fontSize = custom_fontSize;
   td.style.color = '#000';
   td.style.backgroundColor = '#fff';  
-  if((row == 0 && col>0) || (row == 1 && col == 3) || (row >= 2 && col > 1)){
+  if((row == 0 && col>0) || (row == 1 && col == 3 || col == 7) || (row >= 2 && col > 1 && col < 8)){
     td.style.backgroundColor = '#d4d4d4';
   }
   if(col == 0)
@@ -197,7 +206,8 @@ function mergeFields(){
       mergeCells: []
     };
     hotOptions.mergeCells = hotOptions.mergeCells.concat([
-      {row: 0, col: 1, rowspan: 1, colspan: 2}
+      {row: 0, col: 1, rowspan: 1, colspan: 2},
+      {row: 0, col: 7, rowspan: 1, colspan: 2}
     ]);
     tableObject.updateSettings(hotOptions);
   }
@@ -207,7 +217,8 @@ function mergeFields(){
       mergeCells: []
     };
     hotOptions.mergeCells = hotOptions.mergeCells.concat([
-      {row: 0, col: 1, rowspan: 1, colspan: 2}
+      {row: 0, col: 1, rowspan: 1, colspan: 2},
+      {row: 0, col: 7, rowspan: 1, colspan: 2}
     ]);
     tableObject1.updateSettings(hotOptions); 
   }
