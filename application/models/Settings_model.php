@@ -672,7 +672,7 @@ class Settings_model extends CI_Model {
                         'type'        => 'parlay',
                         'title' => "Custom Parlay ".($key+1),
                         'bet_percent' => floatval($parlay_allocation),
-                        'bet_number1' => $custom_bet_item['parlay_number'],
+                        'bet_number1' => $custom_bet_item['parlay_number'] ? 1 : 0,
                         'bet_number2' => "",
                         'bet_number3' => "",
                         'bet_number4' => ""
@@ -732,7 +732,7 @@ class Settings_model extends CI_Model {
             unset($item['data']);
         }
 
-        $orders_cnt = [];
+        $orders_cnt = [0, 0, 0];
         $custom_orders_cnt = [];
         foreach ($bets as $item) {
             if ($item['bet_type'] == 'rr') {
@@ -756,11 +756,15 @@ class Settings_model extends CI_Model {
             elseif ($item['bet_type'] == 'crr' || $item['bet_type'] == 'cparlay') {
                 $bet_id = intval(explode('_', $item['title'])[1]);
                 if (!isset($custom_orders_cnt[$bet_id])) {
-                    $custom_orders_cnt[$bet_id] = 0;
+                    $custom_orders_cnt[$bet_id] = [
+                        'crr'       => 0,
+                        'cparlay'   => 0
+                    ];
                 }
-                $custom_orders_cnt[$bet_id] += $item['m_number'];
+                $custom_orders_cnt[$bet_id][$item['bet_type']] += $item['m_number'];
             }
         }
+
         $recommend_bet_amounts = [];
         $investor_sportbooks = $this->CI->Investor_model->getInvestorSportboooksWithBets($categoryGroupUser, $betday);
 
@@ -770,8 +774,10 @@ class Settings_model extends CI_Model {
         }
         for ($i = 0; $i < count($orders_cnt); $i ++) {
             $optimal_balance = $settings[$i+1]['bet_percent'] ? ($total_balance * $settings[$i+1]['bet_percent'] / 100) : 0;
-            $recommend_bet_amount = roundBetAmount($optimal_balance / $orders_cnt[$i]);
-            $settings[$i+1]['recommend_bet_amount'] = $recommend_bet_amount ? $recommend_bet_amount : '';
+            if ($orders_cnt[$i]) {
+                $recommend_bet_amount = roundBetAmount($optimal_balance / $orders_cnt[$i]);
+            }
+            $settings[$i+1]['recommend_bet_amount'] = $recommend_bet_amount ?? '';
         }
         // For custom bets only
         foreach ($settings as &$item) {
@@ -781,7 +787,13 @@ class Settings_model extends CI_Model {
                     $item['recommend_bet_amountsmount'] = '';   
                 }
                 else {
-                    $item['recommend_bet_amount'] = roundBetAmount($optimal_balance / $custom_orders_cnt[$item['id']]);
+                    $cnt = $custom_orders_cnt[$item['id']]['c' . $item['type']];
+                    if (!$cnt) {
+                        $item['recommend_bet_amount'] = '';
+                    }
+                    else {
+                        $item['recommend_bet_amount'] = roundBetAmount($optimal_balance / $cnt);
+                    }
                 }
             }
         }
