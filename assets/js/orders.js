@@ -118,4 +118,6 @@ $(document).ready(function() {
         $('#submit-form input[name=betAmount]').val(new_bet_amount);
         $('#submit-form').submit();   
     })
+
+    $(".onboarding-modal").modal("show");
 } );

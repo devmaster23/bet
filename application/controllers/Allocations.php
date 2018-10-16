@@ -45,8 +45,11 @@ class Allocations extends BaseController {
         $_SESSION['betday'] = $betweek;
         
         $worksheet = $this->worksheet_model->getRROrders($betweek,$investorId);
-
         $bets = getBetArr($worksheet);
+        foreach ($bets as &$bet) {
+            unset($bet['data']);
+        }
+
         $setting = $this->setting_model->getActiveSettingByInvestor($betweek,$investorId);
         $investor_sportbooks = $this->investor_model->getInvestorSportboooksWithBets($investorId, $betweek);
 

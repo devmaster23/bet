@@ -15,6 +15,10 @@ function format ( d ) {
             title = 'Round Robin';
         else if(d.bet_type == 'parlay')
             title = 'Parlay';
+        else if(d.bet_type == 'crr')
+            title = 'Custom RR';
+        else if(d.bet_type == 'cparlay')
+            title = 'Custom Parlay';
 
         result = `<div class="bet-info">
             <h5 class="form-header">Description</h5>
@@ -26,11 +30,15 @@ function format ( d ) {
                 </div>`;
         if(d.bet_type != 'single')
         {
+            var rr1 = setting.rr1 ? setting.rr1 : '';
+            var rr2 = setting.rr2 ? setting.rr2 : '';
+            var rr3 = setting.rr3 ? setting.rr3 : '';
+            var rr4 = setting.rr4 ? setting.rr4 : '';
             result += `<div>
-                    <span class="setting-span number red">`+setting.rr1+`</span>
-                    <span class="setting-span number">`+setting.rr2+`</span>
-                    <span class="setting-span number">`+setting.rr3+`</span>
-                    <span class="setting-span number">`+setting.rr4+`</span>
+                    <span class="setting-span number red">`+rr1+`</span>
+                    <span class="setting-span number">`+rr2+`</span>
+                    <span class="setting-span number">`+rr3+`</span>
+                    <span class="setting-span number">`+rr4+`</span>
                 </div>`;
         }
         result += `</div>

@@ -84,7 +84,7 @@ class Order_model extends CI_Model {
             foreach ($tmpArr['sportbooks'] as $sportbook_item) {
                 $tmpArr['current_balance'] += $sportbook_item['current_balance_'.$betweek];
             }
-            $tmpArr['custom_action'] = "<div class='action-div' data-id='".$item['id']."'><a class='' href='/".$this->pageURL."/enter_order?id=".$item['id']."'>Enter Order</a><a class='' href='/".$this->pageURL."/balance?id=".$item['id']."'>Balance</i></a></div>";
+            $tmpArr['custom_action'] = "<div class='action-div' data-id='".$item['id']."'><a class='' href='/".$this->pageURL."/enter_order?id=".$item['id']."&showintro=1'>Enter Order</a><a class='' href='/".$this->pageURL."/balance?id=".$item['id']."'>Balance</i></a></div>";
 
             $result[] = $tmpArr;
         }

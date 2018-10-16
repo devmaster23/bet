@@ -228,24 +228,40 @@ class WorkSheet_model extends CI_Model {
                 {
                     $candy_item = $this->getTeamFromPick($pick_data, $i, 'candy');
                     $candy_key = $this->getTeamKey($pick_data, $i, 'candy');
+                    if(is_null($candy_item['team']))
+                        continue;
+
                     for($j=0; $j<count($validColumnArr); $j++){
+                        $vrns = array();
+                        $disableList = array();
                         for($k=0; $k<$robin_1-1; $k++){
                             $team_row_id = intval($settingData[$k][$j]);
-                            // if ($team_row_id) {
-                            //     continue;
-                            // }
                             $team_info = $this->getTeamFromPick($pick_data, $team_row_id-1);
+                            $vrns[] = $team_info['vrn'];
                             $team_key = $this->getTeamKey($pick_data, $team_row_id-1);
                             if($candy_item['team'] != null && $team_info['team'] != null && ($candy_item['team'] == $team_info['team'] || $candy_key == $team_key))
                             {
-                                $result++;
-                                // break;
+                                $disableList[] = $k;
+                                break;
                             }
-                        }    
+                        }
+                        $invalid_vrns = [];
+                        foreach ($vrns as $key => $vrn) {
+                            if ((count(array_keys($vrns, $vrn)) > 1 && !in_array($vrn, $invalid_vrns)) || 
+                                ($vrn%2==1 && count(array_keys($vrns, $vrn+1)) && !in_array($vrn, $invalid_vrns))
+                                ) {
+                                $disableList[] = $key;
+                                $invalid_vrns[] = $vrn;
+                            }
+                        }
+                        if (count($disableList)) {
+                            $result ++;
+                        }
                     }
                 }
             }
         }
+
         return $result;
     }
 
@@ -347,16 +363,31 @@ class WorkSheet_model extends CI_Model {
                 for($j=0; $j<count($validColumnArr); $j++){
                     $ret[$i][$j] = array();
                     $disableList = array();
+
+                    $vrns = array();
                     for($k=0; $k<$robin_1-1; $k++){
                         $team_row_id = $settingData[$k][$j];
                         $team_info = $this->getTeamFromPick($pick_data, $team_row_id-1);
                         $team_key = $this->getTeamKey($pick_data, $team_row_id-1);
 
-                        array_push($ret[$i][$j],$team_info);    
-                        if($candy_item['team'] != null && $team_info['team'] != null && ($candy_item['team'] == $team_info['team'] || $candy_key == $team_key))
+                        array_push($ret[$i][$j],$team_info);
+                        $vrns[] = $team_info['vrn'];
+                        if($candy_item['team'] != null && $team_info['team'] != null && ($candy_item['team'] == $team_info['team'] || $candy_key == $team_key)) {
                             $disableList[] = $k;
-                    }  
+                        }
+                    }
                     array_push($ret[$i][$j],$candy_item);
+
+                    $invalid_vrns = [];
+                    foreach ($vrns as $key => $vrn) {
+                        if ((count(array_keys($vrns, $vrn)) > 1 && !in_array($vrn, $invalid_vrns)) || 
+                            ($vrn%2==1 && count(array_keys($vrns, $vrn+1)) && !in_array($vrn, $invalid_vrns))
+                            ) {
+                            $disableList[] = $key;
+                            $invalid_vrns[] = $vrn;
+                        }
+                    }
+                    $disableList = array_unique($disableList);
                     $ret[$i][$j]['is_parlay'] = in_array($i."_".$j, $parlayIds) ? 1 : 0;
                     $ret[$i][$j]['title'] = chr(65+$j).($i+1);
                     $ret[$i][$j]['disabled'] = $disableList;
@@ -456,6 +487,8 @@ class WorkSheet_model extends CI_Model {
     private function formatRR($settingData, $pick_data, $i, $j, $rrArr){
         $data = [];
         $rr_number = $rrArr['rr1'];
+        $vrns = [];
+
         $candy_item = $this->getTeamFromPick($pick_data, $i, 'candy');
         if(is_null($candy_item['team']))
             return false;
@@ -471,8 +504,18 @@ class WorkSheet_model extends CI_Model {
 
             $team_info['rush'] = $this->getRushValue($team_info);
             array_push($data,$team_info);
+            array_push($vrns, $team_info['vrn']);
             if($candy_item['team'] != null && $team_info['team'] != null && ($candy_item['team'] == $team_info['team'] || $candy_key == $team_key))
                 $disableList[] = $k;
+        }
+        $invalid_vrns = [];
+        foreach ($vrns as $key => $vrn) {
+            if ((count(array_keys($vrns, $vrn)) > 1 && !in_array($vrn, $invalid_vrns)) || 
+                ($vrn%2==1 && count(array_keys($vrns, $vrn+1)) && !in_array($vrn, $invalid_vrns))
+                ) {
+                $disableList[] = $key;
+                $invalid_vrns[] = $vrn;
+            }
         }
         if(count($disableList))
             return false;
@@ -633,6 +676,7 @@ class WorkSheet_model extends CI_Model {
                     {
                         $tmpArr['bet_type'] = 'parlay';
                         $tmpArr['bet_title'] = 'Parlay';
+                        $tmpArr['m_number'] = 1;
                         $ret['parlay'][] = $tmpArr;
                     }
                 }

@@ -132,6 +132,29 @@ var hotSettings = {
       cellProperties.renderer = defaultValueRenderer;
       return cellProperties;
     },
+    beforeChange: function (change, source) {
+      var row = change[0][0],
+          prop = change[0][1],
+          ref_value = change[0][3];
+      if (prop == 'vrn1') {
+          var vrns = currentTable.getDataAtCol(3).filter(function(value) {
+            return value !== null && value != undefined && value != '';
+          });
+          vrns = vrns.map(v => parseInt(v));
+          if (ref_value != '' && vrns.indexOf(ref_value) > -1) {
+            alert(`Already exists game for VRN ${ref_value}`);
+            return false;
+          }
+          console.log(vrns);
+          for (var i=0; i<vrns.length; i++) {
+            if ((ref_value%2==1 && vrns[i]==(ref_value+1)) ||
+                (ref_value%2==0 && vrns[i]==(ref_value-1))) {
+              alert(`VRNs ${ref_value} and ${vrns[i]} are inseparable`);
+              return false;
+            }
+          }
+        }
+    },
     afterChange: function (change, source) {
       if(source == "sss")
         return;
@@ -143,7 +166,7 @@ var hotSettings = {
         if (prop == 'team1_game_pts'){
           currentTable.setDataAtRowProp(row,'team2_game_pts',ref_value*(-1),"sss");
         }
-        if (prop == 'team1_first_half_pts'){
+        else if (prop == 'team1_first_half_pts'){
           currentTable.setDataAtRowProp(row,'team2_first_half_pts',ref_value*(-1),"sss");
         }
       }
@@ -341,7 +364,6 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
 }
   
 function createSheets(games) {
-
 
   var data = games[pageType] || [];
   var container = $('div.sheet')[0];

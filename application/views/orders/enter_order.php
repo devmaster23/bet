@@ -26,6 +26,23 @@
     <h1 class="text-center"></h1>
 </div>
  -->
+ <?php if (isset($message) && $message): ?>
+<div aria-hidden="true" class="onboarding-modal modal fade animated" id="onboardingTextModal" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-centered" role="document">
+      <div class="modal-content text-center">
+        <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span class="close-label"><span class="os-icon os-icon-close"></span></button>
+        <div class="onboarding-content with-gradient">
+          <h3 class="onboarding-title">
+            Instruction notice!
+          </h3>
+          <div class="lead">
+            <?=$message?>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+<?php endif; ?>
 <div id="main" class="order-page no-sub-menu">
     <div class="inner-wrapper enter_order-page">
         <div class="bet-div">

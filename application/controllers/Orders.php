@@ -165,6 +165,8 @@ class Orders extends BaseController {
             $bet['logo'] = $filename;
         }
 
+        $setting = $this->setting_model->getActiveSetting($betweek);
+
         $data['ip_source'] = $ip_source;
         $data['rr1'] = @$worksheet['rr1'];
         $data['investor'] = $investor;
@@ -178,6 +180,9 @@ class Orders extends BaseController {
 
         $data['bet_count'] = count($bets);
         $data['bet_index'] = $betIndex;
+        if (isset($_REQUEST['showintro']) && $_REQUEST['showintro']) {
+            $data['message'] = trim($setting['description']);
+        }
         $this->load->view('orders/enter_order', $data);
     }
 

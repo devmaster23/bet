@@ -96,9 +96,15 @@ class Games_model extends CI_Model {
 				
 				$gameData[$game_data_index] = $value;
 			}
+			if($gameData['vrn1']%2 == 0) {
+				$gameData['vrn1'] -= 1;
+				$gameData['vrn2'] = $gameData['vrn1'] + 1;
+			}
+			else {
+				$gameData['vrn2'] = $gameData['vrn1']+1;
+			}
 			$gameData['game_type'] =  $game_type;
 			$gameData['betday'] =  $betday;
-			$gameData['vrn2'] =  $gameData['vrn1']+1;
 			if(is_null($row_id))  // new items
 			{
 				$insertData[] = $gameData;
