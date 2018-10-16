@@ -487,10 +487,10 @@
 .sheet_block.disabled .warning{
     position: absolute;
     background-image: url(../img/cross.png);
-    width: 200px;
-    height: 200px;
-    top: 20%;
-    left: 30%;
+    width: 100px;
+    height: 100px;
+    top: 70%;
+    left: 40%;
     background-size: 100% 100%;
 }
 #bets .bets-inner{
