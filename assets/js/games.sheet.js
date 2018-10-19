@@ -133,9 +133,20 @@ var hotSettings = {
       return cellProperties;
     },
     beforeChange: function (change, source) {
+      console.log(change);
       var row = change[0][0],
           prop = change[0][1],
+          cur_value = parseInt(change[0][2]),
           ref_value = change[0][3];
+
+      // In case of editing exiting rows
+      if ((cur_value == ref_value) ||
+          (cur_value%2==1 && ref_value == (cur_value+1)) ||
+          (cur_value%2==0 && ref_value == (cur_value-1))) {
+        return true;
+      }
+
+      // In case of new values
       if (prop == 'vrn1') {
           var vrns = currentTable.getDataAtCol(3).filter(function(value) {
             return value !== null && value != undefined && value != '';
@@ -145,7 +156,7 @@ var hotSettings = {
             alert(`Already exists game for VRN ${ref_value}`);
             return false;
           }
-          console.log(vrns);
+
           for (var i=0; i<vrns.length; i++) {
             if ((ref_value%2==1 && vrns[i]==(ref_value+1)) ||
                 (ref_value%2==0 && vrns[i]==(ref_value-1))) {

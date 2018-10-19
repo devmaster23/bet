@@ -676,6 +676,12 @@ class WorkSheet_model extends CI_Model {
                     {
                         $tmpArr['bet_type'] = 'parlay';
                         $tmpArr['bet_title'] = 'Parlay';
+                        $tmpArr['rrArr'] = array(
+                            'rr1'   => $tmpArr['rrArr']['rr1'],
+                            'rr2'   => null,
+                            'rr3'   => null,
+                            'rr4'   => null
+                        );
                         $tmpArr['m_number'] = 1;
                         $ret['parlay'][] = $tmpArr;
                     }

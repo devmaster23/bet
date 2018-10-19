@@ -34,6 +34,9 @@ function format ( d ) {
             var rr2 = setting.rr2 ? setting.rr2 : '';
             var rr3 = setting.rr3 ? setting.rr3 : '';
             var rr4 = setting.rr4 ? setting.rr4 : '';
+            if (d.bet_type == 'parlay' || d.bet_type == 'cparlay') {
+                rr2 = rr3 = rr4 = '';
+            }
             result += `<div>
                     <span class="setting-span number red">`+rr1+`</span>
                     <span class="setting-span number">`+rr2+`</span>

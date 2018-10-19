@@ -417,7 +417,7 @@ class Investor_model extends CI_Model {
                     if($tmpBetCount + $item['valid_bet_count'] > $totalBetCount)
                         $item['valid_bet_count'] = $totalBetCount - $tmpBetCount;
 
-                    $betAssign = array_slice($bets, $tmpBetCount, $item['valid_bet_count']);
+                    $betAssign = array_slice($bets, $tmpBetCount, $item['bet_count']);
                     $tmpBetCount += $item['valid_bet_count'];
                     
                     foreach ($betAssign as $betItem) {

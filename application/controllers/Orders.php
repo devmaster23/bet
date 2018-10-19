@@ -138,6 +138,7 @@ class Orders extends BaseController {
         $investor = $this->investor_model->getItem($investorId, $data['betweek']);
 
         $bet = isset($bets[$betIndex-1])? $bets[$betIndex-1]: null;
+
         if($bet)
         {
             $filename = 'icon_NFL.png';
