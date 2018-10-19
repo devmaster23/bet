@@ -495,7 +495,7 @@ class WorkSheet_model extends CI_Model {
         $candy_key = $this->getTeamKey($pick_data, $i, 'candy');
         $tmpArr = array();
         $disableList = array();
-        for($k=0; $k<$rr_number-1; $k++){
+        for($k=0; $k<intval($rr_number)-1; $k++){
             $team_row_id = $settingData[$k][$j];
             $team_info = $this->getTeamFromPick($pick_data, $team_row_id-1);
             if(is_null($team_info['team']))
