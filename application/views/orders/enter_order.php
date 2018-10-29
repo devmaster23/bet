@@ -33,7 +33,7 @@
         <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span class="close-label"><span class="os-icon os-icon-close"></span></button>
         <div class="onboarding-content with-gradient">
           <h3 class="onboarding-title">
-            Instruction notice!
+            Special Instructions:
           </h3>
           <div class="lead">
             <?=$message?>

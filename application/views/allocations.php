@@ -27,7 +27,7 @@
         </div>
         <?php if (!is_null($investorId)) { ?>
         <div class="pull-right">
-            <button type="button" class="btn btn-success" onClick="assignBets()">Assign</button>
+            <!-- <button type="button" class="btn btn-success" onClick="assignBets()">Assign</button> -->
         </div>
         <?php }?>
     </div>
