@@ -35,6 +35,11 @@ class Picks_model extends CI_Model {
         'count'     => 'count'
     );
 
+    function __construct() {
+        $this->load->model('Investor_model');
+        $this->load->model('WorkSheet_model');
+    }
+
     private $typeJsonTpl = array(
         'pts'   => 'SP',
         'ml'    => 'ML',
@@ -209,6 +214,22 @@ class Picks_model extends CI_Model {
         ))->order_by('time', 'ASC')->order_by('game_type', 'ASC');
         $rows = $this->db->get()->result_array();
 
+        // Cascading!
+        if (!$this->WorkSheet_model->sheetExists($betday, $type, $groupuser_id)) {
+            if ($type == 1) {
+                $type = 0;
+                $groupuser_id = '';
+            }
+            elseif ($type == 2) {
+                $type = 1;
+                $groupuser_id = $this->Investor_model->getUserGroup($groupuser_id);
+                if (!$this->WorkSheet_model->sheetExists($betday, $type, $groupuser_id)) {
+                    $type = 0;
+                    $groupuser_id = '';
+                }
+            }
+        }
+
         $this->db->select('pick_select')->from('work_sheet');
         $this->db->where(array(
             'betday' => $betday,
@@ -316,7 +337,7 @@ class Picks_model extends CI_Model {
         return $result;
     }
 
-    public function getIndividual($betday, $individual_type = 'candy', $categoryType = null, $categoryGroupUser = null)
+    public function getCascadingIndividual($betday, $individual_type, $categoryType, $categoryGroupUser)
     {
         $type = !is_null($categoryType)? $categoryType : (isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0);
         $groupuser_id = !is_null($categoryGroupUser)? $categoryGroupUser : (isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0);
@@ -396,6 +417,40 @@ class Picks_model extends CI_Model {
         }
 
         return $ret;
+    }
+
+    public function picksExists($betday, $categoryType, $categoryGroupUser) {
+        $query = $this->db->select('*')
+            ->from('work_sheet')
+            ->where(array(
+                'betday' => $betday,
+                'type'  => $categoryType
+            ));
+        if($categoryType != 0)
+            $query->where('groupuser_id', $categoryGroupUser);
+
+        $rows = $query->get()->result_array();
+
+        return !empty($rows);
+    }
+
+    public function getIndividual($betday, $individual_type = 'candy', $categoryType = null, $categoryGroupUser = null)
+    {
+        $type = !is_null($categoryType)? $categoryType : (isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0);
+        $groupuser_id = !is_null($categoryGroupUser)? $categoryGroupUser : (isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0);
+        
+        if ($this->picksExists($betday, $type, $groupuser_id)) {
+            return $this->getCascadingIndividual($betday, $individual_type, $categoryType, $categoryGroupUser);
+        }
+
+        if ($type == 2) {
+            $groupId = $this->Investor_model->getUserGroup($groupuser_id);
+            if ($this->picksExists($betday, 1, $groupId)) {
+                return $this->getCascadingIndividual($betday, $individual_type, 1, $groupId);
+            }
+        }
+
+        return $this->getCascadingIndividual($betday, $individual_type, 0, '');
     }
 
     private function getPickData($row, $team_id=1, $type, $first_half = false, $pickSelectList){

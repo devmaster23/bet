@@ -97,6 +97,18 @@ class Investor_model extends CI_Model {
         return $groupId;
     }
 
+    public function getGroupInvestors($groupId)
+    {
+        $investorIds = [];
+        $this->db->select('id')->from($this->tableName)->where('group_id', $groupId);
+        $rows = $this->db->get()->result_array();
+        foreach ($rows as $row) {
+            $investorIds[] = $row['id'];
+        }
+
+        return $investorIds;
+    }
+
     private function formatPhoneNumber($phoneNumber)
     {
         $phoneNumber = preg_replace('/[^0-9]/','',$phoneNumber);
@@ -312,7 +324,6 @@ class Investor_model extends CI_Model {
         foreach ($sprotbookList as $key => $item) {
             if($item['is_valid'])
             {
-                // var_dump($item);die;
                 $betPercent = $item['valid_percent'];
                 $betCount = $item['valid_bet_count'];
                 $betAssign = array_slice($assignes, $tmpBetCount, $betCount);
@@ -335,14 +346,13 @@ class Investor_model extends CI_Model {
 
         }
 
-        $this->CI->Settings_model->setBetAmount($betweek, $investorId, $bet_amount);
+        // $this->CI->Settings_model->setBetAmount($betweek, $investorId, $bet_amount);
         return array('status'=>'success');
     }
 
     public function getInvestorSportboooksWithBets($investorId, $betweek){
         $result = [];
         $sprotbookList = $this->CI->Investor_sportbooks_model->getListByInvestorId($investorId,$betweek);
-
         $totalBalance = 0;
         $totalValidBalance = 0;
         $sportbookCount = count($sprotbookList);
@@ -350,7 +360,6 @@ class Investor_model extends CI_Model {
         $worksheet = $this->WorkSheet_model->getRROrders($betweek,$investorId);
         $bets = getBetArr($worksheet);
         $totalBetCount = count($bets);
-
         foreach ($sprotbookList as $key => $sportbook_item)
             $totalBalance += floatval($sportbook_item['current_balance_'.$betweek]);
 
@@ -374,7 +383,7 @@ class Investor_model extends CI_Model {
             $tmpArr['equal_percent'] = $sportbookCount == 0 ? 0 : 100 / $sportbookCount;
             $tmpArr['bet_count'] = $sportbook_item['bet_count'];
             $tmpArr['is_valid'] = false;
-            if($tmpArr['percent'] > $tmpArr['equal_percent'] / 2)
+            if($tmpArr['percent'] >= $tmpArr['equal_percent'] / 2)
             {   
                 $tmpArr['is_valid'] = true;
                 $totalValidBalance += $tmpArr['current_balance'];
@@ -417,9 +426,8 @@ class Investor_model extends CI_Model {
                     if($tmpBetCount + $item['valid_bet_count'] > $totalBetCount)
                         $item['valid_bet_count'] = $totalBetCount - $tmpBetCount;
 
-                    $betAssign = array_slice($bets, $tmpBetCount, $item['bet_count']);
+                    $betAssign = array_slice($bets, $tmpBetCount, $item['valid_bet_count']);
                     $tmpBetCount += $item['valid_bet_count'];
-                    
                     foreach ($betAssign as $betItem) {
                         $item['balance_left'] -= $betItem['total_amount'];
                     }
@@ -576,9 +584,9 @@ class Investor_model extends CI_Model {
                     'title' => 'After Bet '.$index,
                 );
                 if( $index == 1)
-                    $before = $initial_bet;
+                    $before = intval($initial_bet);
                 else
-                    $before = $result[$index-2]['after'];
+                    $before = intval($result[$index-2]['after']);
                 if($team['line'] > 0)
                     $payout_win = $before * ($team['line']/100);
                 else
@@ -625,7 +633,9 @@ class Investor_model extends CI_Model {
             foreach ($keyList as $keyItem) {
                 $teamArr = [];
                 foreach ($keyItem as $key) {
-                    $teamArr[] = $teamList[$key-1];
+                    if (isset($teamList[$key-1])) {
+                        $teamArr[] = $teamList[$key-1];
+                    }
                 }
                 $data[] = $teamArr;
             }

@@ -31,6 +31,9 @@ class Settings_model extends CI_Model {
         'bet_amount'
     );
 
+    private $actualType = 0;
+    private $actualGroupUser = '';
+
 
     function __construct()
     {
@@ -250,6 +253,7 @@ class Settings_model extends CI_Model {
         $investor = $this->CI->Investor_model->getByID($investor_id);
         $group_id = isset($investor['group_id']) ? $investor['group_id'] : null;
         $investor_setting = $this->getInvestorSetting($betweek, $investor_id);
+
         if(!$this->isEmptySetting($investor_setting))
         {
             $_SESSION['settingType'] = 2;
@@ -335,6 +339,7 @@ class Settings_model extends CI_Model {
         $investor = $this->CI->Investor_model->getByID($investor_id);
         $group_id = isset($investor['group_id']) ? $investor['group_id'] : null;
         $investor_setting = $this->getInvestorSetting($betweek, $investor_id);
+
         if(!$this->isEmptySetting($investor_setting))
         {
             $result = array(
@@ -364,6 +369,21 @@ class Settings_model extends CI_Model {
     {
         $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
         $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+
+        if (!$this->settingExists($betday, $type, $groupuser_id)) {
+            if ($type == 1) {
+                $type = 0;
+                $groupuser_id = '';
+            }
+            elseif ($type == 2) {
+                $type = 1;
+                $groupuser_id = $this->Investor_model->getUserGroup($groupuser_id);
+                if (!$this->settingExists($betday, $type, $groupuser_id)) {
+                    $type = 0;
+                    $groupuser_id = '';
+                }
+            }
+        }
 
         $rows = $this->db->select('*')
             ->from('settings')
@@ -435,6 +455,21 @@ class Settings_model extends CI_Model {
     public function getActiveSetting($betday, $settingId = -1){
         $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
         $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+
+        if (!$this->settingExists($betday, $type, $groupuser_id)) {
+            if ($type == 1) {
+                $type = 0;
+                $groupuser_id = '';
+            }
+            elseif ($type == 2) {
+                $type = 1;
+                $groupuser_id = $this->Investor_model->getUserGroup($groupuser_id);
+                if (!$this->settingExists($betday, $type, $groupuser_id)) {
+                    $type = 0;
+                    $groupuser_id = '';
+                }
+            }
+        }
 
         $query = $this->db->select('*')
             ->from('settings')
@@ -525,7 +560,7 @@ class Settings_model extends CI_Model {
         return $rows;
     }
 
-    public function getSettings($betday, $categoryType, $categoryGroupUser){
+    public function getCascadingSettings($betday, $categoryType, $categoryGroupUser){
 
         $fomularData = $this->fomularData;
         $settings = $this->defaultSetting;
@@ -555,7 +590,7 @@ class Settings_model extends CI_Model {
         }
 
         $query = $this->db->select('*')
-            ->from('settings')
+            ->from($this->tableName)
             ->where(array(
                 'betday' => $betday,
                 'type'  => $categoryType
@@ -766,12 +801,17 @@ class Settings_model extends CI_Model {
         }
 
         $recommend_bet_amounts = [];
-        $investor_sportbooks = $this->CI->Investor_model->getInvestorSportboooksWithBets($categoryGroupUser, $betday);
+        // $investor_sportbooks = $this->CI->Investor_model->getInvestorSportboooksWithBets($categoryGroupUser, $betday);
+        $investor_sportbooks = [];
+        if ($this->actualType == 2) {
+            $investor_sportbooks = $this->CI->Investor_model->getInvestorSportboooksWithBets($this->actualGroupUser, $betday);
+        }
 
         $total_balance = 0;
         foreach ($investor_sportbooks as $item) {
             $total_balance += $item['current_balance'];
         }
+
         for ($i = 0; $i < count($orders_cnt); $i ++) {
             $optimal_balance = $settings[$i+1]['bet_percent'] ? ($total_balance * $settings[$i+1]['bet_percent'] / 100) : 0;
             if ($orders_cnt[$i]) {
@@ -779,12 +819,13 @@ class Settings_model extends CI_Model {
             }
             $settings[$i+1]['recommend_bet_amount'] = $recommend_bet_amount ?? '';
         }
+
         // For custom bets only
         foreach ($settings as &$item) {
             if (isset($item['id']) && isset($custom_orders_cnt[$item['id']])) {
                 $optimal_balance = $item['bet_percent'] ? ($total_balance * $item['bet_percent'] / 100) : 0;
                 if (!$optimal_balance || !$custom_orders_cnt[$item['id']]) {
-                    $item['recommend_bet_amountsmount'] = '';   
+                    $item['recommend_bet_amount'] = '';   
                 }
                 else {
                     $cnt = $custom_orders_cnt[$item['id']]['c' . $item['type']];
@@ -799,24 +840,26 @@ class Settings_model extends CI_Model {
         }
 
         // Load bet amounts for each bet type
-        $sql = "SELECT * FROM `bet_amounts` WHERE `betday`='$betday' AND `investor_id`='$categoryGroupUser'";
-        $row = $this->db->query($sql)->row();
-        if ($row) {
-            $bet_amounts = json_decode($row->data, true);
-            for ($i = 1; $i < count($settings); $i ++) {
-                if (strpos($settings[$i]['title'], 'Round Robin') !== false) {
-                    $settings[$i]['bet_amount'] = $bet_amounts['rr'];
-                }
-                elseif (strpos($settings[$i]['title'], 'Parlays') !== false) {
-                    $settings[$i]['bet_amount'] = $bet_amounts['parlay'];
-                }
-                elseif (strpos($settings[$i]['title'], 'Individual') !== false) {
-                    $settings[$i]['bet_amount'] = $bet_amounts['single'];
-                }
-                elseif (strpos($settings[$i]['title'], 'Custom') !== false) {
-                    $key = $settings[$i]['type'] . '_' . $settings[$i]['id'];
-                    if (isset($bet_amounts[$key])) {
-                        $settings[$i]['bet_amount'] = $bet_amounts[$key];
+        if ($categoryType == 2) {
+            $sql = "SELECT * FROM `bet_amounts` WHERE `betday`='$betday' AND `investor_id`='$categoryGroupUser'";
+            $row = $this->db->query($sql)->row();
+            if ($row) {
+                $bet_amounts = json_decode($row->data, true);
+                for ($i = 1; $i < count($settings); $i ++) {
+                    if (strpos($settings[$i]['title'], 'Round Robin') !== false) {
+                        $settings[$i]['bet_amount'] = $bet_amounts['rr'];
+                    }
+                    elseif (strpos($settings[$i]['title'], 'Parlays') !== false) {
+                        $settings[$i]['bet_amount'] = $bet_amounts['parlay'];
+                    }
+                    elseif (strpos($settings[$i]['title'], 'Individual') !== false) {
+                        $settings[$i]['bet_amount'] = $bet_amounts['single'];
+                    }
+                    elseif (strpos($settings[$i]['title'], 'Custom') !== false) {
+                        $key = $settings[$i]['type'] . '_' . $settings[$i]['id'];
+                        if (isset($bet_amounts[$key])) {
+                            $settings[$i]['bet_amount'] = $bet_amounts[$key];
+                        }
                     }
                 }
             }
@@ -826,16 +869,84 @@ class Settings_model extends CI_Model {
         return $result;
     }
 
+    public function settingExists($betday, $categoryType, $categoryGroupUser) {
+        $query = $this->db->select('*')
+            ->from($this->tableName)
+            ->where(array(
+                'betday' => $betday,
+                'type'  => $categoryType
+            ));
+        if($categoryType != 0)
+            $query->where('groupuser_id', $categoryGroupUser);
+
+        $rows = $query->get()->result_array();
+
+        return !empty($rows);
+    }
+
+    public function getSettings($betday, $categoryType, $categoryGroupUser) {
+        $this->actualType = $categoryType;
+        $this->actualGroupUser = $categoryGroupUser;
+
+        if ($this->settingExists($betday, $categoryType, $categoryGroupUser)) {
+            return $this->getCascadingSettings($betday, $categoryType, $categoryGroupUser);
+        }
+
+        if ($categoryType == 2) {
+            $groupId = $this->Investor_model->getUserGroup($categoryGroupUser);
+            if ($this->settingExists($betday, 1, $groupId)) {
+                return $this->getCascadingSettings($betday, 1, $groupId);
+            }
+        }
+
+        return $this->getCascadingSettings($betday, 0, '');
+    }
+
     public function saveSettings($betday, $categoryType, $categoryGroupUser,$data, $description = ''){
-        
 
         $jsonData = json_decode($data);
         $settingData = $jsonData->data;
         $description = $jsonData->description;
-        $bet_amount = $jsonData->bet_amount;
 
         $_SESSION['settingType'] = $categoryType;
         $_SESSION['settingGroupuserId'] = $categoryGroupUser;
+
+        // Set settings for children when
+        // $categoryType is All or Group selected
+        if ($categoryType == 0) {
+            $this->db->delete($this->tableName, array('betday' => $betday, 'type !=' => '0'));
+            $this->db->delete('work_sheet', array('betday' => $betday, 'type !=' => '0'));
+            $this->db->delete('custom_bets', array('betday' => $betday, 'type !=' => '0'));
+            $this->db->delete('custom_bet_allocations', array('betday' => $betday, 'type !=' => '0'));
+            $this->db->delete('bet_amounts', array('betday' => $betday));
+        }
+        elseif ($categoryType == 1) {
+            $investorIds = $this->Investor_model->getGroupInvestors($categoryGroupUser);
+            
+            $this->db->where('betday', $betday);
+            $this->db->where('type', 2);
+            $this->db->where_in('groupuser_id', $investorIds);
+            $this->db->delete($this->tableName);
+
+            $this->db->where('betday', $betday);
+            $this->db->where('type', 2);
+            $this->db->where_in('groupuser_id', $investorIds);
+            $this->db->delete('work_sheet');
+
+            $this->db->where('betday', $betday);
+            $this->db->where('type', 2);
+            $this->db->where_in('groupuser_id', $investorIds);
+            $this->db->delete('custom_bets');
+
+            $this->db->where('betday', $betday);
+            $this->db->where('type', 2);
+            $this->db->where_in('groupuser_id', $investorIds);
+            $this->db->delete('custom_bet_allocations');
+
+            $this->db->where('betday', $betday);
+            $this->db->where_in('investor_id', $investorIds);
+            $this->db->delete('bet_amounts');
+        }
 
         $query = $this->db->from('settings')
             ->where(array(
@@ -860,7 +971,6 @@ class Settings_model extends CI_Model {
             'pick_allocation' => @$settingData[3]['1'],
             'pick_number1'  => @$settingData[3]['2'],
             'description'   => $description,
-            'bet_amount'   => $bet_amount,
         );
 
         if ( $rows->num_rows() > 0 ) 
@@ -872,7 +982,7 @@ class Settings_model extends CI_Model {
             if($categoryType != 0)
                 $updateQuery = $updateQuery->where('groupuser_id', $categoryGroupUser);
 
-            $updateQuery->update('settings', $newData);
+            $updateQuery->update($this->tableName, $newData);
         } else {
             $newData['betday'] = $betday;
             $newData['type'] = $categoryType;
@@ -880,7 +990,7 @@ class Settings_model extends CI_Model {
                 $newData['groupuser_id'] = $categoryGroupUser;
             else
                 $newData['groupuser_id'] = 0;
-            $this->db->insert('settings', $newData);
+            $this->db->insert($this->tableName, $newData);
         }
 
         for($i=4; $i< count($settingData); $i ++)
@@ -926,8 +1036,8 @@ class Settings_model extends CI_Model {
             }
         }
 
-        // Save bet amounts for indviduals
-        if ($categoryGroupUser) {
+        // Save bet amounts for individuals
+        if ($categoryType == 2 && $categoryGroupUser) {
             $bet_amounts = [
                 'rr'        => $settingData[1][8] ?? 0,
                 'parlay'    => $settingData[2][8] ?? 0,
@@ -958,6 +1068,8 @@ class Settings_model extends CI_Model {
                     'data'          => json_encode($bet_amounts)
                 ));
             }
+
+            $this->CI->Investor_model->assign($categoryGroupUser, $betday);
         }
     }
 
@@ -978,13 +1090,14 @@ class Settings_model extends CI_Model {
                 'is_open'       => $isChecked
             ));
         } else {
-            $newData = array(
-                'betday'        => $betweek,
-                'type'          => $categoryType,
-                'groupuser_id'  => $categoryGroupUser,
-                'is_open'       => $isChecked
-            );
-            $this->db->insert('settings', $newData);
+            // temporarily disable
+            // $newData = array(
+            //     'betday'        => $betweek,
+            //     'type'          => $categoryType,
+            //     'groupuser_id'  => $categoryGroupUser,
+            //     'is_open'       => $isChecked
+            // );
+            // $this->db->insert('settings', $newData);
         }
         
         return true;

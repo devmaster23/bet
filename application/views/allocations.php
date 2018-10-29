@@ -50,14 +50,14 @@
         <table id="allocations" class="display" style="width:100%">
             <thead>
                 <tr>
-                    <th>Title</th>
+                    <th>Sportsbook</th>
                     <th>Current Balance ($)</th>
-                    <th>( % )</th>
+                    <th>% Total</th>
                     <th>Optimal ( % )</th>
-                    <th>( % )</th>
-                    <th>Desired Bets</th>
+                    <!-- <th>( % )</th> -->
+                    <th>Bets</th>
                     <th>Balance after Bets ($)</th>
-                    <th>Current Bets</th>
+                    <!-- <th>Current Bets</th> -->
                 </tr>
             </thead>
         </table>

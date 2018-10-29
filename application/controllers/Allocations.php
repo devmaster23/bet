@@ -50,27 +50,10 @@ class Allocations extends BaseController {
             unset($bet['data']);
         }
 
-        $setting = $this->setting_model->getActiveSettingByInvestor($betweek,$investorId);
+        // $setting = $this->setting_model->getActiveSettingByInvestor($betweek,$investorId);
         $investor_sportbooks = $this->investor_model->getInvestorSportboooksWithBets($investorId, $betweek);
 
-        $total_balance = 0;
-        foreach ($investor_sportbooks as $item) {
-            $total_balance += $item['current_balance'];
-        }
-
-        $allocation_percent = $setting['data']['bet_allocation'];
-        $optimal_balance = $total_balance * $allocation_percent / 100;
-
-        $total_m_number = 0;
-        foreach ($bets as $item) {
-            $total_m_number += $item['m_number'];
-        }
-        
-        $hypo_bet_amount = $total_m_number ? $optimal_balance / $total_m_number : 1;
-        $hypo_bet_amount = roundBetAmount($hypo_bet_amount);
         $data['data'] = $investor_sportbooks;
-        $data['current_bet_amount'] = $setting['data']['bet_amount'];
-        $data['hypo_bet_amount'] = $hypo_bet_amount;
         header('Content-Type: application/json');
         echo json_encode( $data);
     }

@@ -3,7 +3,26 @@ class CustomBet_model extends CI_Model {
     private $tableName = 'custom_bets';
     private $tableName1 = 'custom_bet_allocations';
 
-    public function getData($betday, $type, $groupuser_id){
+    function __construct() {
+        $this->load->model('Investor_model');
+    }
+
+    public function dataExists($betday, $type, $groupuser_id){
+        $query = $this->db->select('*')
+            ->from($this->tableName)
+            ->where(array(
+                'betday' => $betday,
+                'type'  => $type
+            ));
+        if($groupuser_id != 0)
+            $query->where('groupuser_id', $groupuser_id);
+
+        $rows = $query->get()->result_array();
+
+        return !empty($rows);
+    }
+
+    public function getCascadingData($betday, $type, $groupuser_id){
         $this->db->select('*')
             ->from($this->tableName)
             ->where(array(
@@ -23,6 +42,21 @@ class CustomBet_model extends CI_Model {
             }
         }
         return $result;
+    }
+
+    public function getData($betday, $type, $groupuser_id){
+        if ($this->dataExists($betday, $type, $groupuser_id)) {
+            return $this->getCascadingData($betday, $type, $groupuser_id);
+        }
+
+        if ($type == 2) {
+            $groupId = $this->Investor_model->getUserGroup($groupuser_id);
+            if ($this->dataExists($betday, 1, $groupId)) {
+                return $this->getCascadingData($betday, 1, $groupId);
+            }
+        }
+
+        return $this->getCascadingData($betday, 0, '');
     }
 
     public function saveCustomBet($betday, $data, $type, $groupuser_id){

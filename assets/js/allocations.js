@@ -81,13 +81,13 @@ function loadData(data){
             },
             { "data": "percent" },
             { "data": "equal_percent" },
-            { "data": "valid_percent" },
+            // { "data": "valid_percent" },
             { "data": "valid_bet_count" },
             { 
                 "data": "balance_left",
                 render: $.fn.dataTable.render.number( ',', '.', 2)
             },
-            { "data": "bet_count" },
+            // { "data": "bet_count" },
         ],
         "columnDefs": [
             {"className": "dt-right", "targets": "_all"},

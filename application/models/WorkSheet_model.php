@@ -53,11 +53,30 @@ class WorkSheet_model extends CI_Model {
         $_SESSION['settingType'] = isset($activeSetting['type'])? $activeSetting['type'] : 0;
         $_SESSION['settingGroupuserId'] = isset($activeSetting['groupuser_id'])? $activeSetting['groupuser_id'] : 0;
 
+        $type = $activeSetting['type'];
+        $groupuser_id = $activeSetting['groupuser_id'];
+
+        // Cascading!
+        if (!$this->sheetExists($betday, $type, $groupuser_id)) {
+            if ($type == 1) {
+                $type = 0;
+                $groupuser_id = '';
+            }
+            elseif ($type == 2) {
+                $type = 1;
+                $groupuser_id = $this->Investor_model->getUserGroup($groupuser_id);
+                if (!$this->sheetExists($betday, $type, $groupuser_id)) {
+                    $type = 0;
+                    $groupuser_id = '';
+                }
+            }
+        }
+
         $rows = $this->db->select('*')->from($this->tableName)
                 ->where(array(
                     'betday' => $betday,
-                    'type'  => $activeSetting['type'],
-                    'groupuser_id'  => $activeSetting['groupuser_id']
+                    'type'  => $type,
+                    'groupuser_id'  => $groupuser_id
                 ))
                 ->get()->result_array();
 
@@ -96,6 +115,21 @@ class WorkSheet_model extends CI_Model {
     {
         $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
         $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+
+        if (!$this->sheetExists($betday, $type, $groupuser_id)) {
+            if ($type == 1) {
+                $type = 0;
+                $groupuser_id = '';
+            }
+            elseif ($type == 2) {
+                $type = 1;
+                $groupuser_id = $this->Investor_model->getUserGroup($groupuser_id);
+                if (!$this->sheetExists($betday, $type, $groupuser_id)) {
+                    $type = 0;
+                    $groupuser_id = '';
+                }
+            }
+        }
 
         $rows = $this->db->select('*')->from($this->tableName)
             ->where(array(
@@ -159,7 +193,22 @@ class WorkSheet_model extends CI_Model {
         return $result;
     }
 
-    public function getParlayCount($betday, $type = null, $groupuser_id = null){
+    public function sheetExists($betday, $categoryType, $categoryGroupUser) {
+        $query = $this->db->select('*')
+            ->from('work_sheet')
+            ->where(array(
+                'betday' => $betday,
+                'type'  => $categoryType
+            ));
+        if($categoryType != 0)
+            $query->where('groupuser_id', $categoryGroupUser);
+
+        $rows = $query->get()->result_array();
+
+        return !empty($rows);
+    }
+
+    public function getCascadingParlayCount($betday, $type = null, $groupuser_id = null){
         if(is_null($type))
             $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
         if(is_null($groupuser_id))  
@@ -184,7 +233,27 @@ class WorkSheet_model extends CI_Model {
         return $result;
     }
 
-    public function getDisableCount($betday, $type = null , $groupuser_id = null){
+    public function getParlayCount($betday, $type = null, $groupuser_id = null) {
+        if(is_null($type))
+            $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
+        if(is_null($groupuser_id))  
+            $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+
+        if ($this->sheetExists($betday, $type, $groupuser_id)) {
+            return $this->getCascadingParlayCount($betday, $type, $groupuser_id);
+        }
+
+        if ($type == 2) {
+            $groupId = $this->Investor_model->getUserGroup($groupuser_id);
+            if ($this->sheetExists($betday, 1, $groupId)) {
+                return $this->getCascadingParlayCount($betday, 1, $groupId);
+            }
+        }
+
+        return $this->getCascadingParlayCount($betday, 0, '');
+    }
+
+    public function getCascadingDisableCount($betday, $type = null , $groupuser_id = null){
         if(is_null($type))
             $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
         if(is_null($groupuser_id))
@@ -265,7 +334,27 @@ class WorkSheet_model extends CI_Model {
         return $result;
     }
 
-    public function getValidRRColumnCount($betday, $type = null, $groupuser_id = null)
+    public function getDisableCount($betday, $type = null , $groupuser_id = null) {
+        if(is_null($type))
+            $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
+        if(is_null($groupuser_id))  
+            $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+
+        if ($this->sheetExists($betday, $type, $groupuser_id)) {
+            return $this->getCascadingDisableCount($betday, $type, $groupuser_id);
+        }
+
+        if ($type == 2) {
+            $groupId = $this->Investor_model->getUserGroup($groupuser_id);
+            if ($this->sheetExists($betday, 1, $groupId)) {
+                return $this->getCascadingDisableCount($betday, 1, $groupId);
+            }
+        }
+
+        return $this->getCascadingDisableCount($betday, 0, '');
+    }
+
+    public function getCascadingValidRRColumnCount($betday, $type = null, $groupuser_id = null)
     {
         if(is_null($type))
             $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
@@ -308,11 +397,46 @@ class WorkSheet_model extends CI_Model {
         return $result;
     }
 
+    public function getValidRRColumnCount($betday, $type = null, $groupuser_id = null) {
+        if(is_null($type))
+            $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
+        if(is_null($groupuser_id))  
+            $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+
+        if ($this->sheetExists($betday, $type, $groupuser_id)) {
+            return $this->getCascadingValidRRColumnCount($betday, $type, $groupuser_id);
+        }
+
+        if ($type == 2) {
+            $groupId = $this->Investor_model->getUserGroup($groupuser_id);
+            if ($this->sheetExists($betday, 1, $groupId)) {
+                return $this->getCascadingValidRRColumnCount($betday, 1, $groupId);
+            }
+        }
+
+        return $this->getCascadingValidRRColumnCount($betday, 0, '');
+    }
+
     public function getBetSheet($betday)
     {
 
         $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
         $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+
+        if (!$this->sheetExists($betday, $type, $groupuser_id)) {
+            if ($type == 1) {
+                $type = 0;
+                $groupuser_id = '';
+            }
+            elseif ($type == 2) {
+                $type = 1;
+                $groupuser_id = $this->Investor_model->getUserGroup($groupuser_id);
+                if (!$this->sheetExists($betday, $type, $groupuser_id)) {
+                    $type = 0;
+                    $groupuser_id = '';
+                }
+            }
+        }
 
         $pick_data = $this->CI->Picks_model->getAll($betday);
         $activeSetting = $this->getRobbinSetting($betday);
@@ -574,7 +698,21 @@ class WorkSheet_model extends CI_Model {
             $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
             $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
         }
-        
+
+        if (!$this->sheetExists($betday, $type, $groupuser_id)) {
+            if ($type == 1) {
+                $type = 0;
+                $groupuser_id = '';
+            }
+            elseif ($type == 2) {
+                $type = 1;
+                $groupuser_id = $this->Investor_model->getUserGroup($groupuser_id);
+                if (!$this->sheetExists($betday, $type, $groupuser_id)) {
+                    $type = 0;
+                    $groupuser_id = '';
+                }
+            }
+        }
         
         $pick_data = $this->CI->Picks_model->getAll($betday, $type, $groupuser_id);
         $activeSetting = $investor_setting['data'];
@@ -623,7 +761,7 @@ class WorkSheet_model extends CI_Model {
             $item['total_amount'] = $this->getTotalAmount( $item );
         }
         $ret['single']  = $singleBets;
-        
+
         if(count($custom_rows)){
             foreach ($custom_rows as $row_item) {
                 $picklist_data = $this->CI->Picks_model->getAllList($betday, $type, $groupuser_id);
@@ -636,7 +774,7 @@ class WorkSheet_model extends CI_Model {
                     $ret['cparlay'][] = $cparlay_item;
             }
         }
-        
+
         if(count($rows))
         {
             $row = $rows[0];
@@ -709,6 +847,7 @@ class WorkSheet_model extends CI_Model {
             $result['rr4'] = $robin_4;
             $result['data'] = $ret;
         }
+
         return $result;
     }
 
@@ -895,6 +1034,21 @@ class WorkSheet_model extends CI_Model {
     public function updateParlay($betday, $data){
         $type = isset($_SESSION['settingType']) ? $_SESSION['settingType'] : 0;
         $groupuser_id = isset($_SESSION['settingGroupuserId']) ? $_SESSION['settingGroupuserId'] : 0;
+
+        if (!$this->sheetExists($betday, $type, $groupuser_id)) {
+            if ($type == 1) {
+                $type = 0;
+                $groupuser_id = '';
+            }
+            elseif ($type == 2) {
+                $type = 1;
+                $groupuser_id = $this->Investor_model->getUserGroup($groupuser_id);
+                if (!$this->sheetExists($betday, $type, $groupuser_id)) {
+                    $type = 0;
+                    $groupuser_id = '';
+                }
+            }
+        }
 
         $this->db->where(array(
             'betday'    =>$betday,
