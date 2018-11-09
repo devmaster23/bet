@@ -40,6 +40,7 @@ class Investor_model extends CI_Model {
         $this->CI->load->model('WorkSheet_model');
         $this->CI->load->model('Groups_model');
         $this->CI->load->model('Settings_model');
+        $this->CI->load->model('Order_model');
 
         $this->groups = $this->CI->Groups_model->getAll();
     }
@@ -350,15 +351,30 @@ class Investor_model extends CI_Model {
         return array('status'=>'success');
     }
 
-    public function getInvestorSportboooksWithBets($investorId, $betweek){
+    /**
+     * Description
+     * @param type $investorId 
+     * @param type $betweek 
+     * @param type|bool $fromOrders 
+     * $fromOrders == true => get Orders
+     * $fromOrders == false => No orders yet, get bets instead
+     * @return sportbook list with bets
+     */
+    public function getInvestorSportboooksWithBets($investorId, $betweek, $fromOrders = false){
         $result = [];
         $sprotbookList = $this->CI->Investor_sportbooks_model->getListByInvestorId($investorId,$betweek);
         $totalBalance = 0;
         $totalValidBalance = 0;
         $sportbookCount = count($sprotbookList);
 
-        $worksheet = $this->WorkSheet_model->getRROrders($betweek,$investorId);
-        $bets = getBetArr($worksheet);
+        if ($fromOrders) {
+            $bets = $this->order_model->getOrders($betweek, $investorId);
+        }
+        else {   
+            $worksheet = $this->WorkSheet_model->getRROrders($betweek,$investorId);
+            $bets = getBetArr($worksheet);
+        }
+
         $totalBetCount = count($bets);
         foreach ($sprotbookList as $key => $sportbook_item)
             $totalBalance += floatval($sportbook_item['current_balance_'.$betweek]);
@@ -413,7 +429,17 @@ class Investor_model extends CI_Model {
                 $item['valid_bet_count'] = 0;
                 $item['valid_percent'] = $totalValidBalance == 0 ? 0 : $item['current_balance'] / $totalValidBalance * 100;
                 $item['valid_percent'] = number_format((float)$item['valid_percent'], 2, '.', '');
-                if($tmpBetCount <= $totalBetCount)
+                if ($fromOrders) {
+                    $item['valid_bet_count'] = $item['bet_count'];
+                    // This is after orders are available or reassigned
+                    foreach ($bets as $betItem) {
+                        // filters balance for this sportbook only
+                        if ($betItem['sportbook_id'] == $item['id']) {
+                            $item['balance_left'] -= $betItem['total_amount'];
+                        }
+                    }
+                }
+                elseif($tmpBetCount <= $totalBetCount)
                 {
                     // $item['valid_bet_count'] = round($totalBetCount * $item['valid_percent'] / 100);
                     $allowed_balance = intval($item['current_balance'] * $total_bet_percent / 100);
@@ -426,7 +452,7 @@ class Investor_model extends CI_Model {
                     if($tmpBetCount + $item['valid_bet_count'] > $totalBetCount)
                         $item['valid_bet_count'] = $totalBetCount - $tmpBetCount;
 
-                    $betAssign = array_slice($bets, $tmpBetCount, $item['valid_bet_count']);
+                    $betAssign = array_slice($bets, $tmpBetCount, $item['bet_count']);
                     $tmpBetCount += $item['valid_bet_count'];
                     foreach ($betAssign as $betItem) {
                         $item['balance_left'] -= $betItem['total_amount'];

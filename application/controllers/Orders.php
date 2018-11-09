@@ -94,6 +94,7 @@ class Orders extends BaseController {
 
         $this->setting_model->setActiveSetting($betweek,$investorId);
         $bets = $this->model->getOrders($data['betweek'],$investorId);
+
         if(isset($_POST['sportbookID']))
         {
             $sportbookID = $_POST['sportbookID'];
