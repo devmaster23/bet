@@ -244,7 +244,8 @@ function defaultValueRenderer(instance, td, row, col, prop, value, cellPropertie
 function coverRenderer (instance, td, row, col, prop, value, cellProperties) {
   var jsonObj = {},
     checked = false,
-    checkedList = [];
+    checkedList = [false, false, false],
+    extraClass = '';
   if (row % 4 == 0 || row % 4 == 1) {
     td.style.backgroundColor = '#e5e5e5';
   }
@@ -267,11 +268,23 @@ function coverRenderer (instance, td, row, col, prop, value, cellProperties) {
             checkedList[2] = true;
         }
       });
+      if (checkedList[0] == true && checkedList[1] == false && checkedList[2] == false) {
+        extraClass = 'pick';
+      }
+      else if (checkedList[1] == true && checkedList[0] == false && checkedList[2] == false) {
+        extraClass = 'wrapper';
+      }
+      else if (checkedList[2] == true && checkedList[0] == false && checkedList[1] == false) {
+        extraClass = 'candy';
+      }
+      else if (checked == true) {
+        extraClass = 'compound'
+      }
     }
   }catch(e){
   }
 
-  $(td).html('<div class="pick-check-box" checked="'+checked+'" data-pick="'+checkedList[0]+'" data-wrapper="'+checkedList[1]+'" data-candy="'+checkedList[2]+'" data-toggle="popover" data-placement="bottom" data-html="true" data-row="'+row+'" data-prop="'+prop+'">'+displayValue+'</div>');
+  $(td).html('<div class="pick-check-box ' + extraClass + '" checked="'+checked+'" data-pick="'+checkedList[0]+'" data-wrapper="'+checkedList[1]+'" data-candy="'+checkedList[2]+'" data-toggle="popover" data-placement="bottom" data-html="true" data-row="'+row+'" data-prop="'+prop+'">'+displayValue+'</div>');
   return td;
 }
 

@@ -800,7 +800,7 @@ class Settings_model extends CI_Model {
             }
         }
 
-        $recommend_bet_amounts = [];
+        // $recommend_bet_amounts = [];
         // $investor_sportbooks = $this->CI->Investor_model->getInvestorSportboooksWithBets($categoryGroupUser, $betday);
         $investor_sportbooks = [];
         if ($this->actualType == 2) {
@@ -839,31 +839,6 @@ class Settings_model extends CI_Model {
             }
         }
 
-        // Load bet amounts for each bet type
-        if ($categoryType == 2) {
-            $sql = "SELECT * FROM `bet_amounts` WHERE `betday`='$betday' AND `investor_id`='$categoryGroupUser'";
-            $row = $this->db->query($sql)->row();
-            if ($row) {
-                $bet_amounts = json_decode($row->data, true);
-                for ($i = 1; $i < count($settings); $i ++) {
-                    if (strpos($settings[$i]['title'], 'Round Robin') !== false) {
-                        $settings[$i]['bet_amount'] = $bet_amounts['rr'];
-                    }
-                    elseif (strpos($settings[$i]['title'], 'Parlays') !== false) {
-                        $settings[$i]['bet_amount'] = $bet_amounts['parlay'];
-                    }
-                    elseif (strpos($settings[$i]['title'], 'Individual') !== false) {
-                        $settings[$i]['bet_amount'] = $bet_amounts['single'];
-                    }
-                    elseif (strpos($settings[$i]['title'], 'Custom') !== false) {
-                        $key = $settings[$i]['type'] . '_' . $settings[$i]['id'];
-                        if (isset($bet_amounts[$key])) {
-                            $settings[$i]['bet_amount'] = $bet_amounts[$key];
-                        }
-                    }
-                }
-            }
-        }
         $result['bet_allocation'] = $settings;
 
         return $result;
@@ -888,18 +863,47 @@ class Settings_model extends CI_Model {
         $this->actualType = $categoryType;
         $this->actualGroupUser = $categoryGroupUser;
 
-        if ($this->settingExists($betday, $categoryType, $categoryGroupUser)) {
-            return $this->getCascadingSettings($betday, $categoryType, $categoryGroupUser);
-        }
+        $settings = $this->getCascadingSettings($betday, 0, '');
 
-        if ($categoryType == 2) {
+        if ($this->settingExists($betday, $categoryType, $categoryGroupUser)) {
+            $settings = $this->getCascadingSettings($betday, $categoryType, $categoryGroupUser);
+        }
+        elseif ($categoryType == 2) {
             $groupId = $this->Investor_model->getUserGroup($categoryGroupUser);
             if ($this->settingExists($betday, 1, $groupId)) {
-                return $this->getCascadingSettings($betday, 1, $groupId);
+                $settings = $this->getCascadingSettings($betday, 1, $groupId);
             }
         }
 
-        return $this->getCascadingSettings($betday, 0, '');
+        // Load bet amounts for each bet type
+        if ($categoryType == 2) {
+            $allocations = $settings['bet_allocation'];
+            $sql = "SELECT * FROM `bet_amounts` WHERE `betday`='$betday' AND `investor_id`='$categoryGroupUser'";
+            $row = $this->db->query($sql)->row();
+            if ($row) {
+                $bet_amounts = json_decode($row->data, true);
+                for ($i = 1; $i < count($allocations); $i ++) {
+                    if (strpos($allocations[$i]['title'], 'Round Robin') !== false) {
+                        $allocations[$i]['bet_amount'] = $bet_amounts['rr'];
+                    }
+                    elseif (strpos($allocations[$i]['title'], 'Parlays') !== false) {
+                        $allocations[$i]['bet_amount'] = $bet_amounts['parlay'];
+                    }
+                    elseif (strpos($allocations[$i]['title'], 'Individual') !== false) {
+                        $allocations[$i]['bet_amount'] = $bet_amounts['single'];
+                    }
+                    elseif (strpos($allocations[$i]['title'], 'Custom') !== false) {
+                        $key = $allocations[$i]['type'] . '_' . $allocations[$i]['id'];
+                        if (isset($bet_amounts[$key])) {
+                            $allocations[$i]['bet_amount'] = $bet_amounts[$key];
+                        }
+                    }
+                }
+            }
+            $settings['bet_allocation'] = $allocations;
+        }
+
+        return $settings;
     }
 
     public function saveSettings($betday, $categoryType, $categoryGroupUser,$data, $description = ''){
@@ -1070,6 +1074,34 @@ class Settings_model extends CI_Model {
             }
 
             $this->CI->Investor_model->assign($categoryGroupUser, $betday);
+        }
+        else {
+            $group = $categoryType == 0 ? 0 : $categoryGroupUser;
+            $investorIds = $this->Investor_model->getGroupInvestors($group);
+            foreach ($investorIds as $investor) {
+                $settings = $this->getSettings($betday, 2, $investor);
+                $allocations = $settings['bet_allocation'];
+                $bet_amounts = [
+                    'rr'    => $allocations[1]['recommend_bet_amount'],
+                    'parlay'=> $allocations[2]['recommend_bet_amount'],
+                    'single'=> $allocations[3]['recommend_bet_amount']
+                ];
+                for ($i = 4; $i < count($allocations); $i ++) {
+                    $key = $allocations[$i]['type'] . '_' . $allocations[$i]['id'];
+                    $val = $allocations[$i]['recommend_bet_amount'];
+                    if ($val == '') {
+                        $val = 0;
+                    }
+                    $bet_amounts[$key] = $val;
+                }
+                $this->db->insert('bet_amounts', array(
+                    'betday'    => $betday,
+                    'investor_id' => $investor,
+                    'data'  => json_encode($bet_amounts)
+                ));
+
+                $this->CI->Investor_model->assign($investor, $betday);
+            }
         }
     }
 

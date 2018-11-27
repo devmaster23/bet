@@ -89,7 +89,7 @@ class OrderLog_model extends CI_Model {
             $filename = 'icon_NFL.png';
             $order_url = '';
             if($item['action'] != 'balance'){
-                if($bet_data->game_type){
+                if(isset($bet_data->game_type)){
                     switch ($bet_data->game_type) {
                         case 'NCAA M':
                             $filename = 'icon_NCAAM.png';

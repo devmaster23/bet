@@ -101,8 +101,14 @@ class Investor_model extends CI_Model {
     public function getGroupInvestors($groupId)
     {
         $investorIds = [];
-        $this->db->select('id')->from($this->tableName)->where('group_id', $groupId);
+        if ($groupId == 0) {
+            $this->db->select('id')->from($this->tableName);
+        }
+        else {
+            $this->db->select('id')->from($this->tableName)->where('group_id', $groupId);
+        }
         $rows = $this->db->get()->result_array();
+
         foreach ($rows as $row) {
             $investorIds[] = $row['id'];
         }
@@ -356,7 +362,7 @@ class Investor_model extends CI_Model {
      * @param type $investorId 
      * @param type $betweek 
      * @param type|bool $fromOrders 
-     * $fromOrders == true => get Orders
+     * $fromOrders == true => get placed orders
      * $fromOrders == false => No orders yet, get bets instead
      * @return sportbook list with bets
      */
@@ -379,14 +385,34 @@ class Investor_model extends CI_Model {
         foreach ($sprotbookList as $key => $sportbook_item)
             $totalBalance += floatval($sportbook_item['current_balance_'.$betweek]);
 
-        // Get current betday setting
-        $query = $this->db->select('*')
+        // Get cascading betday setting
+        $query = $this->db->select('*') // Get individual setting
             ->from('settings')
             ->where(array(
                 'betday' => $betweek,
                 'groupuser_id'  => $investorId
             ));
         $row = $query->get()->row_array();
+        if (!$row) {        // Get group setting
+            $groupId = $this->getUserGroup($investorId);
+            $query = $this->db->select('*')
+                ->from('settings')
+                ->where(array(
+                    'betday' => $betweek,
+                    'type'  => 1,
+                    'groupuser_id'  => $groupId
+                ));
+            $row = $query->get()->row_array();
+        }
+        if (!$row) {    // Final option: get global setting
+            $query = $this->db->select('*')
+                ->from('settings')
+                ->where(array(
+                    'betday' => $betweek,
+                    'type'  => 0
+                ));
+            $row = $query->get()->row_array();
+        }
         $total_bet_percent = $row ? $row['bet_allocation'] : 0;
 
         foreach ($sprotbookList as $key => $sportbook_item) {

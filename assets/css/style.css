@@ -366,8 +366,19 @@
     text-align: center;
 }
 .pick-check-box[checked="true"]{
-    background-color: #1e4dc3;
     color: #fff;
+}
+.pick-check-box.pick {
+    background-color: #3399ff;
+}
+.pick-check-box.wrapper {
+    background-color: #339900;
+}
+.pick-check-box.candy {
+    background-color: #ff0000;
+}
+.pick-check-box.compound {
+    background-color: #000000;
 }
 .popover{
     -webkit-box-shadow: 0px 1px 30px -6px rgba(143,143,143,1);
